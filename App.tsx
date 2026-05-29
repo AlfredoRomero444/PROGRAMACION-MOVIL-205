@@ -23,13 +23,13 @@ export default function App() {
               <View style={[styles.iconWrapper, focused && styles.iconWrapperActive]}>
                 <View style={{ opacity: iconOpacity }}>
                   {route.name === 'Perfil' && (
-                    <User color={iconColor} size={20} strokeWidth={2} />
+                    <User color={iconColor} size={18} strokeWidth={2} />
                   )}
                   {route.name === 'Habilidades' && (
-                    <Zap color={iconColor} size={20} strokeWidth={2} />
+                    <Zap color={iconColor} size={18} strokeWidth={2} />
                   )}
                   {route.name === 'Mi Proyecto' && (
-                    <Laptop color={iconColor} size={20} strokeWidth={2} />
+                    <Laptop color={iconColor} size={18} strokeWidth={2} />
                   )}
                 </View>
               </View>
@@ -38,16 +38,17 @@ export default function App() {
           tabBarActiveTintColor: '#bf5af2',
           tabBarInactiveTintColor: '#8e8e93',
           tabBarLabelStyle: {
-            fontSize: 11,
-            marginBottom: 5,
+            fontSize: 10,
+            marginBottom: 3,
+            marginTop: -2, // Sube un poco el texto para pegarlo al icono
           },
           tabBarStyle: { 
             backgroundColor: '#0a0a12', 
             borderTopWidth: 1.5,
-            borderTopColor: '#bf5af230', // Línea morada sutil arriba
-            height: 60, // <-- Antes era 75, ahora es más delgada
-            paddingTop: 5,
-            position: 'absolute', // Opcional: para que flote o se vea más moderna
+            borderTopColor: '#bf5af230', // Línea morada superior
+            height: 50, // <-- Súper delgada (Estaba en 60)
+            paddingTop: 4,
+            paddingBottom: 2,
           },
           headerStyle: { backgroundColor: '#0a0a12' },
           headerTintColor: '#fff',
@@ -66,15 +67,15 @@ const styles = StyleSheet.create({
   iconWrapper: {
     alignItems: 'center',
     justifyContent: 'center',
-    width: 38,
-    height: 38,
-    borderRadius: 19,
+    width: 32,
+    height: 32,
+    borderRadius: 16,
   },
   iconWrapperActive: {
     shadowColor: '#bf5af2',
     shadowOffset: { width: 0, height: 0 },
     shadowOpacity: 0.9,
-    shadowRadius: 10,
+    shadowRadius: 8,
     backgroundColor: '#bf5af215',
   }
 });
