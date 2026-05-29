@@ -1,10 +1,11 @@
 import React from 'react';
 import { View, Text, StyleSheet, Image, ScrollView } from 'react-native';
 
-const nombre: string = "Alfredo G"; 
+const nombre: string = "ALFREDO GIRARTE ROMERO"; 
 const carrera: string = "Ingeniería en Sistemas Computacionales";
+const generacion: number = 19; // Nueva variable agregada
 const cuatrimestre: number = 10; 
-const promedio: number = 9.5;
+const promedio: number = 8.69;
 const titulado: boolean = false; 
 const datoPendiente: null = null; 
 
@@ -25,6 +26,12 @@ export default function ProfileScreen() {
         <View style={styles.infoRow}>
           <Text style={styles.label}>CARRERA</Text>
           <Text style={styles.value}>{carrera}</Text>
+        </View>
+
+        {/* Sección de la Generación */}
+        <View style={styles.infoRow}>
+          <Text style={styles.label}>GENERACIÓN</Text>
+          <Text style={styles.value}>{generacion}</Text>
         </View>
 
         <View style={styles.statsRow}>
@@ -56,7 +63,7 @@ export default function ProfileScreen() {
       </View>
 
       <View style={styles.localImageContainer}>
-         <Text style={styles.label}>LOGO LOCAL (ASSETS)</Text>
+         <Text style={styles.label}>(ASSETS)</Text>
          <Image source={require('../assets/icon.png')} style={styles.localImg} />
       </View>
     </ScrollView>
@@ -88,7 +95,6 @@ const styles = StyleSheet.create({
   statBox: { backgroundColor: '#090912', padding: 15, borderRadius: 20, width: '48%', alignItems: 'center', borderWidth: 1, borderColor: '#bf5af233' },
   label: { color: '#bf5af2', fontSize: 10, fontWeight: '700', marginBottom: 5 },
   value: { color: '#fff', fontSize: 16 },
-  // Estilo específico en color rojo neón para resaltar el valor falso
   errorValue: { color: '#ff453a', fontWeight: '600' },
   statValue: { color: '#fff', fontSize: 22, fontWeight: 'bold' },
   localImageContainer: { marginTop: 30, alignItems: 'center' },

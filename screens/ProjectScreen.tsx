@@ -2,17 +2,16 @@ import React from 'react';
 import { View, Text, StyleSheet, ScrollView, Linking } from 'react-native'; // Importamos Linking
 
 const proyecto = {
-  nombre: "Portafolio Móvil",
+  nombre: "Programación Móvil",
   version: "1.0.0",
-  descripcion: "Aplicación funcional en React Native para evaluación parcial.",
-  // Ponemos el enlace con https:// para que Linking funcione perfectamente
+  descripcion: "Aplicación funcional en React Native parcial I.",
+
   repositorio: "https://github.com/AlfredoRomero444/PROGRAMACION-MOVIL-205",
   activo: true,
 };
 
 export default function ProjectScreen() {
   
-  // Función para abrir el enlace en el navegador
   const abrirLink = () => {
     Linking.openURL(proyecto.repositorio).catch((err) => 
       console.error("No se pudo abrir el enlace:", err)
