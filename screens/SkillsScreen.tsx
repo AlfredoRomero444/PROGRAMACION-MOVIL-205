@@ -1,7 +1,29 @@
 import React from 'react';
-import { View, Text, StyleSheet, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, Image } from 'react-native';
 
-const habilidades: string[] = ['React Native', 'TypeScript', 'JavaScript', 'Git & GitHub', 'HTML & CSS'];
+// Estructura de datos con las URLs directas de los logos oficiales en PNG/SVG de alta calidad
+const habilidades = [
+  {
+    name: 'React Native',
+    logo: 'https://images.pngfile.net/download/10705/medium'
+  },
+  {
+    name: 'TypeScript',
+    logo: 'https://cdn.iconscout.com/icon/free/png-512/free-typescript-1174965.png'
+  },
+  {
+    name: 'JavaScript',
+    logo: 'https://cdn.iconscout.com/icon/free/png-512/free-javascript-1-225993.png'
+  },
+  {
+    name: 'Git & GitHub',
+    logo: 'https://cdn.iconscout.com/icon/free/png-512/free-github-159-721954.png'
+  },
+  {
+    name: 'HTML & CSS',
+    logo: 'https://cdn.iconscout.com/icon/free/png-512/free-html5-40-1175209.png'
+  }
+];
 
 export default function SkillsScreen() {
   return (
@@ -15,10 +37,15 @@ export default function SkillsScreen() {
         {habilidades.map((skill, index) => (
           <View key={index} style={styles.skillCard}>
             <View style={styles.iconCircle}>
-              <Text style={styles.iconText}>⚡</Text>
+              {/* Reemplazamos el Text del emoji por el componente Image nativo */}
+              <Image 
+                source={{ uri: skill.logo }} 
+                style={styles.skillLogo} 
+                resizeMode="contain"
+              />
             </View>
             <View style={styles.textContainer}>
-              <Text style={styles.skillName}>{skill}</Text>
+              <Text style={styles.skillName}>{skill.name}</Text>
               <View style={styles.progressBg}>
                 <View style={[styles.progressFill, { width: `${85 - (index * 5)}%` }]} />
               </View>
@@ -43,9 +70,14 @@ const styles = StyleSheet.create({
   },
   iconCircle: {
     width: 50, height: 50, borderRadius: 25, backgroundColor: '#090912',
-    justifyContent: 'center', alignItems: 'center', borderWidth: 1, borderColor: '#bf5af2'
+    justifyContent: 'center', alignItems: 'center', borderWidth: 1, borderColor: '#bf5af2',
+    overflow: 'hidden' // Evita que logos cuadrados se salgan del círculo neón
   },
-  iconText: { fontSize: 20 },
+  // Ajustes de tamaño para que los logotipos se acoplen perfectamente al círculo neón
+  skillLogo: {
+    width: 28,
+    height: 28,
+  },
   textContainer: { flex: 1, marginLeft: 15 },
   skillName: { color: '#fff', fontSize: 18, fontWeight: '700', marginBottom: 8 },
   progressBg: { height: 4, backgroundColor: '#ffffff11', borderRadius: 2 },
