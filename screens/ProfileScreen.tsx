@@ -13,7 +13,7 @@ export default function ProfileScreen() {
     <ScrollView style={styles.container} contentContainerStyle={styles.content}>
       <View style={styles.header}>
         <View style={styles.neonOrbit}>
-          <Image source={{ uri: 'https://picsum.photos/200' }} style={styles.profileImg} />
+          <Image source={{ uri: 'https://images.genius.com/f3d1d78ded7a82fe8bc7ec6441eb9018.1000x996x1.jpg' }} style={styles.profileImg} />
         </View>
         <Text style={styles.mainTitle}>{nombre}</Text>
         <View style={styles.badge}><Text style={styles.badgeText}>ESTUDIANTE</Text></View>
@@ -29,7 +29,7 @@ export default function ProfileScreen() {
 
         <View style={styles.statsRow}>
           <View style={styles.statBox}>
-            <Text style={styles.label}>CUATRI</Text>
+            <Text style={styles.label}>CUATRIMESTRE</Text>
             <Text style={styles.statValue}>{cuatrimestre}°</Text>
           </View>
           <View style={styles.statBox}>
@@ -40,7 +40,7 @@ export default function ProfileScreen() {
 
         <View style={styles.infoRow}>
           <Text style={styles.label}>ESTADO TITULACIÓN (boolean)</Text>
-          <Text style={styles.value}>{titulado ? "Completado" : "Pendiente"}</Text>
+          <Text style={styles.value}>{titulado ? "Completado" : "false"}</Text>
         </View>
 
         <View style={styles.infoRow}>
