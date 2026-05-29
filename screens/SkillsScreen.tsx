@@ -5,7 +5,7 @@ import { View, Text, StyleSheet, ScrollView, Image } from 'react-native';
 const habilidades = [
   {
     name: 'React Native',
-    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/React-icon.svg/512px-React-icon.svg.png'
+    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/React-icon.svg/3840px-React-icon.svg.png'
   },
   {
     name: 'TypeScript',
