@@ -1,11 +1,11 @@
 import React from 'react';
 import { View, Text, StyleSheet, ScrollView, Image } from 'react-native';
 
-// Estructura de datos con las URLs directas de los logos oficiales en PNG/SVG de alta calidad
+// Estructura de datos con URLs 100% estables de Wikimedia e Iconscout
 const habilidades = [
   {
     name: 'React Native',
-    logo: 'https://images.pngfile.net/download/10705/medium'
+    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/React-icon.svg/512px-React-icon.svg.png'
   },
   {
     name: 'TypeScript',
@@ -37,10 +37,13 @@ export default function SkillsScreen() {
         {habilidades.map((skill, index) => (
           <View key={index} style={styles.skillCard}>
             <View style={styles.iconCircle}>
-              {/* Reemplazamos el Text del emoji por el componente Image nativo */}
+              {/* Renderiza el logo y le mete el color azul oficial si es React Native */}
               <Image 
                 source={{ uri: skill.logo }} 
-                style={styles.skillLogo} 
+                style={[
+                  styles.skillLogo, 
+                  skill.name === 'React Native' && { tintColor: '#61dafb' }
+                ]} 
                 resizeMode="contain"
               />
             </View>
@@ -71,9 +74,8 @@ const styles = StyleSheet.create({
   iconCircle: {
     width: 50, height: 50, borderRadius: 25, backgroundColor: '#090912',
     justifyContent: 'center', alignItems: 'center', borderWidth: 1, borderColor: '#bf5af2',
-    overflow: 'hidden' // Evita que logos cuadrados se salgan del círculo neón
+    overflow: 'hidden'
   },
-  // Ajustes de tamaño para que los logotipos se acoplen perfectamente al círculo neón
   skillLogo: {
     width: 28,
     height: 28,
