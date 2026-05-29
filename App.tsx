@@ -1,9 +1,8 @@
 import React from 'react';
-import { Text } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { Text, StyleSheet } from 'react-native';
 
-// Importación de las tres pantallas actualizadas
 import ProfileScreen from './screens/ProfileScreen';
 import SkillsScreen from './screens/SkillsScreen';
 import ProjectScreen from './screens/ProjectScreen';
@@ -14,37 +13,50 @@ export default function App() {
   return (
     <NavigationContainer>
       <Tab.Navigator
-        screenOptions={{
-          tabBarActiveTintColor: '#3b82f6', 
-          tabBarInactiveTintColor: '#999',   
-          tabBarStyle: { backgroundColor: '#fff', height: 60, paddingBottom: 8 },
-          headerStyle: { backgroundColor: '#3b82f6' }, 
+        screenOptions={({ route }) => ({
+          tabBarIcon: ({ focused }) => {
+            let icon;
+            if (route.name === 'Perfil') icon = '👤';
+            else if (route.name === 'Habilidades') icon = '⚡';
+            else if (route.name === 'Mi Proyecto') icon = '💻';
+            
+            return (
+              <Text style={[styles.tabIcon, focused && styles.tabIconActive]}>
+                {icon}
+              </Text>
+            );
+          },
+          tabBarActiveTintColor: '#bf5af2', // Púrpura neón
+          tabBarInactiveTintColor: '#8e8e93',
+          tabBarStyle: { 
+            backgroundColor: '#0a0a12', 
+            borderTopWidth: 1,
+            borderTopColor: '#ffffff10',
+            height: 70,
+            paddingBottom: 12,
+            paddingTop: 8
+          },
+          headerStyle: { backgroundColor: '#0a0a12' },
           headerTintColor: '#fff',
-          headerTitleStyle: { fontWeight: 'bold' },
-        }}
+          headerTitleStyle: { fontWeight: 'bold', letterSpacing: 1 },
+        })}
       >
-        <Tab.Screen
-          name="Perfil"
-          component={ProfileScreen}
-          options={{
-            tabBarIcon: () => <Text style={{ fontSize: 20 }}>👤</Text>,
-          }}
-        />
-        <Tab.Screen
-          name="Habilidades"
-          component={SkillsScreen}
-          options={{
-            tabBarIcon: () => <Text style={{ fontSize: 20 }}>🛠️</Text>,
-          }}
-        />
-        <Tab.Screen
-          name="Mi Proyecto"
-          component={ProjectScreen}
-          options={{
-            tabBarIcon: () => <Text style={{ fontSize: 20 }}>💼</Text>,
-          }}
-        />
+        <Tab.Screen name="Perfil" component={ProfileScreen} />
+        <Tab.Screen name="Habilidades" component={SkillsScreen} />
+        <Tab.Screen name="Mi Proyecto" component={ProjectScreen} />
       </Tab.Navigator>
     </NavigationContainer>
   );
 }
+
+const styles = StyleSheet.create({
+  tabIcon: {
+    fontSize: 20,
+    opacity: 0.6
+  },
+  tabIconActive: {
+    opacity: 1,
+    textShadowColor: '#bf5af2',
+    textShadowRadius: 6
+  }
+});
