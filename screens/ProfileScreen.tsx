@@ -40,12 +40,18 @@ export default function ProfileScreen() {
 
         <View style={styles.infoRow}>
           <Text style={styles.label}>ESTADO TITULACIÓN (boolean)</Text>
-          <Text style={styles.value}>{titulado ? "Completado" : "false"}</Text>
+          {/* Si es falso, se aplica el estilo rojo personalizado */}
+          <Text style={[styles.value, !titulado && styles.errorValue]}>
+            {titulado ? "Completado" : "false"}
+          </Text>
         </View>
 
         <View style={styles.infoRow}>
           <Text style={styles.label}>PENDIENTES (null)</Text>
-          <Text style={styles.value}>{String(datoPendiente)}</Text>
+          {/* Se fuerza el renderizado exacto de la cadena "null" */}
+          <Text style={styles.value}>
+            {datoPendiente === null ? "null" : String(datoPendiente)}
+          </Text>
         </View>
       </View>
 
@@ -82,6 +88,8 @@ const styles = StyleSheet.create({
   statBox: { backgroundColor: '#090912', padding: 15, borderRadius: 20, width: '48%', alignItems: 'center', borderWidth: 1, borderColor: '#bf5af233' },
   label: { color: '#bf5af2', fontSize: 10, fontWeight: '700', marginBottom: 5 },
   value: { color: '#fff', fontSize: 16 },
+  // Estilo específico en color rojo neón para resaltar el valor falso
+  errorValue: { color: '#ff453a', fontWeight: '600' },
   statValue: { color: '#fff', fontSize: 22, fontWeight: 'bold' },
   localImageContainer: { marginTop: 30, alignItems: 'center' },
   localImg: { width: 60, height: 60, opacity: 0.7 },
