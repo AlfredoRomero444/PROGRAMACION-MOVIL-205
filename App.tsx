@@ -1,7 +1,9 @@
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { StyleSheet, Image, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
+// Importamos los iconos exactos de Lucide
+import { User, Zap, Laptop } from 'lucide-react-native';
 
 import ProfileScreen from './screens/ProfileScreen';
 import SkillsScreen from './screens/SkillsScreen';
@@ -9,47 +11,34 @@ import ProjectScreen from './screens/ProjectScreen';
 
 const Tab = createBottomTabNavigator();
 
-// Enlaces estables corregidos a iconos vectoriales en formato PNG
-const tabIcons = {
-  Perfil: {
-    default: 'https://cdn-icons-png.flaticon.com/512/1077/1077063.png', // Usuario lineal
-    focused: 'https://cdn-icons-png.flaticon.com/512/1077/1077063.png', 
-  },
-  Habilidades: {
-    default: 'https://cdn-icons-png.flaticon.com/512/9351/9351717.png', // Rayo con pulso eléctrico
-    focused: 'https://cdn-icons-png.flaticon.com/512/9351/9351717.png',
-  },
-  'Mi Proyecto': {
-    default: 'https://cdn-icons-png.flaticon.com/512/4213/4213179.png', // Laptop lineal corregida
-    focused: 'https://cdn-icons-png.flaticon.com/512/4213/4213179.png',
-  }
-};
-
 export default function App() {
   return (
     <NavigationContainer>
       <Tab.Navigator
         screenOptions={({ route }) => ({
           tabBarIcon: ({ focused }) => {
-            const iconUrl = focused 
-              ? tabIcons[route.name as keyof typeof tabIcons].focused 
-              : tabIcons[route.name as keyof typeof tabIcons].default;
+            // Configuración de colores según el estado de la pestaña
+            const iconColor = focused ? '#bf5af2' : '#8e8e93';
+            const iconOpacity = focused ? 1 : 0.5;
 
             return (
               <View style={[styles.iconWrapper, focused && styles.iconWrapperActive]}>
-                <Image 
-                  source={{ uri: iconUrl }} 
-                  style={[
-                    styles.imageIcon, 
-                    focused ? styles.imageIconActive : styles.imageIconInactive
-                  ]}
-                  resizeMode="contain"
-                />
+                <View style={{ opacity: iconOpacity }}>
+                  {route.name === 'Perfil' && (
+                    <User color={iconColor} size={24} strokeWidth={2} />
+                  )}
+                  {route.name === 'Habilidades' && (
+                    <Zap color={iconColor} size={24} strokeWidth={2} />
+                  )}
+                  {route.name === 'Mi Proyecto' && (
+                    <Laptop color={iconColor} size={24} strokeWidth={2} />
+                  )}
+                </View>
               </View>
             );
           },
           tabBarActiveTintColor: '#bf5af2', // Púrpura neón
-          tabBarInactiveTintColor: '#8e8e93', // Gris
+          tabBarInactiveTintColor: '#8e8e93', // Gris apagado
           tabBarStyle: { 
             backgroundColor: '#0a0a12', 
             borderTopWidth: 1,
@@ -74,27 +63,17 @@ export default function App() {
 const styles = StyleSheet.create({
   iconWrapper: {
     alignItems: 'center',
-    justifyContent: 'center', // Sintaxis correcta de React Native / TypeScript
+    justifyContent: 'center',
     width: 44,
     height: 44,
     borderRadius: 22,
   },
+  // Resplandor neón idéntico para la pestaña activa
   iconWrapperActive: {
     shadowColor: '#bf5af2',
     shadowOffset: { width: 0, height: 0 },
     shadowOpacity: 0.8,
     shadowRadius: 10,
     backgroundColor: '#bf5af212',
-  },
-  imageIcon: {
-    width: 26,
-    height: 26,
-  },
-  imageIconActive: {
-    tintColor: '#bf5af2', 
-  },
-  imageIconInactive: {
-    tintColor: '#8e8e93', 
-    opacity: 0.5
   }
 });
