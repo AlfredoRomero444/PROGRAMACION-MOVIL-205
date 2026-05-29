@@ -9,19 +9,19 @@ import ProjectScreen from './screens/ProjectScreen';
 
 const Tab = createBottomTabNavigator();
 
-// Enlaces estables a iconos vectoriales en formato PNG de alta calidad y fondo transparente
+// Enlaces estables corregidos a iconos vectoriales en formato PNG
 const tabIcons = {
   Perfil: {
     default: 'https://cdn-icons-png.flaticon.com/512/1077/1077063.png', // Usuario lineal
-    focused: 'https://cdn-icons-png.flaticon.com/512/1077/1077114.png', // Usuario relleno
+    focused: 'https://cdn-icons-png.flaticon.com/512/1077/1077063.png', 
   },
   Habilidades: {
-    default: 'https://cdn-icons-png.flaticon.com/512/9357/9357004.png', // Átomo / Ciencia lineal
-    focused: 'https://cdn-icons-png.flaticon.com/512/9356/9356956.png', // Átomo / Ciencia relleno
+    default: 'https://cdn-icons-png.flaticon.com/512/9351/9351717.png', // Rayo con pulso eléctrico
+    focused: 'https://cdn-icons-png.flaticon.com/512/9351/9351717.png',
   },
   'Mi Proyecto': {
-    default: 'https://cdn-icons-png.flaticon.com/512/2920/2920244.png', // Código / Computador lineal
-    focused: 'https://cdn-icons-png.flaticon.com/512/2920/2920277.png', // Código / Computador relleno
+    default: 'https://cdn-icons-png.flaticon.com/512/4213/4213179.png', // Laptop lineal corregida
+    focused: 'https://cdn-icons-png.flaticon.com/512/4213/4213179.png',
   }
 };
 
@@ -31,7 +31,6 @@ export default function App() {
       <Tab.Navigator
         screenOptions={({ route }) => ({
           tabBarIcon: ({ focused }) => {
-            // Seleccionamos la URL adecuada basándonos en si la pestaña está activa o no
             const iconUrl = focused 
               ? tabIcons[route.name as keyof typeof tabIcons].focused 
               : tabIcons[route.name as keyof typeof tabIcons].default;
@@ -40,21 +39,24 @@ export default function App() {
               <View style={[styles.iconWrapper, focused && styles.iconWrapperActive]}>
                 <Image 
                   source={{ uri: iconUrl }} 
-                  style={[styles.imageIcon, focused ? styles.imageIconActive : styles.imageIconInactive]}
+                  style={[
+                    styles.imageIcon, 
+                    focused ? styles.imageIconActive : styles.imageIconInactive
+                  ]}
                   resizeMode="contain"
                 />
               </View>
             );
           },
-          tabBarActiveTintColor: '#bf5af2', // Púrpura neón oficial
-          tabBarInactiveTintColor: '#8e8e93',
+          tabBarActiveTintColor: '#bf5af2', // Púrpura neón
+          tabBarInactiveTintColor: '#8e8e93', // Gris
           tabBarStyle: { 
             backgroundColor: '#0a0a12', 
             borderTopWidth: 1,
             borderTopColor: '#ffffff10',
-            height: 70,
+            height: 75,
             paddingBottom: 12,
-            paddingTop: 8
+            paddingTop: 10
           },
           headerStyle: { backgroundColor: '#0a0a12' },
           headerTintColor: '#fff',
@@ -72,30 +74,27 @@ export default function App() {
 const styles = StyleSheet.create({
   iconWrapper: {
     alignItems: 'center',
-    justifyContent: 'center',
-    width: 40,
-    height: 40,
-    borderRadius: 20,
+    justifyContent: 'center', // Sintaxis correcta de React Native / TypeScript
+    width: 44,
+    height: 44,
+    borderRadius: 22,
   },
-  // Contenedor con efecto de resplandor neón exterior exclusivo para el activo
   iconWrapperActive: {
     shadowColor: '#bf5af2',
     shadowOffset: { width: 0, height: 0 },
-    shadowOpacity: 0.6,
-    shadowRadius: 8,
-    backgroundColor: '#bf5af208'
+    shadowOpacity: 0.8,
+    shadowRadius: 10,
+    backgroundColor: '#bf5af212',
   },
   imageIcon: {
-    width: 22,
-    height: 22,
+    width: 26,
+    height: 26,
   },
-  // Tinte púrpura brillante para el ícono seleccionado
   imageIconActive: {
-    tintColor: '#bf5af2',
+    tintColor: '#bf5af2', 
   },
-  // Tinte grisáceo tenue para mantener baja opacidad de fondo
   imageIconInactive: {
-    tintColor: '#8e8e93',
-    opacity: 0.6
+    tintColor: '#8e8e93', 
+    opacity: 0.5
   }
 });
