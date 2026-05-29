@@ -1,15 +1,24 @@
 import React from 'react';
-import { View, Text, StyleSheet, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, Linking } from 'react-native'; // Importamos Linking
 
 const proyecto = {
   nombre: "Portafolio Móvil",
   version: "1.0.0",
   descripcion: "Aplicación funcional en React Native para evaluación parcial.",
-  repositorio: "github.com/AlfredoRomero444/PROGRAMACION-MOVIL-205",
+  // Ponemos el enlace con https:// para que Linking funcione perfectamente
+  repositorio: "https://github.com/AlfredoRomero444/PROGRAMACION-MOVIL-205",
   activo: true,
 };
 
 export default function ProjectScreen() {
+  
+  // Función para abrir el enlace en el navegador
+  const abrirLink = () => {
+    Linking.openURL(proyecto.repositorio).catch((err) => 
+      console.error("No se pudo abrir el enlace:", err)
+    );
+  };
+
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.content}>
       <Text style={styles.sectionLabel}>DETALLES DEL PROYECTO</Text>
@@ -33,7 +42,10 @@ export default function ProjectScreen() {
 
         <View style={styles.row}>
            <Text style={styles.label}>REPOSITORIO</Text>
-           <Text style={styles.link}>{proyecto.repositorio}</Text>
+           {/* Agregamos el onPress para capturar el clic y activar la función */}
+           <Text style={styles.link} onPress={abrirLink}>
+              {proyecto.repositorio.replace("https://", "")} {/* Esto quita el https:// visualmente para que se vea limpio en tu pantalla */}
+           </Text>
         </View>
       </View>
 
@@ -65,7 +77,8 @@ const styles = StyleSheet.create({
   row: { marginBottom: 15 },
   label: { color: '#8e8e93', fontSize: 10, fontWeight: '700', marginBottom: 4 },
   value: { color: '#fff', fontSize: 15 },
-  link: { color: '#0a84ff', fontSize: 13, textDecorationLine: 'underline' },
+  // Agregamos cursor: 'pointer' para que al pasar el mouse en web aparezca la manita de clic
+  link: { color: '#0a84ff', fontSize: 13, textDecorationLine: 'underline', cursor: 'pointer' }, 
   consoleBox: { 
     backgroundColor: '#000', 
     borderRadius: 20, 
@@ -82,7 +95,7 @@ const styles = StyleSheet.create({
     padding: 20, 
     fontSize: 12,
     lineHeight: 18,
-    // @ts-ignore - Esto le dice a TypeScript que ignore la validación estricta en móvil y aplique el salto de línea en Web
+    // @ts-ignore
     whiteSpace: 'pre-wrap'
   },
 });
