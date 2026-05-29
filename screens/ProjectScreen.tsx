@@ -38,11 +38,16 @@ export default function ProjectScreen() {
       </View>
 
       <Text style={[styles.sectionLabel, {marginTop: 30}]}>DEBUG DATA (JSON.stringify)</Text>
+      
       <View style={styles.consoleBox}>
         <View style={styles.consoleHeader}>
-          <View style={styles.dot} /><View style={styles.dot} /><View style={styles.dot} />
+          <View style={styles.dot} />
+          <View style={styles.dot} />
+          <View style={styles.dot} />
         </View>
-        <Text style={styles.codeText}>{JSON.stringify(proyecto, null, 2)}</Text>
+        <Text style={styles.codeText}>
+          {JSON.stringify(proyecto, null, 2)}
+        </Text>
       </View>
     </ScrollView>
   );
@@ -61,8 +66,23 @@ const styles = StyleSheet.create({
   label: { color: '#8e8e93', fontSize: 10, fontWeight: '700', marginBottom: 4 },
   value: { color: '#fff', fontSize: 15 },
   link: { color: '#0a84ff', fontSize: 13, textDecorationLine: 'underline' },
-  consoleBox: { backgroundColor: '#000', borderRadius: 20, overflow: 'hidden', borderWidth: 1, borderColor: '#bf5af244' },
+  consoleBox: { 
+    backgroundColor: '#000', 
+    borderRadius: 20, 
+    overflow: 'hidden', 
+    borderWidth: 1, 
+    borderColor: '#bf5af244',
+    width: '100%'
+  },
   consoleHeader: { flexDirection: 'row', backgroundColor: '#1c1c1e', padding: 10, gap: 5 },
   dot: { width: 6, height: 6, borderRadius: 3, backgroundColor: '#ffffff22' },
-  codeText: { color: '#bf5af2', fontFamily: 'monospace', padding: 20, fontSize: 12 },
+  codeText: { 
+    color: '#bf5af2', 
+    fontFamily: 'monospace', 
+    padding: 20, 
+    fontSize: 12,
+    lineHeight: 18,
+    // @ts-ignore - Esto le dice a TypeScript que ignore la validación estricta en móvil y aplique el salto de línea en Web
+    whiteSpace: 'pre-wrap'
+  },
 });
