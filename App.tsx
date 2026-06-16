@@ -10,11 +10,17 @@ import {
   SafeAreaProvider,
   useSafeAreaInsets,
 } from 'react-native-safe-area-context';
-import { User, Zap, Laptop } from 'lucide-react-native';
+import {
+  User,
+  Zap,
+  Laptop,
+  Disc3,
+} from 'lucide-react-native';
 
-import ProfileScreen from './screens/ProfileScreen';
-import SkillsScreen from './screens/SkillsScreen';
-import ProjectScreen from './screens/ProjectScreen';
+import ProfileScreen from './src/screens/ProfileScreen';
+import SkillsScreen from './src/screens/SkillsScreen';
+import ProjectScreen from './src/screens/ProjectScreen';
+import HomeScreen from './src/screens/HomeScreen'
 
 const Tab = createBottomTabNavigator();
 
@@ -25,17 +31,27 @@ function MainTabs() {
     <Tab.Navigator
       screenOptions={({ route }) => ({
         tabBarIcon: ({ focused }) => {
-          const iconColor = focused ? '#bf5af2' : '#8e8e93';
-          const iconOpacity = focused ? 1 : 0.5;
+          const iconColor = focused
+            ? '#bf5af2'
+            : '#8e8e93';
+
+          const iconOpacity = focused
+            ? 1
+            : 0.5;
 
           return (
             <View
               style={[
                 styles.iconWrapper,
-                focused && styles.iconWrapperActive,
+                focused &&
+                  styles.iconWrapperActive,
               ]}
             >
-              <View style={{ opacity: iconOpacity }}>
+              <View
+                style={{
+                  opacity: iconOpacity,
+                }}
+              >
                 {route.name === 'Perfil' && (
                   <User
                     color={iconColor}
@@ -52,8 +68,18 @@ function MainTabs() {
                   />
                 )}
 
-                {route.name === 'Mi Proyecto' && (
+                {route.name ===
+                  'Mi Proyecto' && (
                   <Laptop
+                    color={iconColor}
+                    size={18}
+                    strokeWidth={2}
+                  />
+                )}
+
+                {route.name ===
+                  'Tienda' && (
+                  <Disc3
                     color={iconColor}
                     size={18}
                     strokeWidth={2}
@@ -64,8 +90,11 @@ function MainTabs() {
           );
         },
 
-        tabBarActiveTintColor: '#bf5af2',
-        tabBarInactiveTintColor: '#8e8e93',
+        tabBarActiveTintColor:
+          '#bf5af2',
+
+        tabBarInactiveTintColor:
+          '#8e8e93',
 
         tabBarLabelStyle: {
           fontSize: 10,
@@ -76,11 +105,15 @@ function MainTabs() {
         tabBarStyle: {
           backgroundColor: '#0a0a12',
           borderTopWidth: 1.5,
-          borderTopColor: '#bf5af230',
+          borderTopColor:
+            '#bf5af230',
 
           height: 60 + insets.bottom,
           paddingTop: 4,
-          paddingBottom: Math.max(insets.bottom, 8),
+          paddingBottom: Math.max(
+            insets.bottom,
+            8
+          ),
         },
 
         headerStyle: {
@@ -108,6 +141,11 @@ function MainTabs() {
       <Tab.Screen
         name="Mi Proyecto"
         component={ProjectScreen}
+      />
+
+      <Tab.Screen
+        name="Tienda"
+        component={HomeScreen}
       />
     </Tab.Navigator>
   );
