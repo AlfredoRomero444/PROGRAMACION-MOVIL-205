@@ -73,7 +73,7 @@ export default function ProfileScreen() {
       </View>
 
       <View style={styles.localImageContainer}>
-        <Text style={styles.label}>IMAGEN FROM LOCAL</Text>
+        <Text style={styles.localImageLabel}>IMAGEN FROM LOCAL</Text>
 
         <View style={styles.neonOrbit}>
           <Image
@@ -195,7 +195,17 @@ const styles = StyleSheet.create({
   },
 
   localImageContainer: {
-    marginTop: 30,
+    marginTop: 40,
     alignItems: 'center',
+    width: '100%',
+  },
+
+  localImageLabel: {
+    color: '#bf5af2',
+    fontSize: 10,
+    fontWeight: '700',
+    marginBottom: 18,
+    textAlign: 'center',
+    letterSpacing: 0.5,
   },
 });

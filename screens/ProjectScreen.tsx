@@ -20,14 +20,26 @@ const proyecto = {
     'https://www.instagram.com/asyd.g1?igsh=ZG92M2V0NXlsN2du',
   facebook:
     'https://www.facebook.com/share/1Ggccb14Jk/',
+  tiktok:
+    'https://www.tiktok.com/@asyd.g1',
   activo: true,
 };
 
 export default function ProjectScreen() {
-  const abrirRepositorio = () => {
-    Linking.openURL(proyecto.repositorio).catch((err) =>
-      console.error('No se pudo abrir el repositorio:', err)
-    );
+  const abrirRepositorio = async () => {
+    const appUrl = 'https://www.github.com://AlfredoRomero444/PROGRAMACION-MOVIL-205';
+
+    try {
+      const supported = await Linking.canOpenURL(appUrl);
+
+      if (supported) {
+        await Linking.openURL(appUrl);
+      } else {
+        await Linking.openURL(proyecto.repositorio);
+      }
+    } catch (error) {
+      console.error('No se pudo abrir el repositorio:', error);
+    }
   };
 
   const abrirInstagram = async () => {
@@ -60,6 +72,22 @@ export default function ProjectScreen() {
       }
     } catch (error) {
       console.error('No se pudo abrir Facebook:', error);
+    }
+  };
+
+  const abrirTiktok = async () => {
+    const appUrl = 'tiktok://user?username=asyd.g1';
+
+    try {
+      const supported = await Linking.canOpenURL(appUrl);
+
+      if (supported) {
+        await Linking.openURL(appUrl);
+      } else {
+        await Linking.openURL(proyecto.tiktok);
+      }
+    } catch (error) {
+      console.error('No se pudo abrir TikTok:', error);
     }
   };
 
@@ -119,20 +147,25 @@ export default function ProjectScreen() {
           </Text>
         </View>
 
-        <View style={styles.row}>
-          <Text style={styles.label}>
-            REPOSITORIO
-          </Text>
+        <View style={styles.githubCard}>
+          <Ionicons
+            name="logo-github"
+            size={22}
+            color="#ffffff"
+          />
 
-          <Text
-            style={styles.link}
-            onPress={abrirRepositorio}
-          >
-            {proyecto.repositorio.replace(
-              'https://',
-              ''
-            )}
-          </Text>
+          <View style={styles.githubContent}>
+            <Text style={styles.label}>
+              REPOSITORIO
+            </Text>
+
+            <Text
+              style={styles.githubLink}
+              onPress={abrirRepositorio}
+            >
+              {proyecto.repositorio.replace('https://', '')}
+            </Text>
+          </View>
         </View>
 
         <View style={styles.instagramCard}>
@@ -173,6 +206,27 @@ export default function ProjectScreen() {
               onPress={abrirFacebook}
             >
               Asyd Gaze
+            </Text>
+          </View>
+        </View>
+
+        <View style={styles.tiktokCard}>
+          <Ionicons
+            name="logo-tiktok"
+            size={22}
+            color="#ffffff"
+          />
+
+          <View style={styles.tiktokContent}>
+            <Text style={styles.label}>
+              TIKTOK
+            </Text>
+
+            <Text
+              style={styles.tiktokLink}
+              onPress={abrirTiktok}
+            >
+              @asyd.g1
             </Text>
           </View>
         </View>
@@ -307,9 +361,25 @@ const styles = StyleSheet.create({
     color: '#32d74b',
   },
 
-  link: {
-    color: '#0a84ff',
+  githubCard: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#ffffff08',
+    borderRadius: 15,
+    padding: 12,
+    marginTop: 5,
+    borderWidth: 1,
+    borderColor: '#ffffff10',
+  },
+
+  githubContent: {
+    marginLeft: 12,
+  },
+
+  githubLink: {
+    color: '#fff',
     fontSize: 13,
+    fontWeight: '700',
     textDecorationLine: 'underline',
   },
 
@@ -319,7 +389,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#ffffff08',
     borderRadius: 15,
     padding: 12,
-    marginTop: 5,
+    marginTop: 10,
     borderWidth: 1,
     borderColor: '#ffffff10',
   },
@@ -353,6 +423,30 @@ const styles = StyleSheet.create({
     color: '#1877F2',
     fontSize: 14,
     fontWeight: '700',
+  },
+
+  tiktokCard: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#ffffff08',
+    borderRadius: 15,
+    padding: 12,
+    marginTop: 10,
+    borderWidth: 1,
+    borderColor: '#ffffff10',
+  },
+
+  tiktokContent: {
+    marginLeft: 12,
+  },
+
+  tiktokLink: {
+    color: '#25F4EE',
+    fontSize: 14,
+    fontWeight: '700',
+    textShadowColor: '#FE2C55',
+    textShadowOffset: { width: 1, height: 0 },
+    textShadowRadius: 1,
   },
 
   consoleBox: {
