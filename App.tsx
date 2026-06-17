@@ -20,7 +20,7 @@ import {
 import ProfileScreen from './src/screens/ProfileScreen';
 import SkillsScreen from './src/screens/SkillsScreen';
 import ProjectScreen from './src/screens/ProjectScreen';
-import HomeScreen from './src/screens/HomeScreen'
+import HomeScreen from './src/screens/HomeScreen';
 
 const Tab = createBottomTabNavigator();
 
