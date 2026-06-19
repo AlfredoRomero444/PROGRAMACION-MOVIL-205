@@ -3,161 +3,148 @@ import {
   View,
   Text,
   StyleSheet,
-  FlatList,
+  ScrollView,
   Image,
-  TouchableOpacity,
-  Alert,
+  FlatList,
 } from 'react-native';
 
-import { discos, artistas } from '../services/DiscosService';
-import { Disco } from '../types/index';
+import {
+  discos,
+  artistas,
+} from '../services/DiscosService';
 
 export default function HomeScreen() {
-  const getArtista = (id: number) => {
-    return artistas.find(
-      artista => artista.id === id
-    );
-  };
 
-  const handleOferta = (disco: Disco) => {
-    const nuevaOferta =
-      disco.precioActual + 100;
+  // ✅ DESTACADO FIJO (Asyd G)
+  const destacado = discos.find(d => d.id === 16)!;
 
-    Alert.alert(
-      'Confirmar oferta',
-      `¿Deseas ofertar $${nuevaOferta} por ${disco.nombre}?`,
-      [
-        {
-          text: 'Cancelar',
-          style: 'cancel',
-        },
-        {
-          text: 'Ofertar',
-          onPress: () =>
-            Alert.alert(
-              'Oferta enviada',
-              `Tu oferta de $${nuevaOferta} fue registrada correctamente.`
-            ),
-        },
-      ]
-    );
-  };
-
-  const renderDisco = ({
-    item,
-  }: {
-    item: Disco;
-  }) => {
-    const artista = getArtista(
-      item.artistaId
-    );
-
-    return (
-      <View style={styles.card}>
-        <Image
-          source={
-            typeof item.imagen === 'string'
-              ? { uri: item.imagen }
-              : item.imagen
-          }
-          style={styles.imagen}
-        />
-
-        <View style={styles.content}>
-          <Text style={styles.nombre}>
-            {item.nombre}
-          </Text>
-
-          <Text style={styles.artista}>
-            {artista?.nombre}
-          </Text>
-
-          <Text style={styles.genero}>
-            {artista?.genero} •{' '}
-            {artista?.pais}
-          </Text>
-
-          <Text style={styles.descripcion}>
-            {item.descripcion}
-          </Text>
-
-          <View style={styles.statsRow}>
-            <View style={styles.statBox}>
-              <Text style={styles.statLabel}>
-                PRECIO INICIAL
-              </Text>
-
-              <Text style={styles.statValue}>
-                ${item.precioInicial}
-              </Text>
-            </View>
-
-            <View style={styles.statBox}>
-              <Text style={styles.statLabel}>
-                OFERTA ACTUAL
-              </Text>
-
-              <Text style={styles.statValue}>
-                ${item.precioActual}
-              </Text>
-            </View>
-          </View>
-
-          <View style={styles.priceBox}>
-            <Text style={styles.priceLabel}>
-              SUBASTA ACTIVA
-            </Text>
-
-            <Text style={styles.price}>
-              ${item.precioActual}
-            </Text>
-          </View>
-
-          <Text style={styles.fecha}>
-            FINALIZA: {item.fechaFin}
-          </Text>
-
-          <TouchableOpacity
-            style={styles.button}
-            onPress={() =>
-              handleOferta(item)
-            }
-          >
-            <Text
-              style={styles.buttonText}
-            >
-              OFERTAR +$100
-            </Text>
-          </TouchableOpacity>
-        </View>
-      </View>
-    );
-  };
+  const nuevosArtistas = artistas.slice(0, 8);
 
   return (
-    <View style={styles.container}>
+    <ScrollView
+      style={styles.container}
+      contentContainerStyle={styles.content}
+      showsVerticalScrollIndicator={false}
+    >
       <Text style={styles.sectionLabel}>
-        Albums / Singles
+        DESCUBRE NUEVA MÚSICA
+      </Text>
+
+      <Text style={styles.title}>
+        Bienvenido a Pulse Music
       </Text>
 
       <Text style={styles.subtitle}>
-        Catálogo Premium Álbumes & Singles
+        Explora artistas, álbumes y colecciones exclusivas.
       </Text>
 
+      {/* 🔥 BANNER */}
+      <View style={styles.banner}>
+        <View style={styles.bannerContent}>
+          <Text style={styles.bannerTag}>
+            TENDENCIA
+          </Text>
+
+          <Text style={styles.bannerTitle}>
+            {destacado.nombre}
+          </Text>
+
+          <Text style={styles.bannerArtist}>
+            {
+              artistas.find(a => a.id === destacado.artistaId)?.nombre
+            }
+          </Text>
+        </View>
+
+        <Image
+          source={
+            typeof destacado.imagen === 'string'
+              ? { uri: destacado.imagen }
+              : destacado.imagen
+          }
+          style={styles.bannerImage}
+        />
+      </View>
+
+      {/* ARTISTAS */}
+      <View style={styles.sectionHeader}>
+        <Text style={styles.sectionTitle}>
+          Artistas destacados
+        </Text>
+
+        <Text style={styles.sectionAction}>
+          Ver más
+        </Text>
+      </View>
+
       <FlatList
-        data={discos}
-        keyExtractor={item =>
-          item.id.toString()
-        }
-        renderItem={renderDisco}
-        showsVerticalScrollIndicator={
-          false
-        }
-        contentContainerStyle={
-          styles.list
-        }
+        horizontal
+        data={nuevosArtistas}
+        keyExtractor={item => item.id.toString()}
+        showsHorizontalScrollIndicator={false}
+        contentContainerStyle={styles.artistList}
+        renderItem={({ item }) => (
+          <View style={styles.artistCard}>
+            <Image
+              source={
+                typeof item.imagen === 'string'
+                  ? { uri: item.imagen }
+                  : item.imagen
+              }
+              style={styles.artistImage}
+            />
+
+            <Text numberOfLines={1} style={styles.artistName}>
+              {item.nombre}
+            </Text>
+
+            <Text style={styles.artistGenre}>
+              {item.genero}
+            </Text>
+          </View>
+        )}
       />
-    </View>
+
+      {/* ÁLBUMES */}
+      <View style={styles.sectionHeader}>
+        <Text style={styles.sectionTitle}>
+          Álbumes populares
+        </Text>
+      </View>
+
+      {discos.map(disco => {
+        const artista = artistas.find(
+          a => a.id === disco.artistaId
+        );
+
+        return (
+          <View key={disco.id} style={styles.albumCard}>
+            <Image
+              source={
+                typeof disco.imagen === 'string'
+                  ? { uri: disco.imagen }
+                  : disco.imagen
+              }
+              style={styles.albumImage}
+            />
+
+            <View style={styles.albumInfo}>
+              <Text style={styles.albumName}>
+                {disco.nombre}
+              </Text>
+
+              <Text style={styles.albumArtist}>
+                {artista?.nombre}
+              </Text>
+
+              <Text style={styles.albumPrice}>
+                Desde ${disco.precioActual}
+              </Text>
+            </View>
+          </View>
+        );
+      })}
+    </ScrollView>
   );
 }
 
@@ -165,143 +152,162 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#090912',
-    paddingTop: 20,
+  },
+
+  content: {
+    padding: 25,
+    paddingBottom: 120,
   },
 
   sectionLabel: {
     color: '#bf5af2',
-    fontSize: 12,
+    fontSize: 11,
     fontWeight: '800',
     letterSpacing: 2,
-    marginHorizontal: 25,
+  },
+
+  title: {
+    color: '#ffffff',
+    fontSize: 34,
+    fontWeight: '900',
+    marginTop: 10,
   },
 
   subtitle: {
     color: '#8e8e93',
-    fontSize: 14,
-    marginHorizontal: 25,
-    marginTop: 5,
-    marginBottom: 20,
+    fontSize: 15,
+    lineHeight: 22,
+    marginTop: 10,
+    marginBottom: 30,
   },
 
-  list: {
-    paddingHorizontal: 25,
-    paddingBottom: 120,
-  },
-
-  card: {
+  banner: {
     backgroundColor: '#151525',
     borderRadius: 30,
-    overflow: 'hidden',
-    marginBottom: 20,
+    padding: 20,
+    marginBottom: 30,
+    flexDirection: 'row',
+    alignItems: 'center',
     borderWidth: 1,
     borderColor: '#ffffff10',
   },
 
-  imagen: {
-    width: '100%',
-    height: 220,
+  bannerContent: {
+    flex: 1,
+    marginRight: 15,
   },
 
-  content: {
-    padding: 20,
+  bannerTag: {
+    color: '#bf5af2',
+    fontSize: 11,
+    fontWeight: '800',
+    letterSpacing: 2,
   },
 
-  nombre: {
-    color: '#fff',
+  bannerTitle: {
+    color: '#ffffff',
     fontSize: 24,
     fontWeight: 'bold',
+    marginTop: 12,
   },
 
-  artista: {
-    color: '#bf5af2',
-    fontSize: 16,
+  bannerArtist: {
+    color: '#8e8e93',
+    fontSize: 15,
+    marginTop: 6,
+  },
+
+  bannerImage: {
+    width: 110,
+    height: 110,
+    borderRadius: 20,
+  },
+
+  sectionHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 18,
+    marginTop: 10,
+  },
+
+  sectionTitle: {
+    color: '#ffffff',
+    fontSize: 20,
     fontWeight: '700',
-    marginTop: 8,
   },
 
-  genero: {
+  sectionAction: {
+    color: '#bf5af2',
+    fontWeight: '600',
+  },
+
+  artistList: {
+    paddingBottom: 15,
+  },
+
+  artistCard: {
+    width: 120,
+    marginRight: 15,
+  },
+
+  artistImage: {
+    width: 120,
+    height: 120,
+    borderRadius: 24,
+    marginBottom: 10,
+  },
+
+  artistName: {
+    color: '#ffffff',
+    fontSize: 14,
+    fontWeight: '700',
+  },
+
+  artistGenre: {
     color: '#8e8e93',
     fontSize: 12,
     marginTop: 4,
   },
 
-  descripcion: {
-    color: '#fff',
-    marginTop: 15,
-    lineHeight: 22,
-    fontSize: 14,
-  },
-
-  statsRow: {
+  albumCard: {
+    backgroundColor: '#151525',
+    borderRadius: 24,
+    padding: 15,
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginTop: 18,
-  },
-
-  statBox: {
-    width: '48%',
-    backgroundColor: '#090912',
-    padding: 15,
-    borderRadius: 20,
     alignItems: 'center',
-  },
-
-  statLabel: {
-    color: '#bf5af2',
-    fontSize: 10,
-    fontWeight: '700',
-    marginBottom: 5,
-  },
-
-  statValue: {
-    color: '#fff',
-    fontSize: 18,
-    fontWeight: 'bold',
-  },
-
-  priceBox: {
-    marginTop: 18,
-    backgroundColor: '#090912',
-    borderRadius: 20,
-    padding: 15,
-    alignItems: 'center',
+    marginBottom: 15,
     borderWidth: 1,
-    borderColor: '#bf5af230',
+    borderColor: '#ffffff10',
   },
 
-  priceLabel: {
-    color: '#bf5af2',
-    fontSize: 10,
+  albumImage: {
+    width: 75,
+    height: 75,
+    borderRadius: 18,
+  },
+
+  albumInfo: {
+    flex: 1,
+    marginLeft: 15,
+  },
+
+  albumName: {
+    color: '#ffffff',
+    fontSize: 17,
     fontWeight: '700',
   },
 
-  price: {
-    color: '#32d74b',
-    fontSize: 30,
-    fontWeight: 'bold',
+  albumArtist: {
+    color: '#8e8e93',
+    fontSize: 14,
     marginTop: 5,
   },
 
-  fecha: {
-    color: '#8e8e93',
-    fontSize: 12,
-    marginTop: 15,
-    textAlign: 'center',
-  },
-
-  button: {
-    backgroundColor: '#bf5af2',
-    marginTop: 18,
-    paddingVertical: 14,
-    borderRadius: 20,
-    alignItems: 'center',
-  },
-
-  buttonText: {
-    color: '#fff',
-    fontWeight: '800',
-    fontSize: 14,
-    letterSpacing: 1,
+  albumPrice: {
+    color: '#32d74b',
+    fontSize: 15,
+    fontWeight: '700',
+    marginTop: 10,
   },
 });
