@@ -227,7 +227,7 @@ export const discos: Disco[] = [
   {
     id: 16,
     nombre: 'Y TÚ NO',
-    descripcion: 'Sencillo de Asyd G.',
+    descripcion: 'Álbum de Asyd G.',
     imagen: require('../../assets/ytuno.jpg'),
     precioInicial: 180,
     precioActual: 240,
