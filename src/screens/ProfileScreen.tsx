@@ -102,7 +102,7 @@ export default function ProfileScreen() {
       {/* Avatar */}
       <View style={styles.avatarWrapper}>
         <Image
-          source={require('../../assets/profile.jpg')}
+          source={require('../../assets/perfil.jpg')}
           style={styles.avatar}
         />
       </View>
