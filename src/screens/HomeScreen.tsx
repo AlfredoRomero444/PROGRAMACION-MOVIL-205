@@ -6,19 +6,31 @@ import {
   ScrollView,
   Image,
   FlatList,
+  ActivityIndicator,
 } from 'react-native';
 
-import {
-  discos,
-  artistas,
-} from '../services/DiscosService';
+import { useProductos } from '../hooks/useProductos';
 
 export default function HomeScreen() {
+  const { productos, cargando, getArtesano } = useProductos();
+
+  
+  if (cargando) {
+    return (
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color="#bf5af2" />
+        <Text style={styles.loadingText}>Cargando catálogo...</Text>
+      </View>
+    );
+  }
 
   // ✅ DESTACADO FIJO (Asyd G)
-  const destacado = discos.find(d => d.id === 16)!;
+  const destacado = productos.find(d => d.id === 16)!;
 
-  const nuevosArtistas = artistas.slice(0, 8);
+  const nuevosArtistas = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+    .map(id => getArtesano(id))
+    .filter(Boolean)
+    .slice(0, 8);
 
   return (
     <ScrollView
@@ -31,7 +43,7 @@ export default function HomeScreen() {
       </Text>
 
       <Text style={styles.title}>
-        Bienvenido a Pulse Music
+        Welcome to Asyd Core
       </Text>
 
       <Text style={styles.subtitle}>
@@ -39,32 +51,32 @@ export default function HomeScreen() {
       </Text>
 
       {/* 🔥 BANNER */}
-      <View style={styles.banner}>
-        <View style={styles.bannerContent}>
-          <Text style={styles.bannerTag}>
-            TENDENCIA
-          </Text>
+      {destacado && (
+        <View style={styles.banner}>
+          <View style={styles.bannerContent}>
+            <Text style={styles.bannerTag}>
+              TENDENCIA
+            </Text>
 
-          <Text style={styles.bannerTitle}>
-            {destacado.nombre}
-          </Text>
+            <Text style={styles.bannerTitle}>
+              {destacado.nombre}
+            </Text>
 
-          <Text style={styles.bannerArtist}>
-            {
-              artistas.find(a => a.id === destacado.artistaId)?.nombre
+            <Text style={styles.bannerArtist}>
+              {getArtesano(destacado.artistaId)?.nombre}
+            </Text>
+          </View>
+
+          <Image
+            source={
+              typeof destacado.imagen === 'string'
+                ? { uri: destacado.imagen }
+                : destacado.imagen
             }
-          </Text>
+            style={styles.bannerImage}
+          />
         </View>
-
-        <Image
-          source={
-            typeof destacado.imagen === 'string'
-              ? { uri: destacado.imagen }
-              : destacado.imagen
-          }
-          style={styles.bannerImage}
-        />
-      </View>
+      )}
 
       {/* ARTISTAS */}
       <View style={styles.sectionHeader}>
@@ -80,26 +92,26 @@ export default function HomeScreen() {
       <FlatList
         horizontal
         data={nuevosArtistas}
-        keyExtractor={item => item.id.toString()}
+        keyExtractor={item => item!.id.toString()}
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={styles.artistList}
         renderItem={({ item }) => (
           <View style={styles.artistCard}>
             <Image
               source={
-                typeof item.imagen === 'string'
-                  ? { uri: item.imagen }
-                  : item.imagen
+                typeof item!.imagen === 'string'
+                  ? { uri: item!.imagen }
+                  : item!.imagen
               }
               style={styles.artistImage}
             />
 
             <Text numberOfLines={1} style={styles.artistName}>
-              {item.nombre}
+              {item!.nombre}
             </Text>
 
             <Text style={styles.artistGenre}>
-              {item.genero}
+              {item!.genero}
             </Text>
           </View>
         )}
@@ -112,10 +124,8 @@ export default function HomeScreen() {
         </Text>
       </View>
 
-      {discos.map(disco => {
-        const artista = artistas.find(
-          a => a.id === disco.artistaId
-        );
+      {productos.map(disco => {
+        const artista = getArtesano(disco.artistaId);
 
         return (
           <View key={disco.id} style={styles.albumCard}>
@@ -157,6 +167,19 @@ const styles = StyleSheet.create({
   content: {
     padding: 25,
     paddingBottom: 120,
+  },
+
+  loadingContainer: {
+    flex: 1,
+    backgroundColor: '#090912',
+    justifyContent: 'center',
+    alignItems: 'center',
+    gap: 16,
+  },
+
+  loadingText: {
+    color: '#8e8e93',
+    fontSize: 14,
   },
 
   sectionLabel: {

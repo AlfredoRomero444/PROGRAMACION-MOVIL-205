@@ -30,7 +30,7 @@ export default function StoreScreen() {
     <View style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.sectionLabel}>CATÁLOGO</Text>
-        <Text style={styles.title}>Tienda Musical</Text>
+        <Text style={styles.title}>Music Store</Text>
         <Text style={styles.subtitle}>
           {discos.length} discos disponibles para coleccionar
         </Text>

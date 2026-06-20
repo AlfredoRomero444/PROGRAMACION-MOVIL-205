@@ -42,7 +42,7 @@ export default function ExploreScreen() {
     <View style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.sectionLabel}>EXPLORA</Text>
-        <Text style={styles.title}>Por género</Text>
+        <Text style={styles.title}>By musical genre</Text>
         <Text style={styles.subtitle}>
           Encuentra artistas y discos según tu estilo
         </Text>
