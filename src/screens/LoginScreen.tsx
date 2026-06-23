@@ -37,7 +37,7 @@ export default function LoginScreen({
   return (
     <View style={styles.container}>
       <Text style={styles.title}>
-        MusicWave
+        Asyd Core.✧⋆
       </Text>
 
       <Text style={styles.subtitle}>

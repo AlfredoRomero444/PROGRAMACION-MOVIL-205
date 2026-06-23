@@ -43,7 +43,7 @@ export default function HomeScreen() {
       </Text>
 
       <Text style={styles.title}>
-        Welcome to Asyd Core
+        Welcome to{'\n'}Asyd Core.✧⋆
       </Text>
 
       <Text style={styles.subtitle}>

@@ -42,167 +42,92 @@ type TabParamList = {
   Perfil: undefined;
 };
 
-type LoginScreenProps = NativeStackScreenProps<
-  RootStackParamList,
-  'Login'
->;
+type LoginScreenProps = NativeStackScreenProps<RootStackParamList, 'Login'>;
 
-const Stack =
-  createNativeStackNavigator<RootStackParamList>();
+const Stack = createNativeStackNavigator<RootStackParamList>();
+const Tab   = createBottomTabNavigator<TabParamList>();
 
-const Tab =
-  createBottomTabNavigator<TabParamList>();
-
-function MainTabs() {
+// ── MainTabs recibe onLogout y lo inyecta en ProfileScreen ──────
+function MainTabs({ onLogout }: { onLogout: () => void }) {
   const insets = useSafeAreaInsets();
 
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
-        headerStyle: {
-          backgroundColor: '#0a0a12',
-        },
-
+        headerStyle: { backgroundColor: '#0a0a12' },
         headerTintColor: '#fff',
-
         headerShadowVisible: false,
-
-        headerTitleStyle: {
-          fontWeight: '700',
-          fontSize: 18,
-        },
-
+        headerTitleStyle: { fontWeight: '700', fontSize: 18 },
         tabBarActiveTintColor: '#bf5af2',
-
         tabBarInactiveTintColor: '#8e8e93',
-
         tabBarStyle: {
           backgroundColor: '#0a0a12',
           borderTopWidth: 1.5,
           borderTopColor: '#bf5af230',
           height: 60 + insets.bottom,
           paddingTop: 4,
-          paddingBottom: Math.max(
-            insets.bottom,
-            8
-          ),
+          paddingBottom: Math.max(insets.bottom, 8),
         },
-
         tabBarLabelStyle: {
           fontSize: 10,
           fontWeight: '600',
           marginBottom: 3,
           marginTop: -2,
         },
-
         tabBarIcon: ({ focused, color }) => (
-          <View
-            style={[
-              styles.iconWrapper,
-              focused &&
-                styles.iconWrapperActive,
-            ]}
-          >
-            {route.name === 'Inicio' && (
-              <House
-                color={color}
-                size={18}
-                strokeWidth={2}
-              />
-            )}
-
-            {route.name === 'Explorar' && (
-              <Search
-                color={color}
-                size={18}
-                strokeWidth={2}
-              />
-            )}
-
-            {route.name === 'Tienda' && (
-              <Disc3
-                color={color}
-                size={18}
-                strokeWidth={2}
-              />
-            )}
-
-            {route.name === 'Perfil' && (
-              <User
-                color={color}
-                size={18}
-                strokeWidth={2}
-              />
-            )}
+          <View style={[styles.iconWrapper, focused && styles.iconWrapperActive]}>
+            {route.name === 'Inicio'   && <House  color={color} size={18} strokeWidth={2} />}
+            {route.name === 'Explorar' && <Search color={color} size={18} strokeWidth={2} />}
+            {route.name === 'Tienda'   && <Disc3  color={color} size={18} strokeWidth={2} />}
+            {route.name === 'Perfil'   && <User   color={color} size={18} strokeWidth={2} />}
           </View>
         ),
       })}
     >
-      <Tab.Screen
-        name="Inicio"
-        component={HomeScreen}
-      />
+      <Tab.Screen name="Inicio"   component={HomeScreen}    />
+      <Tab.Screen name="Explorar" component={ExploreScreen} />
+      <Tab.Screen name="Tienda"   component={StoreScreen}   />
 
-      <Tab.Screen
-        name="Explorar"
-        component={ExploreScreen}
-      />
-
-      <Tab.Screen
-        name="Tienda"
-        component={StoreScreen}
-      />
-
-      <Tab.Screen
-        name="Perfil"
-        component={ProfileScreen}
-      />
+      {/*
+        ProfileScreen necesita onLogout → no podemos usar `component=`
+        directamente, así que usamos la forma children render prop,
+        que es la misma técnica que ya usas en el Stack para LoginScreen.
+      */}
+      <Tab.Screen name="Perfil">
+        {() => <ProfileScreen onLogout={onLogout} />}
+      </Tab.Screen>
     </Tab.Navigator>
   );
 }
 
+// ── App ─────────────────────────────────────────────────────────
 export default function App() {
-  const [isLogged, setIsLogged] =
-    useState(false);
+  const [isLogged, setIsLogged] = useState(false);
 
   return (
     <SafeAreaProvider>
-      <StatusBar
-        barStyle="light-content"
-        backgroundColor="#0a0a12"
-      />
+      <StatusBar barStyle="light-content" backgroundColor="#0a0a12" />
 
       <NavigationContainer>
-        <Stack.Navigator
-          screenOptions={{
-            headerShown: false,
-          }}
-        >
+        <Stack.Navigator screenOptions={{ headerShown: false }}>
           {!isLogged ? (
             <>
               <Stack.Screen name="Login">
-                {(
-                  props: LoginScreenProps
-                ) => (
+                {(props: LoginScreenProps) => (
                   <LoginScreen
                     {...props}
-                    onLogin={() =>
-                      setIsLogged(true)
-                    }
+                    onLogin={() => setIsLogged(true)}
                   />
                 )}
               </Stack.Screen>
 
-              <Stack.Screen
-                name="Register"
-                component={RegisterScreen}
-              />
+              <Stack.Screen name="Register" component={RegisterScreen} />
             </>
           ) : (
-            <Stack.Screen
-              name="MainTabs"
-              component={MainTabs}
-            />
+            <Stack.Screen name="MainTabs">
+              {/* Pasamos onLogout a MainTabs, que lo baja hasta ProfileScreen */}
+              {() => <MainTabs onLogout={() => setIsLogged(false)} />}
+            </Stack.Screen>
           )}
         </Stack.Navigator>
       </NavigationContainer>
@@ -218,19 +143,11 @@ const styles = StyleSheet.create({
     height: 32,
     borderRadius: 16,
   },
-
   iconWrapperActive: {
     backgroundColor: '#bf5af215',
-
     shadowColor: '#bf5af2',
-
-    shadowOffset: {
-      width: 0,
-      height: 0,
-    },
-
+    shadowOffset: { width: 0, height: 0 },
     shadowOpacity: 0.9,
-
     shadowRadius: 8,
   },
 });
