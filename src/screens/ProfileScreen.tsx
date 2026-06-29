@@ -13,7 +13,8 @@ import {
   KeyboardAvoidingView,
   Platform,
 } from 'react-native';
-import { Svg, Path, G, Defs, LinearGradient, Stop, Rect, Circle } from 'react-native-svg';
+import { useTheme } from '../context/ThemeContext';
+import { Svg, Path, Defs, LinearGradient, Stop, Rect, Circle } from 'react-native-svg';
 
 type ApiStatus = 'idle' | 'loading' | 'success' | 'error';
 
@@ -52,7 +53,6 @@ interface UserData {
   playlists: number;
 }
 
-// ── Props ────────────────────────────────────────────────────────
 interface ProfileScreenProps {
   onLogout: () => void;
 }
@@ -103,49 +103,19 @@ const TikTokIcon = ({ size = 20 }: { size?: number }) => (
       d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V8.95a8.2 8.2 0 0 0 4.79 1.53V7.05a4.85 4.85 0 0 1-1.02-.36z"
       fill="#69C9D0"
     />
-    <Path
-      d="M18.57 6.33a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V8.95a8.2 8.2 0 0 0 4.79 1.53V7.05a4.85 4.85 0 0 1-1.02-.36z"
-      fill="#EE1D52"
-      opacity="0.6"
-    />
-    <Path
-      d="M16.57 6.33a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V8.95a8.2 8.2 0 0 0 4.79 1.53V7.05a4.85 4.85 0 0 1-1.02-.36z"
-      fill="#fff"
-      opacity="0.9"
-    />
   </Svg>
 );
-// ────────────────────────────────────────────────────────────────
 
 const SOCIAL_LINKS = [
-  {
-    id: 'instagram',
-    username: '@asyd.g1',
-    url: 'https://www.instagram.com/asyd.g1?igsh=ZG92M2V0NXlsN2du',
-    Icon: InstagramIcon,
-  },
-  {
-    id: 'facebook',
-    username: 'Asyd Gaze',
-    url: 'https://www.facebook.com/share/1Ggccb14Jk/',
-    Icon: FacebookIcon,
-  },
-  {
-    id: 'tiktok',
-    username: '@asyd.g1',
-    url: 'https://www.tiktok.com/@asyd.g1',
-    Icon: TikTokIcon,
-  },
-  {
-    id: 'github',
-    username: 'AlfredoRomero444',
-    url: 'https://github.com/AlfredoRomero444',
-    Icon: GitHubIcon,
-  },
+  { id: 'instagram', username: '@asyd.g1',        url: 'https://www.instagram.com/asyd.g1?igsh=ZG92M2V0NXlsN2du', Icon: InstagramIcon },
+  { id: 'facebook',  username: 'Asyd Gaze',        url: 'https://www.facebook.com/share/1Ggccb14Jk/',              Icon: FacebookIcon  },
+  { id: 'tiktok',    username: '@asyd.g1',          url: 'https://www.tiktok.com/@asyd.g1',                         Icon: TikTokIcon    },
+  { id: 'github',    username: 'AlfredoRomero444',  url: 'https://github.com/AlfredoRomero444',                     Icon: GitHubIcon    },
 ];
 
 export default function ProfileScreen({ onLogout }: ProfileScreenProps) {
-  // ── Estado del usuario (editable) ───────────────────────────
+  const { colors, theme, toggleTheme } = useTheme();
+
   const [usuario, setUsuario] = useState<UserData>({
     nombre: 'Asyd G.✧⋆',
     correo: 'asydg1@gmail.com',
@@ -154,34 +124,19 @@ export default function ProfileScreen({ onLogout }: ProfileScreenProps) {
     playlists: 8,
   });
 
-  // ── Estado del modal de edición ─────────────────────────────
-  const [editModalVisible, setEditModalVisible] = useState(false);
-  const [editForm, setEditForm] = useState<UserData>({ ...usuario });
-
-  // ── Estado del modal de logout ───────────────────────────────
+  const [editModalVisible,  setEditModalVisible]  = useState(false);
+  const [editForm,          setEditForm]           = useState<UserData>({ ...usuario });
   const [logoutModalVisible, setLogoutModalVisible] = useState(false);
+  const [errorModalVisible,  setErrorModalVisible]  = useState(false);
 
-  const openEditModal = () => {
-    setEditForm({ ...usuario }); // pre-cargar con datos actuales
-    setEditModalVisible(true);
-  };
-
-  // ── Estado del modal de error de validación ─────────────────
-  const [errorModalVisible, setErrorModalVisible] = useState(false);
-
+  const openEditModal = () => { setEditForm({ ...usuario }); setEditModalVisible(true); };
   const saveEdit = () => {
-    if (!editForm.nombre.trim() || !editForm.correo.trim()) {
-      setErrorModalVisible(true);
-      return;
-    }
+    if (!editForm.nombre.trim() || !editForm.correo.trim()) { setErrorModalVisible(true); return; }
     setUsuario({ ...editForm });
     setEditModalVisible(false);
   };
-
-  // ── Logout con confirmación ──────────────────────────────────
   const handleLogout = () => setLogoutModalVisible(true);
 
-  // ── Artistas / géneros (estáticos) ───────────────────────────
   const artistasFavoritos = [
     { id: '1', nombre: 'The Weeknd',      imagen: 'https://i.pinimg.com/736x/80/e0/3c/80e03c0a7c6ed8a83f09c77a49b70e5e.jpg' },
     { id: '2', nombre: 'OPYI',            imagen: 'https://i.pinimg.com/736x/b7/a0/62/b7a0627eacddc949efa2d52aa5486b87.jpg' },
@@ -190,21 +145,20 @@ export default function ProfileScreen({ onLogout }: ProfileScreenProps) {
     { id: '5', nombre: 'Samantha Barron', imagen: 'https://i.pinimg.com/1200x/f4/b0/c2/f4b0c21857157685233273b8ff1533b1.jpg' },
     { id: '6', nombre: 'Gera MX',         imagen: 'https://i.pinimg.com/736x/59/6b/2a/596b2aa28086534e972c16851ec4dfa2.jpg' },
   ];
-
   const generosFavoritos = ['Pop', 'Hip-Hop', 'Rap', 'R&B soul'];
 
-  // ── API Monitor ──────────────────────────────────────────────
+  // API Monitor
   const [apiResponse, setApiResponse] = useState<ApiPayload | null>(null);
-  const [apiStatus, setApiStatus]     = useState<ApiStatus>('idle');
-  const [ping, setPing]               = useState<number | null>(null);
+  const [apiStatus,   setApiStatus]   = useState<ApiStatus>('idle');
+  const [ping,        setPing]        = useState<number | null>(null);
   const [requestCount, setRequestCount] = useState(0);
-  const [uptime, setUptime]           = useState(0);
-  const [blink, setBlink]             = useState(true);
-  const startTime                     = useRef(Date.now());
+  const [uptime,      setUptime]      = useState(0);
+  const [blink,       setBlink]       = useState(true);
+  const startTime = useRef(Date.now());
 
   useEffect(() => {
     const uptimeTimer = setInterval(() => setUptime(Math.floor((Date.now() - startTime.current) / 1000)), 1000);
-    const blinkTimer  = setInterval(() => setBlink((b) => !b), 800);
+    const blinkTimer  = setInterval(() => setBlink(b => !b), 800);
     return () => { clearInterval(uptimeTimer); clearInterval(blinkTimer); };
   }, []);
 
@@ -212,40 +166,29 @@ export default function ProfileScreen({ onLogout }: ProfileScreenProps) {
     setApiStatus('loading');
     const t0 = Date.now();
     try {
-      const response = await fetch(
-        'https://api.github.com/repos/AlfredoRomero444/PROGRAMACION-MOVIL-205',
-        { headers: { Accept: 'application/vnd.github.v3+json' } }
-      );
+      const response = await fetch('https://api.github.com/repos/AlfredoRomero444/PROGRAMACION-MOVIL-205', {
+        headers: { Accept: 'application/vnd.github.v3+json' },
+      });
       const measuredPing = Date.now() - t0;
       setPing(measuredPing);
-      setRequestCount((r) => r + 1);
+      setRequestCount(r => r + 1);
       if (!response.ok) throw new Error(`HTTP ${response.status}`);
       const data = await response.json();
-      const payload: ApiPayload = {
+      setApiResponse({
         status: 'success', code: response.status,
         endpoint: 'https://api.github.com/repos/AlfredoRomero444/PROGRAMACION-MOVIL-205',
         data: {
-          userId: 'asydg_001',
-          nombre: usuario.nombre,
-          canciones: usuario.cancionesEscuchadas,
-          artistas: usuario.artistasSeguidos,
-          playlists: usuario.playlists,
-          repo: {
-            nombre: data.name, estrellas: data.stargazers_count,
-            forks: data.forks_count, lenguaje: data.language,
-            visibilidad: data.visibility, ultimoCommit: data.pushed_at,
-          },
+          userId: 'asydg_001', nombre: usuario.nombre,
+          canciones: usuario.cancionesEscuchadas, artistas: usuario.artistasSeguidos, playlists: usuario.playlists,
+          repo: { nombre: data.name, estrellas: data.stargazers_count, forks: data.forks_count, lenguaje: data.language, visibilidad: data.visibility, ultimoCommit: data.pushed_at },
         },
         meta: { ping: `${measuredPing}ms`, requests: requestCount + 1, uptime: `${uptime}s` },
-      };
-      setApiResponse(payload); setApiStatus('success');
-    } catch (error: unknown) {
-      setRequestCount((r) => r + 1);
-      const msg = error instanceof Error ? error.message : 'Unknown error';
-      setApiResponse({
-        status: 'error', code: 0, message: msg,
-        meta: { ping: ping !== null ? `${ping}ms` : 'N/A', requests: requestCount + 1, uptime: `${uptime}s` },
       });
+      setApiStatus('success');
+    } catch (error: unknown) {
+      setRequestCount(r => r + 1);
+      const msg = error instanceof Error ? error.message : 'Unknown error';
+      setApiResponse({ status: 'error', code: 0, message: msg, meta: { ping: ping !== null ? `${ping}ms` : 'N/A', requests: requestCount + 1, uptime: `${uptime}s` } });
       setApiStatus('error');
     }
   };
@@ -253,222 +196,198 @@ export default function ProfileScreen({ onLogout }: ProfileScreenProps) {
   useEffect(() => { fetchApi(); }, []);
 
   const badgeLabel = apiStatus === 'loading' ? 'CARGANDO' : apiStatus === 'success' ? 'ACTIVO' : 'ERROR';
+  const isDark = theme === 'dark';
 
   // ── Render ───────────────────────────────────────────────────
   return (
     <>
-      <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
+      <ScrollView style={[styles.container, { backgroundColor: colors.bg }]} showsVerticalScrollIndicator={false}>
+
         {/* Portada */}
         <View style={styles.cover}>
           <Image source={require('../../assets/HasleyLuke.jpg')} style={styles.coverImage} resizeMode="cover" />
-          <TouchableOpacity style={styles.settingsButton}>
-            <Text style={styles.settingsIcon}>⚙</Text>
+
+          {/* Botón toggle de tema — símbolo ✧⋆ */}
+          <TouchableOpacity
+            style={[styles.themeButton, { backgroundColor: colors.accentFaint, borderColor: colors.accentBorder }]}
+            onPress={toggleTheme}
+            activeOpacity={0.8}
+          >
+            <Text style={[styles.themeSymbol, { color: colors.accent }]}>
+              {isDark ? '✧⋆' : '✧⋆'}
+            </Text>
           </TouchableOpacity>
         </View>
 
         {/* Avatar */}
-        <View style={styles.avatarWrapper}>
-          <Image source={require('../../assets/perfil.jpg')} style={styles.avatar} />
+        <View style={[styles.avatarWrapper, { borderColor: colors.bg }]}>
+          <Image source={require('../../assets/perfil.jpg')} style={[styles.avatar, { borderColor: colors.bg }]} />
         </View>
 
         <View style={styles.content}>
-          <Text style={styles.nombre}>{usuario.nombre}</Text>
-          <Text style={styles.correo}>{usuario.correo}</Text>
+          <Text style={[styles.nombre, { color: colors.textPrimary }]}>{usuario.nombre}</Text>
+          <Text style={[styles.correo, { color: colors.textSecondary }]}>{usuario.correo}</Text>
 
           {/* Redes sociales */}
-          <View style={styles.socialColumn}>
+          <View style={[styles.socialColumn, { backgroundColor: colors.bgCard, borderColor: colors.border }]}>
             {SOCIAL_LINKS.map(({ id, username, url, Icon }) => (
-              <TouchableOpacity key={id} style={styles.socialRow} onPress={() => Linking.openURL(url)} activeOpacity={0.7}>
-                <View style={styles.socialIconWrap}><Icon size={22} /></View>
-                <Text style={styles.socialUsername}>{username}</Text>
-                <Text style={styles.socialArrow}>›</Text>
+              <TouchableOpacity key={id} style={[styles.socialRow, { borderColor: colors.border }]} onPress={() => Linking.openURL(url)} activeOpacity={0.7}>
+                <View style={[styles.socialIconWrap, { backgroundColor: colors.border }]}><Icon size={22} /></View>
+                <Text style={[styles.socialUsername, { color: colors.textPrimary }]}>{username}</Text>
+                <Text style={[styles.socialArrow, { color: colors.textSecondary }]}>›</Text>
               </TouchableOpacity>
             ))}
           </View>
 
           {/* Estadísticas */}
-          <View style={styles.statsRow}>
+          <View style={[styles.statsRow, { borderColor: colors.borderMid }]}>
             <View style={styles.statBox}>
-              <Text style={styles.statNumero}>{usuario.cancionesEscuchadas.toLocaleString()}</Text>
-              <Text style={styles.statLabel}>canciones</Text>
+              <Text style={[styles.statNumero, { color: colors.textPrimary }]}>{usuario.cancionesEscuchadas.toLocaleString()}</Text>
+              <Text style={[styles.statLabel,  { color: colors.textSecondary }]}>canciones</Text>
             </View>
-            <View style={styles.statDivider} />
+            <View style={[styles.statDivider, { backgroundColor: colors.borderMid }]} />
             <View style={styles.statBox}>
-              <Text style={styles.statNumero}>{usuario.artistasSeguidos}</Text>
-              <Text style={styles.statLabel}>artistas</Text>
+              <Text style={[styles.statNumero, { color: colors.textPrimary }]}>{usuario.artistasSeguidos}</Text>
+              <Text style={[styles.statLabel,  { color: colors.textSecondary }]}>artistas</Text>
             </View>
-            <View style={styles.statDivider} />
+            <View style={[styles.statDivider, { backgroundColor: colors.borderMid }]} />
             <View style={styles.statBox}>
-              <Text style={styles.statNumero}>{usuario.playlists}</Text>
-              <Text style={styles.statLabel}>playlists</Text>
+              <Text style={[styles.statNumero, { color: colors.textPrimary }]}>{usuario.playlists}</Text>
+              <Text style={[styles.statLabel,  { color: colors.textSecondary }]}>playlists</Text>
             </View>
           </View>
 
           {/* Top artistas */}
-          <Text style={styles.sectionTitle}>Top artistas</Text>
+          <Text style={[styles.sectionTitle, { color: colors.textPrimary }]}>Top artistas</Text>
           <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.artistasScroll}>
-            {artistasFavoritos.map((artista) => (
+            {artistasFavoritos.map(artista => (
               <View key={artista.id} style={styles.artistaItem}>
                 <Image source={{ uri: artista.imagen }} style={styles.artistaAvatar} />
-                <Text style={styles.artistaNombre} numberOfLines={1}>{artista.nombre}</Text>
+                <Text style={[styles.artistaNombre, { color: colors.textSecondary }]} numberOfLines={1}>{artista.nombre}</Text>
               </View>
             ))}
           </ScrollView>
 
           {/* Géneros */}
-          <Text style={styles.sectionTitle}>Géneros favoritos</Text>
+          <Text style={[styles.sectionTitle, { color: colors.textPrimary }]}>Géneros favoritos</Text>
           <View style={styles.generosContainer}>
-            {generosFavoritos.map((genero) => (
-              <View key={genero} style={styles.generoBadge}>
-                <Text style={styles.generoText}>{genero}</Text>
+            {generosFavoritos.map(genero => (
+              <View key={genero} style={[styles.generoBadge, { backgroundColor: colors.accentFaint }]}>
+                <Text style={[styles.generoText, { color: colors.accentLight }]}>{genero}</Text>
               </View>
             ))}
           </View>
 
           {/* API Monitor */}
-          <View style={styles.apiCard}>
-            <View style={styles.apiHeader}>
+          <View style={[styles.apiCard, { backgroundColor: colors.bgCard, borderColor: colors.accentBorder }]}>
+            <View style={[styles.apiHeader, { borderColor: colors.accentBorder, backgroundColor: isDark ? '#160d26' : '#f5f0fc' }]}>
               <View style={styles.apiHeaderLeft}>
-                <View style={[styles.apiDot, { opacity: blink ? 1 : 0.2, backgroundColor: apiStatus === 'error' ? '#e24b4a' : '#bf5af2' }]} />
-                <Text style={styles.apiTitle}>API STATUS</Text>
+                <View style={[styles.apiDot, { opacity: blink ? 1 : 0.2, backgroundColor: apiStatus === 'error' ? '#e24b4a' : colors.accent }]} />
+                <Text style={[styles.apiTitle, { color: colors.accent }]}>API STATUS</Text>
               </View>
-              <View style={[styles.apiBadge, apiStatus === 'error' && { borderColor: '#e24b4a50', backgroundColor: '#e24b4a20' }]}>
-                <Text style={[styles.apiBadgeText, apiStatus === 'error' && { color: '#e24b4a' }]}>{badgeLabel}</Text>
-              </View>
-            </View>
-            <View style={styles.apiMetrics}>
-              <View style={styles.apiMetricBox}>
-                <Text style={styles.apiMetricValue}>{ping !== null ? `${ping}ms` : '—'}</Text>
-                <Text style={styles.apiMetricLabel}>PING</Text>
-              </View>
-              <View style={styles.apiMetricDivider} />
-              <View style={styles.apiMetricBox}>
-                <Text style={styles.apiMetricValue}>{requestCount}</Text>
-                <Text style={styles.apiMetricLabel}>REQUESTS</Text>
-              </View>
-              <View style={styles.apiMetricDivider} />
-              <View style={styles.apiMetricBox}>
-                <Text style={styles.apiMetricValue}>{uptime}s</Text>
-                <Text style={styles.apiMetricLabel}>UPTIME</Text>
+              <View style={[styles.apiBadge, { backgroundColor: colors.accentFaint, borderColor: colors.accentBorder }, apiStatus === 'error' && { borderColor: '#e24b4a50', backgroundColor: '#e24b4a20' }]}>
+                <Text style={[styles.apiBadgeText, { color: colors.accentLight }, apiStatus === 'error' && { color: '#e24b4a' }]}>{badgeLabel}</Text>
               </View>
             </View>
-            <View style={styles.apiJsonBox}>
+            <View style={[styles.apiMetrics, { borderColor: colors.accentBorder }]}>
+              <View style={styles.apiMetricBox}>
+                <Text style={[styles.apiMetricValue, { color: colors.accentLight }]}>{ping !== null ? `${ping}ms` : '—'}</Text>
+                <Text style={[styles.apiMetricLabel, { color: colors.textMuted }]}>PING</Text>
+              </View>
+              <View style={[styles.apiMetricDivider, { backgroundColor: colors.accentBorder }]} />
+              <View style={styles.apiMetricBox}>
+                <Text style={[styles.apiMetricValue, { color: colors.accentLight }]}>{requestCount}</Text>
+                <Text style={[styles.apiMetricLabel, { color: colors.textMuted }]}>REQUESTS</Text>
+              </View>
+              <View style={[styles.apiMetricDivider, { backgroundColor: colors.accentBorder }]} />
+              <View style={styles.apiMetricBox}>
+                <Text style={[styles.apiMetricValue, { color: colors.accentLight }]}>{uptime}s</Text>
+                <Text style={[styles.apiMetricLabel, { color: colors.textMuted }]}>UPTIME</Text>
+              </View>
+            </View>
+            <View style={[styles.apiJsonBox, { backgroundColor: isDark ? '#0a0714' : '#faf8ff' }]}>
               {apiStatus === 'loading' && (
                 <View style={styles.apiLoading}>
-                  <ActivityIndicator size="small" color="#bf5af2" />
-                  <Text style={styles.apiLoadingText}>Fetching endpoint...</Text>
+                  <ActivityIndicator size="small" color={colors.accent} />
+                  <Text style={[styles.apiLoadingText, { color: colors.textMuted }]}>Fetching endpoint...</Text>
                 </View>
               )}
               {(apiStatus === 'success' || apiStatus === 'error') && apiResponse && (
                 <>
                   <TouchableOpacity onPress={() => Linking.openURL('https://github.com/AlfredoRomero444/PROGRAMACION-MOVIL-205')}>
-                    <Text style={[styles.apiEndpointLine, styles.apiLink]}>{'> '}GET /repos/AlfredoRomero444/PROGRAMACION-MOVIL-205</Text>
+                    <Text style={[styles.apiEndpointLine, { color: colors.accent }, styles.apiLink]}>{'> '}GET /repos/AlfredoRomero444/PROGRAMACION-MOVIL-205</Text>
                   </TouchableOpacity>
-                  <Text style={styles.apiJsonRaw}>{JSON.stringify(apiResponse, null, 2)}</Text>
+                  <Text style={[styles.apiJsonRaw, { color: isDark ? '#a8d8a8' : '#2d6a2d' }]}>{JSON.stringify(apiResponse, null, 2)}</Text>
                 </>
               )}
             </View>
-            <TouchableOpacity style={[styles.apiRefetchBtn, apiStatus === 'loading' && { opacity: 0.5 }]} onPress={fetchApi} disabled={apiStatus === 'loading'}>
-              <Text style={styles.apiRefetchText}>↻  Actualizar</Text>
+            <TouchableOpacity
+              style={[styles.apiRefetchBtn, { backgroundColor: isDark ? '#160d26' : '#f5f0fc' }, apiStatus === 'loading' && { opacity: 0.5 }]}
+              onPress={fetchApi}
+              disabled={apiStatus === 'loading'}
+            >
+              <Text style={[styles.apiRefetchText, { color: colors.accent }]}>↻  Actualizar</Text>
             </TouchableOpacity>
           </View>
 
           {/* Opciones */}
-          <View style={styles.optionsContainer}>
-            {/* ── EDITAR PERFIL ── */}
-            <TouchableOpacity style={styles.optionRow} onPress={openEditModal}>
-              <Text style={styles.optionText}>Editar perfil</Text>
-              <Text style={styles.optionArrow}>›</Text>
+          <View style={[styles.optionsContainer, { borderColor: colors.borderMid }]}>
+            <TouchableOpacity style={[styles.optionRow, { borderColor: colors.borderMid }]} onPress={openEditModal}>
+              <Text style={[styles.optionText, { color: colors.textPrimary }]}>Editar perfil</Text>
+              <Text style={[styles.optionArrow, { color: colors.textSecondary }]}>›</Text>
             </TouchableOpacity>
-
-            {/* ── CERRAR SESIÓN ── */}
-            <TouchableOpacity style={[styles.optionRow, styles.logoutRow]} onPress={handleLogout}>
+            <TouchableOpacity style={[styles.optionRow, styles.logoutRow, { borderColor: colors.borderMid }]} onPress={handleLogout}>
               <Text style={styles.logoutText}>Cerrar sesión</Text>
             </TouchableOpacity>
           </View>
         </View>
       </ScrollView>
 
-      {/* ══════════════════════════════════════════════════════════
-          MODAL — Editar perfil
-      ══════════════════════════════════════════════════════════ */}
-      <Modal
-        visible={editModalVisible}
-        animationType="slide"
-        transparent
-        onRequestClose={() => setEditModalVisible(false)}
-      >
-        <KeyboardAvoidingView
-          style={styles.modalOverlay}
-          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        >
-          <View style={styles.modalSheet}>
-            {/* Handle */}
+      {/* Modal — Editar perfil */}
+      <Modal visible={editModalVisible} animationType="slide" transparent onRequestClose={() => setEditModalVisible(false)}>
+        <KeyboardAvoidingView style={styles.modalOverlay} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+          <View style={[styles.modalSheet, { backgroundColor: colors.bgDeep, borderColor: colors.accentBorder }]}>
             <View style={styles.modalHandle} />
+            <Text style={[styles.modalTitle, { color: colors.textPrimary }]}>Editar perfil</Text>
 
-            <Text style={styles.modalTitle}>Editar perfil</Text>
+            {(['nombre', 'correo'] as const).map(field => (
+              <View key={field}>
+                <Text style={[styles.fieldLabel, { color: colors.textSecondary }]}>{field === 'nombre' ? 'Nombre' : 'Correo electrónico'}</Text>
+                <TextInput
+                  style={[styles.fieldInput, { backgroundColor: colors.bgInput, color: colors.textPrimary, borderColor: colors.accentBorder }]}
+                  value={editForm[field]}
+                  onChangeText={t => setEditForm(f => ({ ...f, [field]: t }))}
+                  keyboardType={field === 'correo' ? 'email-address' : 'default'}
+                  autoCapitalize={field === 'correo' ? 'none' : 'words'}
+                  placeholderTextColor={colors.textMuted}
+                  selectionColor={colors.accent}
+                />
+              </View>
+            ))}
 
-            {/* Campo: Nombre */}
-            <Text style={styles.fieldLabel}>Nombre</Text>
-            <TextInput
-              style={styles.fieldInput}
-              value={editForm.nombre}
-              onChangeText={(t) => setEditForm((f) => ({ ...f, nombre: t }))}
-              placeholderTextColor="#8e8e93"
-              selectionColor="#bf5af2"
-            />
+            {[
+              { key: 'cancionesEscuchadas', label: 'Canciones escuchadas' },
+              { key: 'artistasSeguidos',    label: 'Artistas seguidos' },
+              { key: 'playlists',           label: 'Playlists' },
+            ].map(({ key, label }) => (
+              <View key={key}>
+                <Text style={[styles.fieldLabel, { color: colors.textSecondary }]}>{label}</Text>
+                <TextInput
+                  style={[styles.fieldInput, { backgroundColor: colors.bgInput, color: colors.textPrimary, borderColor: colors.accentBorder }]}
+                  value={String(editForm[key as keyof UserData])}
+                  onChangeText={t => setEditForm(f => ({ ...f, [key]: Number(t) || 0 }))}
+                  keyboardType="numeric"
+                  placeholderTextColor={colors.textMuted}
+                  selectionColor={colors.accent}
+                />
+              </View>
+            ))}
 
-            {/* Campo: Correo */}
-            <Text style={styles.fieldLabel}>Correo electrónico</Text>
-            <TextInput
-              style={styles.fieldInput}
-              value={editForm.correo}
-              onChangeText={(t) => setEditForm((f) => ({ ...f, correo: t }))}
-              keyboardType="email-address"
-              autoCapitalize="none"
-              placeholderTextColor="#8e8e93"
-              selectionColor="#bf5af2"
-            />
-
-            {/* Campo: Canciones */}
-            <Text style={styles.fieldLabel}>Canciones escuchadas</Text>
-            <TextInput
-              style={styles.fieldInput}
-              value={String(editForm.cancionesEscuchadas)}
-              onChangeText={(t) => setEditForm((f) => ({ ...f, cancionesEscuchadas: Number(t) || 0 }))}
-              keyboardType="numeric"
-              placeholderTextColor="#8e8e93"
-              selectionColor="#bf5af2"
-            />
-
-            {/* Campo: Artistas */}
-            <Text style={styles.fieldLabel}>Artistas seguidos</Text>
-            <TextInput
-              style={styles.fieldInput}
-              value={String(editForm.artistasSeguidos)}
-              onChangeText={(t) => setEditForm((f) => ({ ...f, artistasSeguidos: Number(t) || 0 }))}
-              keyboardType="numeric"
-              placeholderTextColor="#8e8e93"
-              selectionColor="#bf5af2"
-            />
-
-            {/* Campo: Playlists */}
-            <Text style={styles.fieldLabel}>Playlists</Text>
-            <TextInput
-              style={styles.fieldInput}
-              value={String(editForm.playlists)}
-              onChangeText={(t) => setEditForm((f) => ({ ...f, playlists: Number(t) || 0 }))}
-              keyboardType="numeric"
-              placeholderTextColor="#8e8e93"
-              selectionColor="#bf5af2"
-            />
-
-            {/* Botones */}
             <View style={styles.modalButtons}>
-              <TouchableOpacity style={styles.cancelBtn} onPress={() => setEditModalVisible(false)}>
-                <Text style={styles.cancelBtnText}>Cancelar</Text>
+              <TouchableOpacity style={[styles.cancelBtn, { borderColor: colors.border }]} onPress={() => setEditModalVisible(false)}>
+                <Text style={[styles.cancelBtnText, { color: colors.textSecondary }]}>Cancelar</Text>
               </TouchableOpacity>
-              <TouchableOpacity style={styles.saveBtn} onPress={saveEdit}>
+              <TouchableOpacity style={[styles.saveBtn, { backgroundColor: colors.accent }]} onPress={saveEdit}>
                 <Text style={styles.saveBtnText}>Guardar</Text>
               </TouchableOpacity>
             </View>
@@ -476,60 +395,25 @@ export default function ProfileScreen({ onLogout }: ProfileScreenProps) {
         </KeyboardAvoidingView>
       </Modal>
 
-      {/* ══════════════════════════════════════════════════════════
-          MODAL — Confirmar cerrar sesión
-      ══════════════════════════════════════════════════════════ */}
-      <Modal
-        visible={logoutModalVisible}
-        animationType="fade"
-        transparent
-        onRequestClose={() => setLogoutModalVisible(false)}
-      >
+      {/* Modal — Cerrar sesión */}
+      <Modal visible={logoutModalVisible} animationType="fade" transparent onRequestClose={() => setLogoutModalVisible(false)}>
         <View style={styles.logoutOverlay}>
-          <View style={styles.logoutDialog}>
-            {/* Ícono decorativo — SVG power button */}
+          <View style={[styles.logoutDialog, { backgroundColor: colors.bgDeep, borderColor: colors.accentBorder }]}>
             <View style={styles.logoutIconWrap}>
               <Svg width={26} height={26} viewBox="0 0 24 24" fill="none">
-                <Path
-                  d="M12 3v9"
-                  stroke="#e24b4a"
-                  strokeWidth={2.2}
-                  strokeLinecap="round"
-                />
-                <Path
-                  d="M6.34 6.34A9 9 0 1 0 17.66 6.34"
-                  stroke="#e24b4a"
-                  strokeWidth={2.2}
-                  strokeLinecap="round"
-                />
+                <Path d="M12 3v9" stroke="#e24b4a" strokeWidth={2.2} strokeLinecap="round" />
+                <Path d="M6.34 6.34A9 9 0 1 0 17.66 6.34" stroke="#e24b4a" strokeWidth={2.2} strokeLinecap="round" />
               </Svg>
             </View>
-
-            <Text style={styles.logoutDialogTitle}>Cerrar sesión</Text>
-            <Text style={styles.logoutDialogSubtitle}>
-              ¿Seguro que quieres salir?{'\n'}Tendrás que volver a iniciar sesión.
-            </Text>
-
-            {/* Divisor */}
-            <View style={styles.logoutDivider} />
-
-            {/* Botones */}
+            <Text style={[styles.logoutDialogTitle,    { color: colors.textPrimary }]}>Cerrar sesión</Text>
+            <Text style={[styles.logoutDialogSubtitle, { color: colors.textSecondary }]}>¿Seguro que quieres salir?{'\n'}Tendrás que volver a iniciar sesión.</Text>
+            <View style={[styles.logoutDivider, { backgroundColor: colors.border }]} />
             <View style={styles.logoutButtons}>
-              <TouchableOpacity
-                style={styles.logoutCancelBtn}
-                onPress={() => setLogoutModalVisible(false)}
-                activeOpacity={0.7}
-              >
-                <Text style={styles.logoutCancelText}>Cancelar</Text>
+              <TouchableOpacity style={styles.logoutCancelBtn} onPress={() => setLogoutModalVisible(false)} activeOpacity={0.7}>
+                <Text style={[styles.logoutCancelText, { color: colors.textSecondary }]}>Cancelar</Text>
               </TouchableOpacity>
-
-              <View style={styles.logoutBtnDivider} />
-
-              <TouchableOpacity
-                style={styles.logoutConfirmBtn}
-                onPress={() => { setLogoutModalVisible(false); onLogout(); }}
-                activeOpacity={0.7}
-              >
+              <View style={[styles.logoutBtnDivider, { backgroundColor: colors.border }]} />
+              <TouchableOpacity style={styles.logoutConfirmBtn} onPress={() => { setLogoutModalVisible(false); onLogout(); }} activeOpacity={0.7}>
                 <Text style={styles.logoutConfirmText}>Cerrar sesión</Text>
               </TouchableOpacity>
             </View>
@@ -537,47 +421,21 @@ export default function ProfileScreen({ onLogout }: ProfileScreenProps) {
         </View>
       </Modal>
 
-      {/* ══════════════════════════════════════════════════════════
-          MODAL — Error de validación
-      ══════════════════════════════════════════════════════════ */}
-      <Modal
-        visible={errorModalVisible}
-        animationType="fade"
-        transparent
-        onRequestClose={() => setErrorModalVisible(false)}
-      >
+      {/* Modal — Error validación */}
+      <Modal visible={errorModalVisible} animationType="fade" transparent onRequestClose={() => setErrorModalVisible(false)}>
         <View style={styles.logoutOverlay}>
-          <View style={styles.logoutDialog}>
-            <View style={[styles.logoutIconWrap, { backgroundColor: '#bf5af218', borderColor: '#bf5af240' }]}>
+          <View style={[styles.logoutDialog, { backgroundColor: colors.bgDeep, borderColor: colors.accentBorder }]}>
+            <View style={[styles.logoutIconWrap, { backgroundColor: colors.accentFaint, borderColor: colors.accentBorder }]}>
               <Svg width={26} height={26} viewBox="0 0 24 24" fill="none">
-                <Path
-                  d="M12 8v5"
-                  stroke="#bf5af2"
-                  strokeWidth={2.2}
-                  strokeLinecap="round"
-                />
-                <Path
-                  d="M12 16.5v.5"
-                  stroke="#bf5af2"
-                  strokeWidth={2.5}
-                  strokeLinecap="round"
-                />
+                <Path d="M12 8v5" stroke="#bf5af2" strokeWidth={2.2} strokeLinecap="round" />
+                <Path d="M12 16.5v.5" stroke="#bf5af2" strokeWidth={2.5} strokeLinecap="round" />
               </Svg>
             </View>
-
-            <Text style={styles.logoutDialogTitle}>Campos requeridos</Text>
-            <Text style={styles.logoutDialogSubtitle}>
-              El nombre y el correo{'\n'}no pueden estar vacíos.
-            </Text>
-
-            <View style={styles.logoutDivider} />
-
-            <TouchableOpacity
-              style={{ width: '100%', paddingVertical: 16, alignItems: 'center' }}
-              onPress={() => setErrorModalVisible(false)}
-              activeOpacity={0.7}
-            >
-              <Text style={{ color: '#bf5af2', fontSize: 14, fontWeight: '700' }}>Entendido</Text>
+            <Text style={[styles.logoutDialogTitle,    { color: colors.textPrimary }]}>Campos requeridos</Text>
+            <Text style={[styles.logoutDialogSubtitle, { color: colors.textSecondary }]}>El nombre y el correo{'\n'}no pueden estar vacíos.</Text>
+            <View style={[styles.logoutDivider, { backgroundColor: colors.border }]} />
+            <TouchableOpacity style={{ width: '100%', paddingVertical: 16, alignItems: 'center' }} onPress={() => setErrorModalVisible(false)} activeOpacity={0.7}>
+              <Text style={{ color: colors.accent, fontSize: 14, fontWeight: '700' }}>Entendido</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -589,241 +447,102 @@ export default function ProfileScreen({ onLogout }: ProfileScreenProps) {
 const AVATAR_SIZE = 84;
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#090912' },
+  container:    { flex: 1 },
+  cover:        { height: 150, overflow: 'hidden' },
+  coverImage:   { width: '100%', height: '100%' },
 
-  cover: { height: 150, overflow: 'hidden' },
-  coverImage: { width: '100%', height: '100%' },
-
-  settingsButton: {
+  themeButton: {
     position: 'absolute', top: 14, right: 16,
-    width: 32, height: 32, borderRadius: 16,
-    backgroundColor: '#ffffff20', alignItems: 'center', justifyContent: 'center',
+    width: 42, height: 36, borderRadius: 18,
+    borderWidth: 1,
+    alignItems: 'center', justifyContent: 'center',
   },
-  settingsIcon: { color: '#fff', fontSize: 16 },
+  themeSymbol: {
+    fontSize: 16,
+    fontWeight: '300',
+    letterSpacing: -1,
+  },
 
   avatarWrapper: { marginTop: -AVATAR_SIZE / 2, paddingLeft: 20 },
-  avatar: {
-    width: AVATAR_SIZE, height: AVATAR_SIZE, borderRadius: AVATAR_SIZE / 2,
-    borderWidth: 3, borderColor: '#090912',
-  },
+  avatar: { width: AVATAR_SIZE, height: AVATAR_SIZE, borderRadius: AVATAR_SIZE / 2, borderWidth: 3 },
 
-  content: { paddingHorizontal: 20, paddingTop: 12, paddingBottom: 40 },
+  content:      { paddingHorizontal: 20, paddingTop: 12, paddingBottom: 40 },
+  nombre:       { fontSize: 19, fontWeight: '700', fontFamily: 'monospace' },
+  correo:       { fontSize: 13, marginTop: 2, marginBottom: 14 },
 
-  nombre: { color: '#fff', fontSize: 19, fontWeight: '700', fontFamily: 'monospace' },
-  correo: { color: '#8e8e93', fontSize: 13, marginTop: 2, marginBottom: 14 },
+  socialColumn: { marginBottom: 20, borderRadius: 12, overflow: 'hidden', borderWidth: 1 },
+  socialRow:    { flexDirection: 'row', alignItems: 'center', paddingHorizontal: 14, paddingVertical: 11, borderBottomWidth: 0.5, gap: 12 },
+  socialIconWrap: { width: 34, height: 34, borderRadius: 8, alignItems: 'center', justifyContent: 'center' },
+  socialUsername: { flex: 1, fontSize: 13, fontWeight: '500' },
+  socialArrow:  { fontSize: 18 },
 
-  socialColumn: {
-    marginBottom: 20, borderRadius: 12, overflow: 'hidden',
-    borderWidth: 1, borderColor: '#ffffff10', backgroundColor: '#0e0b1a',
-  },
-  socialRow: {
-    flexDirection: 'row', alignItems: 'center',
-    paddingHorizontal: 14, paddingVertical: 11,
-    borderBottomWidth: 0.5, borderColor: '#ffffff10', gap: 12,
-  },
-  socialIconWrap: {
-    width: 34, height: 34, borderRadius: 8,
-    alignItems: 'center', justifyContent: 'center', backgroundColor: '#ffffff08',
-  },
-  socialUsername: { flex: 1, color: '#d3d1c7', fontSize: 13, fontWeight: '500' },
-  socialArrow: { color: '#8e8e93', fontSize: 18 },
+  statsRow:     { flexDirection: 'row', paddingVertical: 14, borderTopWidth: 0.5, borderBottomWidth: 0.5, marginBottom: 22 },
+  statBox:      { flex: 1, alignItems: 'center' },
+  statDivider:  { width: 0.5 },
+  statNumero:   { fontSize: 17, fontWeight: '700' },
+  statLabel:    { fontSize: 11, marginTop: 3 },
 
-  statsRow: {
-    flexDirection: 'row', paddingVertical: 14,
-    borderTopWidth: 0.5, borderBottomWidth: 0.5,
-    borderColor: '#ffffff1a', marginBottom: 22,
-  },
-  statBox: { flex: 1, alignItems: 'center' },
-  statDivider: { width: 0.5, backgroundColor: '#ffffff1a' },
-  statNumero: { color: '#fff', fontSize: 17, fontWeight: '700' },
-  statLabel: { color: '#8e8e93', fontSize: 11, marginTop: 3 },
-
-  sectionTitle: { color: '#fff', fontSize: 13, fontWeight: '700', marginBottom: 10 },
+  sectionTitle: { fontSize: 13, fontWeight: '700', marginBottom: 10 },
 
   artistasScroll: { gap: 14, paddingBottom: 22 },
-  artistaItem: { width: 64, alignItems: 'center' },
-  artistaAvatar: { width: 56, height: 56, borderRadius: 28, marginBottom: 6, backgroundColor: '#1a1a2e' },
-  artistaNombre: { color: '#d3d1c7', fontSize: 11, textAlign: 'center' },
+  artistaItem:    { width: 64, alignItems: 'center' },
+  artistaAvatar:  { width: 56, height: 56, borderRadius: 28, marginBottom: 6 },
+  artistaNombre:  { fontSize: 11, textAlign: 'center' },
 
   generosContainer: { flexDirection: 'row', flexWrap: 'wrap', gap: 8, marginBottom: 8 },
-  generoBadge: { backgroundColor: '#bf5af226', paddingHorizontal: 12, paddingVertical: 6, borderRadius: 14 },
-  generoText: { color: '#d4a8f5', fontSize: 12, fontWeight: '600' },
+  generoBadge:      { paddingHorizontal: 12, paddingVertical: 6, borderRadius: 14 },
+  generoText:       { fontSize: 12, fontWeight: '600' },
 
   optionsContainer: { marginTop: 14 },
-  optionRow: {
-    flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
-    paddingVertical: 14, borderTopWidth: 0.5, borderColor: '#ffffff1a',
-  },
-  optionText: { color: '#fff', fontSize: 14 },
-  optionArrow: { color: '#8e8e93', fontSize: 18 },
-  logoutRow: { paddingBottom: 4 },
-  logoutText: { color: '#e24b4a', fontSize: 14 },
+  optionRow:        { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingVertical: 14, borderTopWidth: 0.5 },
+  optionText:       { fontSize: 14 },
+  optionArrow:      { fontSize: 18 },
+  logoutRow:        { paddingBottom: 4 },
+  logoutText:       { color: '#e24b4a', fontSize: 14 },
 
-  // API Monitor
-  apiCard: {
-    marginTop: 28, backgroundColor: '#0e0b1a', borderRadius: 14,
-    borderWidth: 1, borderColor: '#bf5af230', overflow: 'hidden',
-  },
-  apiHeader: {
-    flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
-    paddingHorizontal: 14, paddingVertical: 10,
-    borderBottomWidth: 1, borderColor: '#bf5af220', backgroundColor: '#160d26',
-  },
-  apiHeaderLeft: { flexDirection: 'row', alignItems: 'center', gap: 8 },
-  apiDot: { width: 8, height: 8, borderRadius: 4, backgroundColor: '#bf5af2' },
-  apiTitle: { color: '#bf5af2', fontSize: 11, fontWeight: '700', fontFamily: 'monospace', letterSpacing: 2 },
-  apiBadge: {
-    backgroundColor: '#bf5af220', paddingHorizontal: 10, paddingVertical: 3,
-    borderRadius: 20, borderWidth: 1, borderColor: '#bf5af250',
-  },
-  apiBadgeText: { color: '#d4a8f5', fontSize: 10, fontWeight: '700', fontFamily: 'monospace', letterSpacing: 1 },
-  apiMetrics: { flexDirection: 'row', paddingVertical: 12, borderBottomWidth: 1, borderColor: '#bf5af215' },
-  apiMetricBox: { flex: 1, alignItems: 'center' },
-  apiMetricDivider: { width: 1, backgroundColor: '#bf5af220' },
-  apiMetricValue: { color: '#d4a8f5', fontSize: 16, fontWeight: '700', fontFamily: 'monospace' },
-  apiMetricLabel: { color: '#7a5a99', fontSize: 9, fontFamily: 'monospace', letterSpacing: 1, marginTop: 2 },
-  apiJsonBox: { padding: 14, backgroundColor: '#0a0714', borderBottomWidth: 1, borderColor: '#bf5af215' },
-  apiLoading: { flexDirection: 'row', alignItems: 'center', gap: 10, paddingVertical: 8 },
-  apiLoadingText: { color: '#7a5a99', fontSize: 11, fontFamily: 'monospace' },
-  apiEndpointLine: { fontSize: 10, fontFamily: 'monospace', color: '#7a5a99', marginBottom: 10 },
-  apiJsonRaw: { color: '#a8d8a8', fontSize: 10, fontFamily: 'monospace', lineHeight: 16 },
-  apiLink: { textDecorationLine: 'underline', color: '#bf5af2' },
-  apiRefetchBtn: { paddingVertical: 11, alignItems: 'center', backgroundColor: '#160d26' },
-  apiRefetchText: { color: '#bf5af2', fontSize: 12, fontWeight: '700', fontFamily: 'monospace', letterSpacing: 1 },
+  apiCard:          { marginTop: 28, borderRadius: 14, borderWidth: 1, overflow: 'hidden' },
+  apiHeader:        { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 14, paddingVertical: 10, borderBottomWidth: 1 },
+  apiHeaderLeft:    { flexDirection: 'row', alignItems: 'center', gap: 8 },
+  apiDot:           { width: 8, height: 8, borderRadius: 4 },
+  apiTitle:         { fontSize: 11, fontWeight: '700', fontFamily: 'monospace', letterSpacing: 2 },
+  apiBadge:         { paddingHorizontal: 10, paddingVertical: 3, borderRadius: 20, borderWidth: 1 },
+  apiBadgeText:     { fontSize: 10, fontWeight: '700', fontFamily: 'monospace', letterSpacing: 1 },
+  apiMetrics:       { flexDirection: 'row', paddingVertical: 12, borderBottomWidth: 1 },
+  apiMetricBox:     { flex: 1, alignItems: 'center' },
+  apiMetricDivider: { width: 1 },
+  apiMetricValue:   { fontSize: 16, fontWeight: '700', fontFamily: 'monospace' },
+  apiMetricLabel:   { fontSize: 9, fontFamily: 'monospace', letterSpacing: 1, marginTop: 2 },
+  apiJsonBox:       { padding: 14, borderBottomWidth: 1, borderColor: '#bf5af215' },
+  apiLoading:       { flexDirection: 'row', alignItems: 'center', gap: 10, paddingVertical: 8 },
+  apiLoadingText:   { fontSize: 11, fontFamily: 'monospace' },
+  apiEndpointLine:  { fontSize: 10, fontFamily: 'monospace', marginBottom: 10 },
+  apiJsonRaw:       { fontSize: 10, fontFamily: 'monospace', lineHeight: 16 },
+  apiLink:          { textDecorationLine: 'underline' },
+  apiRefetchBtn:    { paddingVertical: 11, alignItems: 'center' },
+  apiRefetchText:   { fontSize: 12, fontWeight: '700', fontFamily: 'monospace', letterSpacing: 1 },
 
-  // ── Modal ─────────────────────────────────────────────────────
-  modalOverlay: {
-    flex: 1,
-    justifyContent: 'flex-end',
-    backgroundColor: '#000000aa',
-  },
-  modalSheet: {
-    backgroundColor: '#0e0b1a',
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
-    paddingHorizontal: 24,
-    paddingTop: 12,
-    paddingBottom: 36,
-    borderTopWidth: 1,
-    borderColor: '#bf5af230',
-  },
-  modalHandle: {
-    width: 40, height: 4, borderRadius: 2,
-    backgroundColor: '#ffffff30', alignSelf: 'center', marginBottom: 18,
-  },
-  modalTitle: {
-    color: '#fff', fontSize: 17, fontWeight: '700',
-    fontFamily: 'monospace', marginBottom: 20,
-  },
-  fieldLabel: {
-    color: '#8e8e93', fontSize: 11,
-    fontFamily: 'monospace', letterSpacing: 1,
-    marginBottom: 4, textTransform: 'uppercase',
-  },
-  fieldInput: {
-    backgroundColor: '#151525',
-    color: '#fff',
-    borderRadius: 12,
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    marginBottom: 14,
-    borderWidth: 1,
-    borderColor: '#bf5af230',
-    fontSize: 14,
-  },
-  modalButtons: {
-    flexDirection: 'row', gap: 12, marginTop: 6,
-  },
-  cancelBtn: {
-    flex: 1, paddingVertical: 14, borderRadius: 14,
-    borderWidth: 1, borderColor: '#ffffff20',
-    alignItems: 'center',
-  },
-  cancelBtnText: { color: '#8e8e93', fontSize: 14, fontWeight: '600' },
-  saveBtn: {
-    flex: 1, paddingVertical: 14, borderRadius: 14,
-    backgroundColor: '#bf5af2', alignItems: 'center',
-  },
-  saveBtnText: { color: '#fff', fontSize: 14, fontWeight: '700' },
+  modalOverlay:  { flex: 1, justifyContent: 'flex-end', backgroundColor: '#000000aa' },
+  modalSheet:    { borderTopLeftRadius: 20, borderTopRightRadius: 20, paddingHorizontal: 24, paddingTop: 12, paddingBottom: 36, borderTopWidth: 1 },
+  modalHandle:   { width: 40, height: 4, borderRadius: 2, backgroundColor: '#ffffff30', alignSelf: 'center', marginBottom: 18 },
+  modalTitle:    { fontSize: 17, fontWeight: '700', fontFamily: 'monospace', marginBottom: 20 },
+  fieldLabel:    { fontSize: 11, fontFamily: 'monospace', letterSpacing: 1, marginBottom: 4, textTransform: 'uppercase' },
+  fieldInput:    { borderRadius: 12, paddingHorizontal: 16, paddingVertical: 12, marginBottom: 14, borderWidth: 1, fontSize: 14 },
+  modalButtons:  { flexDirection: 'row', gap: 12, marginTop: 6 },
+  cancelBtn:     { flex: 1, paddingVertical: 14, borderRadius: 14, borderWidth: 1, alignItems: 'center' },
+  cancelBtnText: { fontSize: 14, fontWeight: '600' },
+  saveBtn:       { flex: 1, paddingVertical: 14, borderRadius: 14, alignItems: 'center' },
+  saveBtnText:   { color: '#fff', fontSize: 14, fontWeight: '700' },
 
-  // ── Modal logout ──────────────────────────────────────────────
-  logoutOverlay: {
-    flex: 1,
-    backgroundColor: '#000000b0',
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingHorizontal: 32,
-  },
-  logoutDialog: {
-    width: '100%',
-    backgroundColor: '#0e0b1a',
-    borderRadius: 20,
-    borderWidth: 1,
-    borderColor: '#bf5af230',
-    overflow: 'hidden',
-    alignItems: 'center',
-    paddingTop: 28,
-  },
-  logoutIconWrap: {
-    width: 52,
-    height: 52,
-    borderRadius: 26,
-    backgroundColor: '#e24b4a18',
-    borderWidth: 1,
-    borderColor: '#e24b4a40',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: 16,
-  },
-
-  logoutDialogTitle: {
-    color: '#fff',
-    fontSize: 17,
-    fontWeight: '700',
-    fontFamily: 'monospace',
-    marginBottom: 8,
-  },
-  logoutDialogSubtitle: {
-    color: '#8e8e93',
-    fontSize: 13,
-    textAlign: 'center',
-    lineHeight: 20,
-    paddingHorizontal: 12,
-    marginBottom: 24,
-  },
-  logoutDivider: {
-    width: '100%',
-    height: 1,
-    backgroundColor: '#ffffff10',
-  },
-  logoutButtons: {
-    flexDirection: 'row',
-    width: '100%',
-  },
-  logoutBtnDivider: {
-    width: 1,
-    backgroundColor: '#ffffff10',
-  },
-  logoutCancelBtn: {
-    flex: 1,
-    paddingVertical: 16,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  logoutCancelText: {
-    color: '#8e8e93',
-    fontSize: 14,
-    fontWeight: '600',
-  },
-  logoutConfirmBtn: {
-    flex: 1,
-    paddingVertical: 16,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  logoutConfirmText: {
-    color: '#e24b4a',
-    fontSize: 14,
-    fontWeight: '700',
-  },
+  logoutOverlay:        { flex: 1, backgroundColor: '#000000b0', alignItems: 'center', justifyContent: 'center', paddingHorizontal: 32 },
+  logoutDialog:         { width: '100%', borderRadius: 20, borderWidth: 1, overflow: 'hidden', alignItems: 'center', paddingTop: 28 },
+  logoutIconWrap:       { width: 52, height: 52, borderRadius: 26, backgroundColor: '#e24b4a18', borderWidth: 1, borderColor: '#e24b4a40', alignItems: 'center', justifyContent: 'center', marginBottom: 16 },
+  logoutDialogTitle:    { fontSize: 17, fontWeight: '700', fontFamily: 'monospace', marginBottom: 8 },
+  logoutDialogSubtitle: { fontSize: 13, textAlign: 'center', lineHeight: 20, paddingHorizontal: 12, marginBottom: 24 },
+  logoutDivider:        { width: '100%', height: 1 },
+  logoutButtons:        { flexDirection: 'row', width: '100%' },
+  logoutBtnDivider:     { width: 1 },
+  logoutCancelBtn:      { flex: 1, paddingVertical: 16, alignItems: 'center', justifyContent: 'center' },
+  logoutCancelText:     { fontSize: 14, fontWeight: '600' },
+  logoutConfirmBtn:     { flex: 1, paddingVertical: 16, alignItems: 'center', justifyContent: 'center' },
+  logoutConfirmText:    { color: '#e24b4a', fontSize: 14, fontWeight: '700' },
 });

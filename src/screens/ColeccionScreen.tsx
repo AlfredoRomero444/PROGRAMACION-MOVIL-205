@@ -4,6 +4,7 @@ import {
   TouchableOpacity, Alert, Modal, ScrollView,
   KeyboardAvoidingView, Platform,
 } from 'react-native';
+import { Pencil, Trash2, Plus, Music2 } from 'lucide-react-native';
 import {
   inicializarDB, insertarDisco, obtenerDiscos,
   actualizarDisco, eliminarDisco, DiscoColeccion,
@@ -13,12 +14,12 @@ import {
 const FORM_VACIO = { nombre: '', artista: '', genero: '', año: '', nota: '' };
 
 export default function ColeccionScreen() {
-  const [discos, setDiscos]       = useState<DiscoColeccion[]>([]);
-  const [modalVisible, setModal]  = useState(false);
-  const [editando, setEditando]   = useState<DiscoColeccion | null>(null);
-  const [form, setForm]           = useState(FORM_VACIO);
+  const [discos, setDiscos]               = useState<DiscoColeccion[]>([]);
+  const [modalVisible, setModal]          = useState(false);
+  const [editando, setEditando]           = useState<DiscoColeccion | null>(null);
+  const [form, setForm]                   = useState(FORM_VACIO);
+  const [modalEliminar, setModalEliminar] = useState<DiscoColeccion | null>(null);
 
-  // Inicializar DB y cargar datos al montar
   useEffect(() => {
     inicializarDB();
     cargar();
@@ -28,14 +29,12 @@ export default function ColeccionScreen() {
     setDiscos(obtenerDiscos());
   }, []);
 
-  // Abre modal en modo "nuevo"
   const abrirNuevo = () => {
     setEditando(null);
     setForm(FORM_VACIO);
     setModal(true);
   };
 
-  // Abre modal en modo "editar"
   const abrirEditar = (disco: DiscoColeccion) => {
     setEditando(disco);
     setForm({
@@ -71,18 +70,7 @@ export default function ColeccionScreen() {
   };
 
   const confirmarEliminar = (disco: DiscoColeccion) => {
-    Alert.alert(
-      'Eliminar disco',
-      `¿Seguro que quieres eliminar "${disco.nombre}"?`,
-      [
-        { text: 'Cancelar', style: 'cancel' },
-        {
-          text: 'Eliminar',
-          style: 'destructive',
-          onPress: () => { eliminarDisco(disco.id); cargar(); },
-        },
-      ]
-    );
+    setModalEliminar(disco);
   };
 
   return (
@@ -96,7 +84,8 @@ export default function ColeccionScreen() {
 
       {/* Botón agregar */}
       <TouchableOpacity style={s.btnAgregar} onPress={abrirNuevo} activeOpacity={0.85}>
-        <Text style={s.btnAgregarText}>+ Agregar disco</Text>
+        <Plus color="#fff" size={18} strokeWidth={2} />
+        <Text style={s.btnAgregarText}>Agregar disco</Text>
       </TouchableOpacity>
 
       {/* Lista */}
@@ -107,7 +96,9 @@ export default function ColeccionScreen() {
         showsVerticalScrollIndicator={false}
         ListEmptyComponent={
           <View style={s.vacio}>
-            <Text style={s.vacioEmoji}>🎵</Text>
+            <View style={s.vacioIconWrapper}>
+              <Music2 color="#5e5e66" size={36} strokeWidth={1.5} />
+            </View>
             <Text style={s.vacioTexto}>Tu colección está vacía.{'\n'}Agrega tu primer disco.</Text>
           </View>
         }
@@ -128,11 +119,11 @@ export default function ColeccionScreen() {
               {item.nota ? <Text style={s.cardNota} numberOfLines={1}>"{item.nota}"</Text> : null}
             </View>
             <View style={s.cardActions}>
-              <TouchableOpacity style={s.btnEdit} onPress={() => abrirEditar(item)}>
-                <Text style={s.btnEditText}>✏️</Text>
+              <TouchableOpacity style={s.btnEdit} onPress={() => abrirEditar(item)} activeOpacity={0.7}>
+                <Pencil color="#bf5af2" size={16} strokeWidth={2} />
               </TouchableOpacity>
-              <TouchableOpacity style={s.btnDel} onPress={() => confirmarEliminar(item)}>
-                <Text style={s.btnDelText}>🗑️</Text>
+              <TouchableOpacity style={s.btnDel} onPress={() => confirmarEliminar(item)} activeOpacity={0.7}>
+                <Trash2 color="#ff453a" size={16} strokeWidth={2} />
               </TouchableOpacity>
             </View>
           </View>
@@ -147,9 +138,18 @@ export default function ColeccionScreen() {
         >
           <View style={s.modalBox}>
             <ScrollView showsVerticalScrollIndicator={false}>
-              <Text style={s.modalTitle}>
-                {editando ? '✏️  Editar disco' : '➕  Nuevo disco'}
-              </Text>
+              {/* Título del modal con ícono */}
+              <View style={s.modalTitleRow}>
+                <View style={editando ? s.modalIconEdit : s.modalIconNew}>
+                  {editando
+                    ? <Pencil color="#bf5af2" size={18} strokeWidth={2} />
+                    : <Plus   color="#bf5af2" size={18} strokeWidth={2} />
+                  }
+                </View>
+                <Text style={s.modalTitle}>
+                  {editando ? 'Editar disco' : 'Nuevo disco'}
+                </Text>
+              </View>
 
               <Text style={s.inputLabel}>Nombre del álbum *</Text>
               <TextInput
@@ -201,10 +201,7 @@ export default function ColeccionScreen() {
               />
 
               <View style={s.modalBtns}>
-                <TouchableOpacity
-                  style={s.btnCancelar}
-                  onPress={() => setModal(false)}
-                >
+                <TouchableOpacity style={s.btnCancelar} onPress={() => setModal(false)}>
                   <Text style={s.btnCancelarText}>Cancelar</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={s.btnGuardar} onPress={guardar}>
@@ -216,6 +213,51 @@ export default function ColeccionScreen() {
             </ScrollView>
           </View>
         </KeyboardAvoidingView>
+      </Modal>
+
+      {/* Modal confirmar eliminar */}
+      <Modal visible={modalEliminar !== null} animationType="fade" transparent>
+        <View style={s.deleteOverlay}>
+          <View style={s.deleteBox}>
+            <View style={s.deleteIconWrapper}>
+              <Trash2 color="#ff453a" size={30} strokeWidth={1.5} />
+            </View>
+
+            <Text style={s.deleteTitle}>Eliminar disco</Text>
+
+            <Text style={s.deleteMsg}>
+              ¿Seguro que quieres eliminar{'\n'}
+              <Text style={s.deleteNombre}>"{modalEliminar?.nombre}"</Text>?
+              {'\n'}Esta acción no se puede deshacer.
+            </Text>
+
+            <View style={s.deleteDivider} />
+
+            <View style={s.deleteBtns}>
+              <TouchableOpacity
+                style={s.deleteCancelar}
+                activeOpacity={0.8}
+                onPress={() => setModalEliminar(null)}
+              >
+                <Text style={s.deleteCancelarText}>Cancelar</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={s.deleteConfirmar}
+                activeOpacity={0.8}
+                onPress={() => {
+                  if (modalEliminar) {
+                    eliminarDisco(modalEliminar.id);
+                    cargar();
+                    setModalEliminar(null);
+                  }
+                }}
+              >
+                <Text style={s.deleteConfirmarText}>Eliminar</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
       </Modal>
     </View>
   );
@@ -229,13 +271,16 @@ const s = StyleSheet.create({
   subtitle:       { color: '#8e8e93', fontSize: 14, marginTop: 6 },
 
   btnAgregar:     { marginHorizontal: 25, marginBottom: 20, backgroundColor: '#bf5af2',
-                    paddingVertical: 14, borderRadius: 18, alignItems: 'center' },
+                    paddingVertical: 14, borderRadius: 18, alignItems: 'center',
+                    flexDirection: 'row', justifyContent: 'center', gap: 8 },
   btnAgregarText: { color: '#fff', fontSize: 15, fontWeight: '800' },
 
   lista:          { paddingHorizontal: 25, paddingBottom: 40 },
 
-  vacio:          { alignItems: 'center', marginTop: 60, gap: 12 },
-  vacioEmoji:     { fontSize: 48 },
+  vacio:          { alignItems: 'center', marginTop: 60, gap: 16 },
+  vacioIconWrapper: { width: 72, height: 72, borderRadius: 22, backgroundColor: '#151525',
+                      alignItems: 'center', justifyContent: 'center',
+                      borderWidth: 1, borderColor: '#ffffff10' },
   vacioTexto:     { color: '#5e5e66', fontSize: 15, textAlign: 'center', lineHeight: 24 },
 
   card:           { flexDirection: 'row', backgroundColor: '#151525', borderRadius: 18,
@@ -253,28 +298,58 @@ const s = StyleSheet.create({
   cardNota:       { color: '#5e5e66', fontSize: 12, fontStyle: 'italic', marginTop: 4 },
   cardActions:    { gap: 8 },
   btnEdit:        { backgroundColor: '#1c1c2e', width: 36, height: 36, borderRadius: 10,
-                    alignItems: 'center', justifyContent: 'center' },
-  btnEditText:    { fontSize: 16 },
+                    alignItems: 'center', justifyContent: 'center',
+                    borderWidth: 1, borderColor: '#bf5af220' },
   btnDel:         { backgroundColor: '#2c1c1c', width: 36, height: 36, borderRadius: 10,
-                    alignItems: 'center', justifyContent: 'center' },
-  btnDelText:     { fontSize: 16 },
+                    alignItems: 'center', justifyContent: 'center',
+                    borderWidth: 1, borderColor: '#ff453a20' },
 
-  // Modal
-  modalOverlay:   { flex: 1, backgroundColor: '#000000aa', justifyContent: 'flex-end' },
-  modalBox:       { backgroundColor: '#0f0f1e', borderTopLeftRadius: 28, borderTopRightRadius: 28,
-                    padding: 28, maxHeight: '90%' },
-  modalTitle:     { color: '#fff', fontSize: 20, fontWeight: '800', marginBottom: 24 },
-  inputLabel:     { color: '#8e8e93', fontSize: 12, fontWeight: '600',
-                    letterSpacing: 0.5, marginBottom: 6 },
-  input:          { backgroundColor: '#151525', color: '#fff', borderRadius: 14,
-                    paddingHorizontal: 16, paddingVertical: 13, marginBottom: 16,
-                    borderWidth: 1, borderColor: '#ffffff10', fontSize: 14 },
-  inputMulti:     { height: 90, textAlignVertical: 'top' },
-  modalBtns:      { flexDirection: 'row', gap: 12, marginTop: 8 },
-  btnCancelar:    { flex: 1, backgroundColor: '#1c1c2e', paddingVertical: 15,
-                    borderRadius: 16, alignItems: 'center' },
-  btnCancelarText:{ color: '#8e8e93', fontSize: 15, fontWeight: '700' },
-  btnGuardar:     { flex: 1, backgroundColor: '#bf5af2', paddingVertical: 15,
-                    borderRadius: 16, alignItems: 'center' },
-  btnGuardarText: { color: '#fff', fontSize: 15, fontWeight: '800' },
+  // Modal formulario
+  modalOverlay:     { flex: 1, backgroundColor: '#000000aa', justifyContent: 'flex-end' },
+  modalBox:         { backgroundColor: '#0f0f1e', borderTopLeftRadius: 28, borderTopRightRadius: 28,
+                      padding: 28, maxHeight: '90%' },
+  modalTitleRow:    { flexDirection: 'row', alignItems: 'center', gap: 12, marginBottom: 24 },
+  modalIconEdit:    { width: 36, height: 36, borderRadius: 10, backgroundColor: '#bf5af220',
+                      alignItems: 'center', justifyContent: 'center' },
+  modalIconNew:     { width: 36, height: 36, borderRadius: 10, backgroundColor: '#bf5af220',
+                      alignItems: 'center', justifyContent: 'center' },
+  modalTitle:       { color: '#fff', fontSize: 20, fontWeight: '800' },
+  inputLabel:       { color: '#8e8e93', fontSize: 12, fontWeight: '600',
+                      letterSpacing: 0.5, marginBottom: 6 },
+  input:            { backgroundColor: '#151525', color: '#fff', borderRadius: 14,
+                      paddingHorizontal: 16, paddingVertical: 13, marginBottom: 16,
+                      borderWidth: 1, borderColor: '#ffffff10', fontSize: 14 },
+  inputMulti:       { height: 90, textAlignVertical: 'top' },
+  modalBtns:        { flexDirection: 'row', gap: 12, marginTop: 8 },
+  btnCancelar:      { flex: 1, backgroundColor: '#1c1c2e', paddingVertical: 15,
+                      borderRadius: 16, alignItems: 'center' },
+  btnCancelarText:  { color: '#8e8e93', fontSize: 15, fontWeight: '700' },
+  btnGuardar:       { flex: 1, backgroundColor: '#bf5af2', paddingVertical: 15,
+                      borderRadius: 16, alignItems: 'center' },
+  btnGuardarText:   { color: '#fff', fontSize: 15, fontWeight: '800' },
+
+  // Modal eliminar
+  deleteOverlay:      { flex: 1, backgroundColor: '#000000bb',
+                        justifyContent: 'center', alignItems: 'center' },
+  deleteBox:          { backgroundColor: '#0f0f1e', borderRadius: 24, padding: 28,
+                        marginHorizontal: 30, borderWidth: 1, borderColor: '#ffffff10',
+                        alignItems: 'center', width: '85%' },
+  deleteIconWrapper:  { width: 64, height: 64, borderRadius: 20, backgroundColor: '#2c1c1c',
+                        alignItems: 'center', justifyContent: 'center', marginBottom: 16,
+                        borderWidth: 1, borderColor: '#ff453a20' },
+  deleteTitle:        { color: '#fff', fontSize: 18, fontWeight: '800',
+                        marginBottom: 10, textAlign: 'center' },
+  deleteMsg:          { color: '#8e8e93', fontSize: 14, textAlign: 'center',
+                        lineHeight: 22, marginBottom: 20 },
+  deleteNombre:       { color: '#ffffff', fontWeight: '700' },
+  deleteDivider:      { height: 1, backgroundColor: '#ffffff10', width: '100%', marginBottom: 20 },
+  deleteBtns:         { flexDirection: 'row', gap: 12, width: '100%' },
+  deleteCancelar:     { flex: 1, backgroundColor: '#1c1c2e', paddingVertical: 15,
+                        borderRadius: 16, alignItems: 'center',
+                        borderWidth: 1, borderColor: '#ffffff08' },
+  deleteCancelarText: { color: '#8e8e93', fontSize: 15, fontWeight: '700' },
+  deleteConfirmar:    { flex: 1, backgroundColor: '#2c1c1c', paddingVertical: 15,
+                        borderRadius: 16, alignItems: 'center',
+                        borderWidth: 1, borderColor: '#ff453a30' },
+  deleteConfirmarText:{ color: '#ff453a', fontSize: 15, fontWeight: '800' },
 });

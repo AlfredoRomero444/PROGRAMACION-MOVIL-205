@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import {
   View,
   Text,
@@ -6,22 +6,83 @@ import {
   ScrollView,
   Image,
   FlatList,
-  ActivityIndicator,
+  Animated,
 } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 
 import { useProductos } from '../hooks/useProductos';
 
+function LoadingSymbols() {
+  const dot   = useRef(new Animated.Value(0)).current;
+  const star  = useRef(new Animated.Value(0)).current;
+  const spark = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    const pulse = (anim: Animated.Value, delay: number) =>
+      Animated.loop(
+        Animated.sequence([
+          Animated.delay(delay),
+          Animated.timing(anim, {
+            toValue: 1,
+            duration: 600,
+            useNativeDriver: true,
+          }),
+          Animated.timing(anim, {
+            toValue: 0.2,
+            duration: 600,
+            useNativeDriver: true,
+          }),
+        ])
+      ).start();
+
+    pulse(dot,   0);
+    pulse(star,  200);
+    pulse(spark, 400);
+  }, []);
+
+  const dotStyle   = { opacity: dot,   transform: [{ scale: dot.interpolate({ inputRange: [0, 1], outputRange: [0.8, 1.2] }) }] };
+  const starStyle  = { opacity: star,  transform: [{ scale: star.interpolate({ inputRange: [0, 1], outputRange: [0.8, 1.4] }) }] };
+  const sparkStyle = { opacity: spark, transform: [{ scale: spark.interpolate({ inputRange: [0, 1], outputRange: [0.8, 1.3] }) }] };
+
+  return (
+    <View style={styles.loadingContainer}>
+      <View style={styles.symbolsRow}>
+        <Animated.Text style={[styles.symbol, dotStyle]}>.</Animated.Text>
+        <Animated.Text style={[styles.symbol, starStyle]}>✧</Animated.Text>
+        <Animated.Text style={[styles.symbol, sparkStyle]}>⋆</Animated.Text>
+      </View>
+    </View>
+  );
+}
+
 export default function HomeScreen() {
   const { productos, cargando, getArtesano } = useProductos();
+  const navigation = useNavigation<any>();
 
-  
+  // Oculta header y tab bar mientras carga, los restaura al terminar
+  useEffect(() => {
+    const parent = navigation.getParent();
+    if (cargando) {
+      navigation.setOptions({ headerShown: false });
+      parent?.setOptions({ tabBarStyle: { display: 'none' } });
+    } else {
+      navigation.setOptions({ headerShown: true });
+      parent?.setOptions({
+        tabBarStyle: {
+          display: 'flex',
+          backgroundColor: '#0a0a12',
+          borderTopWidth: 1.5,
+          borderTopColor: '#bf5af230',
+          height: 60,
+          paddingTop: 4,
+          paddingBottom: 8,
+        },
+      });
+    }
+  }, [cargando]);
+
   if (cargando) {
-    return (
-      <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color="#bf5af2" />
-        <Text style={styles.loadingText}>Cargando catálogo...</Text>
-      </View>
-    );
+    return <LoadingSymbols />;
   }
 
   // ✅ DESTACADO FIJO (Asyd G)
@@ -174,12 +235,18 @@ const styles = StyleSheet.create({
     backgroundColor: '#090912',
     justifyContent: 'center',
     alignItems: 'center',
-    gap: 16,
   },
 
-  loadingText: {
-    color: '#8e8e93',
-    fontSize: 14,
+  symbolsRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+  },
+
+  symbol: {
+    color: '#bf5af2',
+    fontSize: 48,
+    fontWeight: '300',
   },
 
   sectionLabel: {
