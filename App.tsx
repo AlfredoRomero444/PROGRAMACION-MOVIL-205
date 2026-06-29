@@ -10,14 +10,15 @@ import {
   useSafeAreaInsets,
 } from 'react-native-safe-area-context';
 import { StatusBar, StyleSheet, View } from 'react-native';
-import { House, Search, Disc3, User } from 'lucide-react-native';
+import { House, Search, Disc3, User, Library } from 'lucide-react-native';
 
-import LoginScreen from './src/screens/LoginScreen';
+import LoginScreen    from './src/screens/LoginScreen';
 import RegisterScreen from './src/screens/RegisterScreen';
-import HomeScreen from './src/screens/HomeScreen';
-import ExploreStack from './src/navigation/ExploreStack';
-import StoreScreen from './src/screens/StoreScreen';
-import ProfileScreen from './src/screens/ProfileScreen';
+import HomeScreen     from './src/screens/HomeScreen';
+import ExploreStack   from './src/navigation/ExploreStack';
+import StoreScreen    from './src/screens/StoreScreen';
+import ColeccionScreen from './src/screens/ColeccionScreen';
+import ProfileScreen  from './src/screens/ProfileScreen';
 
 type RootStackParamList = {
   Login: undefined;
@@ -29,6 +30,7 @@ type TabParamList = {
   Inicio: undefined;
   Explorar: undefined;
   Tienda: undefined;
+  Colección: undefined;
   Perfil: undefined;
 };
 
@@ -43,11 +45,11 @@ function MainTabs({ onLogout }: { onLogout: () => void }) {
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
-        headerStyle: { backgroundColor: '#0a0a12' },
-        headerTintColor: '#fff',
+        headerStyle:      { backgroundColor: '#0a0a12' },
+        headerTintColor:  '#fff',
         headerShadowVisible: false,
         headerTitleStyle: { fontWeight: '700', fontSize: 18 },
-        tabBarActiveTintColor: '#bf5af2',
+        tabBarActiveTintColor:   '#bf5af2',
         tabBarInactiveTintColor: '#8e8e93',
         tabBarStyle: {
           backgroundColor: '#0a0a12',
@@ -65,10 +67,11 @@ function MainTabs({ onLogout }: { onLogout: () => void }) {
         },
         tabBarIcon: ({ focused, color }) => (
           <View style={[styles.iconWrapper, focused && styles.iconWrapperActive]}>
-            {route.name === 'Inicio'   && <House  color={color} size={18} strokeWidth={2} />}
-            {route.name === 'Explorar' && <Search color={color} size={18} strokeWidth={2} />}
-            {route.name === 'Tienda'   && <Disc3  color={color} size={18} strokeWidth={2} />}
-            {route.name === 'Perfil'   && <User   color={color} size={18} strokeWidth={2} />}
+            {route.name === 'Inicio'    && <House   color={color} size={18} strokeWidth={2} />}
+            {route.name === 'Explorar'  && <Search  color={color} size={18} strokeWidth={2} />}
+            {route.name === 'Tienda'    && <Disc3   color={color} size={18} strokeWidth={2} />}
+            {route.name === 'Colección' && <Library color={color} size={18} strokeWidth={2} />}
+            {route.name === 'Perfil'    && <User    color={color} size={18} strokeWidth={2} />}
           </View>
         ),
       })}
@@ -79,7 +82,8 @@ function MainTabs({ onLogout }: { onLogout: () => void }) {
         component={ExploreStack}
         options={{ headerShown: false }}
       />
-      <Tab.Screen name="Tienda" component={StoreScreen} />
+      <Tab.Screen name="Tienda"    component={StoreScreen} />
+      <Tab.Screen name="Colección" component={ColeccionScreen} />
       <Tab.Screen name="Perfil">
         {() => <ProfileScreen onLogout={onLogout} />}
       </Tab.Screen>
