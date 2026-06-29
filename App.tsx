@@ -9,23 +9,13 @@ import {
   SafeAreaProvider,
   useSafeAreaInsets,
 } from 'react-native-safe-area-context';
-import {
-  StatusBar,
-  StyleSheet,
-  View,
-} from 'react-native';
-import {
-  House,
-  Search,
-  Disc3,
-  User,
-} from 'lucide-react-native';
+import { StatusBar, StyleSheet, View } from 'react-native';
+import { House, Search, Disc3, User } from 'lucide-react-native';
 
 import LoginScreen from './src/screens/LoginScreen';
 import RegisterScreen from './src/screens/RegisterScreen';
-
 import HomeScreen from './src/screens/HomeScreen';
-import ExploreScreen from './src/screens/ExploreScreen';
+import ExploreStack from './src/navigation/ExploreStack';
 import StoreScreen from './src/screens/StoreScreen';
 import ProfileScreen from './src/screens/ProfileScreen';
 
@@ -47,7 +37,6 @@ type LoginScreenProps = NativeStackScreenProps<RootStackParamList, 'Login'>;
 const Stack = createNativeStackNavigator<RootStackParamList>();
 const Tab   = createBottomTabNavigator<TabParamList>();
 
-// ── MainTabs recibe onLogout y lo inyecta en ProfileScreen ──────
 function MainTabs({ onLogout }: { onLogout: () => void }) {
   const insets = useSafeAreaInsets();
 
@@ -84,15 +73,13 @@ function MainTabs({ onLogout }: { onLogout: () => void }) {
         ),
       })}
     >
-      <Tab.Screen name="Inicio"   component={HomeScreen}    />
-      <Tab.Screen name="Explorar" component={ExploreScreen} />
-      <Tab.Screen name="Tienda"   component={StoreScreen}   />
-
-      {/*
-        ProfileScreen necesita onLogout → no podemos usar `component=`
-        directamente, así que usamos la forma children render prop,
-        que es la misma técnica que ya usas en el Stack para LoginScreen.
-      */}
+      <Tab.Screen name="Inicio"   component={HomeScreen} />
+      <Tab.Screen
+        name="Explorar"
+        component={ExploreStack}
+        options={{ headerShown: false }}
+      />
+      <Tab.Screen name="Tienda" component={StoreScreen} />
       <Tab.Screen name="Perfil">
         {() => <ProfileScreen onLogout={onLogout} />}
       </Tab.Screen>
@@ -100,32 +87,25 @@ function MainTabs({ onLogout }: { onLogout: () => void }) {
   );
 }
 
-// ── App ─────────────────────────────────────────────────────────
 export default function App() {
   const [isLogged, setIsLogged] = useState(false);
 
   return (
     <SafeAreaProvider>
       <StatusBar barStyle="light-content" backgroundColor="#0a0a12" />
-
       <NavigationContainer>
         <Stack.Navigator screenOptions={{ headerShown: false }}>
           {!isLogged ? (
             <>
               <Stack.Screen name="Login">
                 {(props: LoginScreenProps) => (
-                  <LoginScreen
-                    {...props}
-                    onLogin={() => setIsLogged(true)}
-                  />
+                  <LoginScreen {...props} onLogin={() => setIsLogged(true)} />
                 )}
               </Stack.Screen>
-
               <Stack.Screen name="Register" component={RegisterScreen} />
             </>
           ) : (
             <Stack.Screen name="MainTabs">
-              {/* Pasamos onLogout a MainTabs, que lo baja hasta ProfileScreen */}
               {() => <MainTabs onLogout={() => setIsLogged(false)} />}
             </Stack.Screen>
           )}
