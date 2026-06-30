@@ -221,7 +221,7 @@ export default function ProfileScreen({ onLogout }: ProfileScreenProps) {
                 : { backgroundColor: '#ffffff', borderColor: '#bf5af2' },
             ]}>
               <Text style={[styles.themeSymbol, { color: colors.accent }]}>
-                {isDark ? '☀︎' : '☾'}
+                .✧⋆
               </Text>
             </View>
           </TouchableOpacity>

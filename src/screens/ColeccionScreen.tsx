@@ -221,33 +221,35 @@ export default function ColeccionScreen() {
       {/* Modal confirmar eliminar */}
       <Modal visible={modalEliminar !== null} animationType="fade" transparent>
         <View style={s.deleteOverlay}>
-          <View style={[s.deleteBox, { backgroundColor: colors.bgDeep, borderColor: colors.border }]}>
+          <View style={s.deleteBox}>
             <View style={s.deleteIconWrapper}>
-              <Trash2 color="#ff453a" size={30} strokeWidth={1.5} />
+              <Trash2 color="#ff453a" size={26} strokeWidth={1.8} />
             </View>
 
-            <Text style={[s.deleteTitle, { color: colors.textPrimary }]}>Eliminar disco</Text>
+            <Text style={s.deleteTitle}>Eliminar disco</Text>
 
-            <Text style={[s.deleteMsg, { color: colors.textSecondary }]}>
+            <Text style={s.deleteMsg}>
               ¿Seguro que quieres eliminar{'\n'}
-              <Text style={[s.deleteNombre, { color: colors.textPrimary }]}>"{modalEliminar?.nombre}"</Text>?
-              {'\n'}Esta acción no se puede deshacer.
+              <Text style={s.deleteNombre}>"{modalEliminar?.nombre}"</Text>?{'\n'}
+              Esta acción no se puede deshacer.
             </Text>
 
-            <View style={[s.deleteDivider, { backgroundColor: colors.border }]} />
+            <View style={s.deleteDivider} />
 
             <View style={s.deleteBtns}>
               <TouchableOpacity
-                style={[s.deleteCancelar, { backgroundColor: colors.bgCard, borderColor: colors.border }]}
-                activeOpacity={0.8}
+                style={s.deleteCancelar}
+                activeOpacity={0.7}
                 onPress={() => setModalEliminar(null)}
               >
-                <Text style={[s.deleteCancelarText, { color: colors.textSecondary }]}>Cancelar</Text>
+                <Text style={s.deleteCancelarText}>Cancelar</Text>
               </TouchableOpacity>
+
+              <View style={s.deleteBtnDivider} />
 
               <TouchableOpacity
                 style={s.deleteConfirmar}
-                activeOpacity={0.8}
+                activeOpacity={0.7}
                 onPress={() => {
                   if (modalEliminar) {
                     eliminarDisco(modalEliminar.id);
@@ -322,22 +324,24 @@ const s = StyleSheet.create({
                       borderRadius: 16, alignItems: 'center' },
   btnGuardarText:   { color: '#fff', fontSize: 15, fontWeight: '800' },
 
-  // Modal eliminar
-  deleteOverlay:      { flex: 1, backgroundColor: '#000000bb',
-                        justifyContent: 'center', alignItems: 'center' },
-  deleteBox:          { borderRadius: 24, padding: 28, marginHorizontal: 30, borderWidth: 1,
-                        alignItems: 'center', width: '85%' },
-  deleteIconWrapper:  { width: 64, height: 64, borderRadius: 20, backgroundColor: '#2c1c1c',
-                        alignItems: 'center', justifyContent: 'center', marginBottom: 16,
-                        borderWidth: 1, borderColor: '#ff453a20' },
-  deleteTitle:        { fontSize: 18, fontWeight: '800', marginBottom: 10, textAlign: 'center' },
-  deleteMsg:          { fontSize: 14, textAlign: 'center', lineHeight: 22, marginBottom: 20 },
-  deleteNombre:       { fontWeight: '700' },
-  deleteDivider:      { height: 1, width: '100%', marginBottom: 20 },
-  deleteBtns:         { flexDirection: 'row', gap: 12, width: '100%' },
-  deleteCancelar:     { flex: 1, paddingVertical: 15, borderRadius: 16, alignItems: 'center', borderWidth: 1 },
-  deleteCancelarText: { fontSize: 15, fontWeight: '700' },
-  deleteConfirmar:    { flex: 1, backgroundColor: '#2c1c1c', paddingVertical: 15,
-                        borderRadius: 16, alignItems: 'center', borderWidth: 1, borderColor: '#ff453a30' },
-  deleteConfirmarText:{ color: '#ff453a', fontSize: 15, fontWeight: '800' },
+  // Modal eliminar — mismo estilo que modal cerrar sesión
+  deleteOverlay:      { flex: 1, backgroundColor: '#000000b0',
+                        justifyContent: 'center', alignItems: 'center', paddingHorizontal: 32 },
+  deleteBox:          { width: '100%', backgroundColor: '#ffffff', borderRadius: 20,
+                        overflow: 'hidden', alignItems: 'center', paddingTop: 28 },
+  deleteIconWrapper:  { width: 56, height: 56, borderRadius: 28,
+                        backgroundColor: '#ff453a12', borderWidth: 1.5, borderColor: '#ff453a50',
+                        alignItems: 'center', justifyContent: 'center', marginBottom: 16 },
+  deleteTitle:        { fontSize: 17, fontWeight: '700', color: '#000000',
+                        marginBottom: 8, textAlign: 'center' },
+  deleteMsg:          { fontSize: 13, color: '#6c6c70', textAlign: 'center',
+                        lineHeight: 20, paddingHorizontal: 12, marginBottom: 24 },
+  deleteNombre:       { fontWeight: '700', color: '#000000' },
+  deleteDivider:      { width: '100%', height: 1, backgroundColor: '#0000001a' },
+  deleteBtns:         { flexDirection: 'row', width: '100%' },
+  deleteBtnDivider:   { width: 1, backgroundColor: '#0000001a' },
+  deleteCancelar:     { flex: 1, paddingVertical: 16, alignItems: 'center', justifyContent: 'center' },
+  deleteCancelarText: { fontSize: 14, fontWeight: '600', color: '#6c6c70' },
+  deleteConfirmar:    { flex: 1, paddingVertical: 16, alignItems: 'center', justifyContent: 'center' },
+  deleteConfirmarText:{ color: '#ff453a', fontSize: 14, fontWeight: '700' },
 });

@@ -41,7 +41,7 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 const Tab   = createBottomTabNavigator<TabParamList>();
 
 // ── Pantalla de carga post-login ──────────────────────────────────────────────
-function LoadingScreen() {
+function LoadingScreen({ bgColor }: { bgColor: string }) {
   const dot   = useRef(new Animated.Value(0)).current;
   const star  = useRef(new Animated.Value(0)).current;
   const spark = useRef(new Animated.Value(0)).current;
@@ -64,7 +64,7 @@ function LoadingScreen() {
   });
 
   return (
-    <View style={loadingStyles.container}>
+    <View style={[loadingStyles.container, { backgroundColor: bgColor }]}>
       <View style={loadingStyles.row}>
         <Animated.Text style={[loadingStyles.symbol, mk(dot,   1.2)]}>.</Animated.Text>
         <Animated.Text style={[loadingStyles.symbol, mk(star,  1.4)]}>✧</Animated.Text>
@@ -75,7 +75,7 @@ function LoadingScreen() {
 }
 
 const loadingStyles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#090912', justifyContent: 'center', alignItems: 'center' },
+  container: { flex: 1, justifyContent: 'center', alignItems: 'center' },
   row:       { flexDirection: 'row', alignItems: 'center', gap: 6 },
   symbol:    { color: '#bf5af2', fontSize: 48, fontWeight: '300' },
 });
@@ -132,7 +132,7 @@ function MainTabs({ onLogout }: { onLogout: () => void }) {
 
 // ── Root interno (necesita acceso al contexto) ────────────────────────────────
 function AppInner() {
-  const { theme } = useTheme();
+  const { theme, colors, isThemeReady } = useTheme();
   const [isLogged, setIsLogged] = useState(false);
   const [isReady,  setIsReady]  = useState(false);
 
@@ -147,14 +147,20 @@ function AppInner() {
     setIsReady(false);
   };
 
+  // Espera a que el tema guardado se cargue antes de renderizar nada,
+  // para evitar el "flash" del tema incorrecto al abrir la app.
+  if (!isThemeReady) {
+    return <LoadingScreen bgColor={colors.bg} />;
+  }
+
   return (
     <>
       <StatusBar
         barStyle={theme === 'dark' ? 'light-content' : 'dark-content'}
-        backgroundColor={theme === 'dark' ? '#090912' : '#f2f2f7'}
+        backgroundColor={colors.bg}
       />
 
-      {isLogged && !isReady && <LoadingScreen />}
+      {isLogged && !isReady && <LoadingScreen bgColor={colors.bg} />}
 
       <View style={{ flex: 1, display: (!isLogged || isReady) ? 'flex' : 'none' }}>
         <NavigationContainer>

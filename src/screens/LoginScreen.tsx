@@ -8,6 +8,7 @@ import {
   Modal,
 } from 'react-native';
 import { AlertCircle, X } from 'lucide-react-native';
+import { useTheme } from '../context/ThemeContext';
 
 type LoginScreenProps = {
   onLogin: () => void;
@@ -19,6 +20,7 @@ type AlertData = {
 };
 
 export default function LoginScreen({ onLogin }: LoginScreenProps) {
+  const { colors } = useTheme();
   const [isRegister, setIsRegister] = useState(false);
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -93,10 +95,10 @@ export default function LoginScreen({ onLogin }: LoginScreenProps) {
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Asyd Core.✧⋆</Text>
+    <View style={[styles.container, { backgroundColor: colors.bg }]}>
+      <Text style={[styles.title, { color: colors.textPrimary }]}>Asyd Core.✧⋆</Text>
 
-      <Text style={styles.subtitle}>
+      <Text style={[styles.subtitle, { color: colors.textSecondary }]}>
         {isRegister
           ? 'Crea una cuenta para descubrir música'
           : 'Inicia sesión para descubrir música'}
@@ -104,9 +106,13 @@ export default function LoginScreen({ onLogin }: LoginScreenProps) {
 
       {isRegister && (
         <TextInput
-          style={styles.input}
+          style={[styles.input, {
+            backgroundColor: colors.bgInput,
+            color: colors.textPrimary,
+            borderColor: colors.border,
+          }]}
           placeholder="Nombre completo"
-          placeholderTextColor="#8e8e93"
+          placeholderTextColor={colors.textSecondary}
           autoCapitalize="words"
           value={name}
           onChangeText={setName}
@@ -114,9 +120,13 @@ export default function LoginScreen({ onLogin }: LoginScreenProps) {
       )}
 
       <TextInput
-        style={styles.input}
+        style={[styles.input, {
+          backgroundColor: colors.bgInput,
+          color: colors.textPrimary,
+          borderColor: colors.border,
+        }]}
         placeholder="Correo electrónico"
-        placeholderTextColor="#8e8e93"
+        placeholderTextColor={colors.textSecondary}
         keyboardType="email-address"
         autoCapitalize="none"
         value={email}
@@ -124,9 +134,13 @@ export default function LoginScreen({ onLogin }: LoginScreenProps) {
       />
 
       <TextInput
-        style={styles.input}
+        style={[styles.input, {
+          backgroundColor: colors.bgInput,
+          color: colors.textPrimary,
+          borderColor: colors.border,
+        }]}
         placeholder="Contraseña"
-        placeholderTextColor="#8e8e93"
+        placeholderTextColor={colors.textSecondary}
         secureTextEntry
         value={password}
         onChangeText={setPassword}
@@ -134,9 +148,13 @@ export default function LoginScreen({ onLogin }: LoginScreenProps) {
 
       {isRegister && (
         <TextInput
-          style={styles.input}
+          style={[styles.input, {
+            backgroundColor: colors.bgInput,
+            color: colors.textPrimary,
+            borderColor: colors.border,
+          }]}
           placeholder="Confirmar contraseña"
-          placeholderTextColor="#8e8e93"
+          placeholderTextColor={colors.textSecondary}
           secureTextEntry
           value={confirmPassword}
           onChangeText={setConfirmPassword}
@@ -150,7 +168,7 @@ export default function LoginScreen({ onLogin }: LoginScreenProps) {
       </TouchableOpacity>
 
       <View style={styles.switchContainer}>
-        <Text style={styles.switchText}>
+        <Text style={[styles.switchText, { color: colors.textSecondary }]}>
           {isRegister ? '¿Ya tienes cuenta?' : '¿No tienes cuenta?'}
         </Text>
         <TouchableOpacity onPress={toggleMode}>
@@ -163,15 +181,15 @@ export default function LoginScreen({ onLogin }: LoginScreenProps) {
       {/* Modal de alerta personalizado */}
       <Modal visible={alerta !== null} animationType="fade" transparent>
         <View style={styles.alertOverlay}>
-          <View style={styles.alertBox}>
+          <View style={[styles.alertBox, { backgroundColor: colors.bgDeep, borderColor: colors.border }]}>
             <View style={styles.alertIconWrapper}>
               <AlertCircle color="#bf5af2" size={30} strokeWidth={1.5} />
             </View>
 
-            <Text style={styles.alertTitle}>{alerta?.titulo}</Text>
-            <Text style={styles.alertMsg}>{alerta?.mensaje}</Text>
+            <Text style={[styles.alertTitle, { color: colors.textPrimary }]}>{alerta?.titulo}</Text>
+            <Text style={[styles.alertMsg, { color: colors.textSecondary }]}>{alerta?.mensaje}</Text>
 
-            <View style={styles.alertDivider} />
+            <View style={[styles.alertDivider, { backgroundColor: colors.border }]} />
 
             <TouchableOpacity
               style={styles.alertBtn}
@@ -190,20 +208,17 @@ export default function LoginScreen({ onLogin }: LoginScreenProps) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#090912',
     justifyContent: 'center',
     paddingHorizontal: 30,
   },
 
   title: {
-    color: '#fff',
     fontSize: 36,
     fontWeight: 'bold',
     textAlign: 'center',
   },
 
   subtitle: {
-    color: '#8e8e93',
     fontSize: 14,
     textAlign: 'center',
     marginTop: 10,
@@ -211,14 +226,11 @@ const styles = StyleSheet.create({
   },
 
   input: {
-    backgroundColor: '#151525',
-    color: '#fff',
     borderRadius: 18,
     paddingHorizontal: 20,
     paddingVertical: 16,
     marginBottom: 16,
     borderWidth: 1,
-    borderColor: '#ffffff10',
   },
 
   button: {
@@ -244,7 +256,6 @@ const styles = StyleSheet.create({
   },
 
   switchText: {
-    color: '#8e8e93',
     fontSize: 14,
   },
 
@@ -262,12 +273,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   alertBox: {
-    backgroundColor: '#0f0f1e',
     borderRadius: 24,
     padding: 28,
     width: '85%',
     borderWidth: 1,
-    borderColor: '#ffffff10',
     alignItems: 'center',
   },
   alertIconWrapper: {
@@ -282,14 +291,12 @@ const styles = StyleSheet.create({
     borderColor: '#bf5af230',
   },
   alertTitle: {
-    color: '#fff',
     fontSize: 18,
     fontWeight: '800',
     marginBottom: 10,
     textAlign: 'center',
   },
   alertMsg: {
-    color: '#8e8e93',
     fontSize: 14,
     textAlign: 'center',
     lineHeight: 22,
@@ -297,7 +304,6 @@ const styles = StyleSheet.create({
   },
   alertDivider: {
     height: 1,
-    backgroundColor: '#ffffff10',
     width: '100%',
     marginBottom: 20,
   },
