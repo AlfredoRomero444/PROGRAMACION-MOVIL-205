@@ -11,6 +11,7 @@ import {
 import { useNavigation } from '@react-navigation/native';
 
 import { useProductos } from '../hooks/useProductos';
+import { useTheme } from '../context/ThemeContext';
 
 function LoadingSymbols() {
   const dot   = useRef(new Animated.Value(0)).current;
@@ -22,16 +23,8 @@ function LoadingSymbols() {
       Animated.loop(
         Animated.sequence([
           Animated.delay(delay),
-          Animated.timing(anim, {
-            toValue: 1,
-            duration: 600,
-            useNativeDriver: true,
-          }),
-          Animated.timing(anim, {
-            toValue: 0.2,
-            duration: 600,
-            useNativeDriver: true,
-          }),
+          Animated.timing(anim, { toValue: 1, duration: 600, useNativeDriver: true }),
+          Animated.timing(anim, { toValue: 0.2, duration: 600, useNativeDriver: true }),
         ])
       ).start();
 
@@ -57,6 +50,7 @@ function LoadingSymbols() {
 
 export default function HomeScreen() {
   const { productos, cargando, getArtesano } = useProductos();
+  const { colors, theme } = useTheme();
   const navigation = useNavigation<any>();
 
   // Oculta header y tab bar mientras carga, los restaura al terminar
@@ -70,22 +64,26 @@ export default function HomeScreen() {
       parent?.setOptions({
         tabBarStyle: {
           display: 'flex',
-          backgroundColor: '#0a0a12',
+          backgroundColor: colors.tabBar,
           borderTopWidth: 1.5,
-          borderTopColor: '#bf5af230',
+          borderTopColor: colors.tabBorder,
           height: 60,
           paddingTop: 4,
           paddingBottom: 8,
         },
       });
     }
-  }, [cargando]);
+  }, [cargando, colors]);
 
   if (cargando) {
-    return <LoadingSymbols />;
+    return (
+      <View style={[styles.loadingContainer, { backgroundColor: colors.bg }]}>
+        <LoadingSymbols />
+      </View>
+    );
   }
 
-  // ✅ DESTACADO FIJO (Asyd G)
+  // DESTACADO FIJO (Asyd G)
   const destacado = productos.find(d => d.id === 16)!;
 
   const nuevosArtistas = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
@@ -95,35 +93,33 @@ export default function HomeScreen() {
 
   return (
     <ScrollView
-      style={styles.container}
+      style={[styles.container, { backgroundColor: colors.bg }]}
       contentContainerStyle={styles.content}
       showsVerticalScrollIndicator={false}
     >
-      <Text style={styles.sectionLabel}>
+      <Text style={[styles.sectionLabel, { color: colors.accent }]}>
         DESCUBRE NUEVA MÚSICA
       </Text>
 
-      <Text style={styles.title}>
+      <Text style={[styles.title, { color: colors.textPrimary }]}>
         Welcome to{'\n'}Asyd Core.✧⋆
       </Text>
 
-      <Text style={styles.subtitle}>
+      <Text style={[styles.subtitle, { color: colors.textSecondary }]}>
         Explora artistas, álbumes y colecciones exclusivas.
       </Text>
 
-      {/* 🔥 BANNER */}
+      {/* BANNER */}
       {destacado && (
-        <View style={styles.banner}>
+        <View style={[styles.banner, { backgroundColor: colors.bgCard, borderColor: colors.border }]}>
           <View style={styles.bannerContent}>
-            <Text style={styles.bannerTag}>
+            <Text style={[styles.bannerTag, { color: colors.accent }]}>
               TENDENCIA
             </Text>
-
-            <Text style={styles.bannerTitle}>
+            <Text style={[styles.bannerTitle, { color: colors.textPrimary }]}>
               {destacado.nombre}
             </Text>
-
-            <Text style={styles.bannerArtist}>
+            <Text style={[styles.bannerArtist, { color: colors.textSecondary }]}>
               {getArtesano(destacado.artistaId)?.nombre}
             </Text>
           </View>
@@ -141,11 +137,10 @@ export default function HomeScreen() {
 
       {/* ARTISTAS */}
       <View style={styles.sectionHeader}>
-        <Text style={styles.sectionTitle}>
+        <Text style={[styles.sectionTitle, { color: colors.textPrimary }]}>
           Artistas destacados
         </Text>
-
-        <Text style={styles.sectionAction}>
+        <Text style={[styles.sectionAction, { color: colors.accent }]}>
           Ver más
         </Text>
       </View>
@@ -166,12 +161,10 @@ export default function HomeScreen() {
               }
               style={styles.artistImage}
             />
-
-            <Text numberOfLines={1} style={styles.artistName}>
+            <Text numberOfLines={1} style={[styles.artistName, { color: colors.textPrimary }]}>
               {item!.nombre}
             </Text>
-
-            <Text style={styles.artistGenre}>
+            <Text style={[styles.artistGenre, { color: colors.textSecondary }]}>
               {item!.genero}
             </Text>
           </View>
@@ -180,16 +173,15 @@ export default function HomeScreen() {
 
       {/* ÁLBUMES */}
       <View style={styles.sectionHeader}>
-        <Text style={styles.sectionTitle}>
+        <Text style={[styles.sectionTitle, { color: colors.textPrimary }]}>
           Álbumes populares
         </Text>
       </View>
 
       {productos.map(disco => {
         const artista = getArtesano(disco.artistaId);
-
         return (
-          <View key={disco.id} style={styles.albumCard}>
+          <View key={disco.id} style={[styles.albumCard, { backgroundColor: colors.bgCard, borderColor: colors.border }]}>
             <Image
               source={
                 typeof disco.imagen === 'string'
@@ -198,17 +190,14 @@ export default function HomeScreen() {
               }
               style={styles.albumImage}
             />
-
             <View style={styles.albumInfo}>
-              <Text style={styles.albumName}>
+              <Text style={[styles.albumName, { color: colors.textPrimary }]}>
                 {disco.nombre}
               </Text>
-
-              <Text style={styles.albumArtist}>
+              <Text style={[styles.albumArtist, { color: colors.textSecondary }]}>
                 {artista?.nombre}
               </Text>
-
-              <Text style={styles.albumPrice}>
+              <Text style={[styles.albumPrice, { color: colors.green }]}>
                 Desde ${disco.precioActual}
               </Text>
             </View>
@@ -220,184 +209,52 @@ export default function HomeScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#090912',
-  },
-
-  content: {
-    padding: 25,
-    paddingBottom: 120,
-  },
+  container: { flex: 1 },
+  content:   { padding: 25, paddingBottom: 120 },
 
   loadingContainer: {
     flex: 1,
-    backgroundColor: '#090912',
     justifyContent: 'center',
     alignItems: 'center',
   },
+  symbolsRow: { flexDirection: 'row', alignItems: 'center', gap: 6 },
+  symbol:     { color: '#bf5af2', fontSize: 48, fontWeight: '300' },
 
-  symbolsRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 6,
-  },
-
-  symbol: {
-    color: '#bf5af2',
-    fontSize: 48,
-    fontWeight: '300',
-  },
-
-  sectionLabel: {
-    color: '#bf5af2',
-    fontSize: 11,
-    fontWeight: '800',
-    letterSpacing: 2,
-  },
-
-  title: {
-    color: '#ffffff',
-    fontSize: 34,
-    fontWeight: '900',
-    marginTop: 10,
-  },
-
-  subtitle: {
-    color: '#8e8e93',
-    fontSize: 15,
-    lineHeight: 22,
-    marginTop: 10,
-    marginBottom: 30,
-  },
+  sectionLabel:  { fontSize: 11, fontWeight: '800', letterSpacing: 2 },
+  title:         { fontSize: 34, fontWeight: '900', marginTop: 10 },
+  subtitle:      { fontSize: 15, lineHeight: 22, marginTop: 10, marginBottom: 30 },
 
   banner: {
-    backgroundColor: '#151525',
-    borderRadius: 30,
-    padding: 20,
-    marginBottom: 30,
-    flexDirection: 'row',
-    alignItems: 'center',
-    borderWidth: 1,
-    borderColor: '#ffffff10',
+    borderRadius: 30, padding: 20, marginBottom: 30,
+    flexDirection: 'row', alignItems: 'center', borderWidth: 1,
   },
-
-  bannerContent: {
-    flex: 1,
-    marginRight: 15,
-  },
-
-  bannerTag: {
-    color: '#bf5af2',
-    fontSize: 11,
-    fontWeight: '800',
-    letterSpacing: 2,
-  },
-
-  bannerTitle: {
-    color: '#ffffff',
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginTop: 12,
-  },
-
-  bannerArtist: {
-    color: '#8e8e93',
-    fontSize: 15,
-    marginTop: 6,
-  },
-
-  bannerImage: {
-    width: 110,
-    height: 110,
-    borderRadius: 20,
-  },
+  bannerContent: { flex: 1, marginRight: 15 },
+  bannerTag:     { fontSize: 11, fontWeight: '800', letterSpacing: 2 },
+  bannerTitle:   { fontSize: 24, fontWeight: 'bold', marginTop: 12 },
+  bannerArtist:  { fontSize: 15, marginTop: 6 },
+  bannerImage:   { width: 110, height: 110, borderRadius: 20 },
 
   sectionHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 18,
-    marginTop: 10,
+    flexDirection: 'row', justifyContent: 'space-between',
+    alignItems: 'center', marginBottom: 18, marginTop: 10,
   },
+  sectionTitle:  { fontSize: 20, fontWeight: '700' },
+  sectionAction: { fontWeight: '600' },
 
-  sectionTitle: {
-    color: '#ffffff',
-    fontSize: 20,
-    fontWeight: '700',
-  },
+  artistList:  { paddingBottom: 15 },
+  artistCard:  { width: 120, marginRight: 15 },
+  artistImage: { width: 120, height: 120, borderRadius: 24, marginBottom: 10 },
+  artistName:  { fontSize: 14, fontWeight: '700' },
+  artistGenre: { fontSize: 12, marginTop: 4 },
 
-  sectionAction: {
-    color: '#bf5af2',
-    fontWeight: '600',
+  albumCard:   {
+    borderRadius: 24, padding: 15,
+    flexDirection: 'row', alignItems: 'center',
+    marginBottom: 15, borderWidth: 1,
   },
-
-  artistList: {
-    paddingBottom: 15,
-  },
-
-  artistCard: {
-    width: 120,
-    marginRight: 15,
-  },
-
-  artistImage: {
-    width: 120,
-    height: 120,
-    borderRadius: 24,
-    marginBottom: 10,
-  },
-
-  artistName: {
-    color: '#ffffff',
-    fontSize: 14,
-    fontWeight: '700',
-  },
-
-  artistGenre: {
-    color: '#8e8e93',
-    fontSize: 12,
-    marginTop: 4,
-  },
-
-  albumCard: {
-    backgroundColor: '#151525',
-    borderRadius: 24,
-    padding: 15,
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 15,
-    borderWidth: 1,
-    borderColor: '#ffffff10',
-  },
-
-  albumImage: {
-    width: 75,
-    height: 75,
-    borderRadius: 18,
-  },
-
-  albumInfo: {
-    flex: 1,
-    marginLeft: 15,
-  },
-
-  albumName: {
-    color: '#ffffff',
-    fontSize: 17,
-    fontWeight: '700',
-  },
-
-  albumArtist: {
-    color: '#8e8e93',
-    fontSize: 14,
-    marginTop: 5,
-  },
-
-  albumPrice: {
-    color: '#32d74b',
-    fontSize: 15,
-    fontWeight: '700',
-    marginTop: 10,
-  },
+  albumImage:  { width: 75, height: 75, borderRadius: 18 },
+  albumInfo:   { flex: 1, marginLeft: 15 },
+  albumName:   { fontSize: 17, fontWeight: '700' },
+  albumArtist: { fontSize: 14, marginTop: 5 },
+  albumPrice:  { fontSize: 15, fontWeight: '700', marginTop: 10 },
 });

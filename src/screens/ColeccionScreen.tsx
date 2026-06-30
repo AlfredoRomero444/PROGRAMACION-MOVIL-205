@@ -9,11 +9,14 @@ import {
   inicializarDB, insertarDisco, obtenerDiscos,
   actualizarDisco, eliminarDisco, DiscoColeccion,
 } from '../services/ColeccionDB';
+import { useTheme } from '../context/ThemeContext';
 
 // Formulario vacío reutilizable
 const FORM_VACIO = { nombre: '', artista: '', genero: '', año: '', nota: '' };
 
 export default function ColeccionScreen() {
+  const { colors } = useTheme();
+
   const [discos, setDiscos]               = useState<DiscoColeccion[]>([]);
   const [modalVisible, setModal]          = useState(false);
   const [editando, setEditando]           = useState<DiscoColeccion | null>(null);
@@ -74,12 +77,12 @@ export default function ColeccionScreen() {
   };
 
   return (
-    <View style={s.container}>
+    <View style={[s.container, { backgroundColor: colors.bg }]}>
       {/* Header */}
       <View style={s.header}>
-        <Text style={s.label}>MI COLECCIÓN</Text>
-        <Text style={s.title}>SQLite Local</Text>
-        <Text style={s.subtitle}>{discos.length} discos guardados en el dispositivo</Text>
+        <Text style={[s.label, { color: colors.accent }]}>MI COLECCIÓN</Text>
+        <Text style={[s.title, { color: colors.textPrimary }]}>SQLite Local</Text>
+        <Text style={[s.subtitle, { color: colors.textSecondary }]}>{discos.length} discos guardados en el dispositivo</Text>
       </View>
 
       {/* Botón agregar */}
@@ -96,33 +99,33 @@ export default function ColeccionScreen() {
         showsVerticalScrollIndicator={false}
         ListEmptyComponent={
           <View style={s.vacio}>
-            <View style={s.vacioIconWrapper}>
-              <Music2 color="#5e5e66" size={36} strokeWidth={1.5} />
+            <View style={[s.vacioIconWrapper, { backgroundColor: colors.bgCard, borderColor: colors.border }]}>
+              <Music2 color={colors.textMuted} size={36} strokeWidth={1.5} />
             </View>
-            <Text style={s.vacioTexto}>Tu colección está vacía.{'\n'}Agrega tu primer disco.</Text>
+            <Text style={[s.vacioTexto, { color: colors.textMuted }]}>Tu colección está vacía.{'\n'}Agrega tu primer disco.</Text>
           </View>
         }
         renderItem={({ item }) => (
-          <View style={s.card}>
+          <View style={[s.card, { backgroundColor: colors.bgCard, borderColor: colors.border }]}>
             <View style={s.cardLeft}>
               <View style={s.dot} />
             </View>
             <View style={s.cardInfo}>
-              <Text style={s.cardNombre} numberOfLines={1}>{item.nombre}</Text>
-              <Text style={s.cardArtista}>{item.artista}</Text>
+              <Text style={[s.cardNombre, { color: colors.textPrimary }]} numberOfLines={1}>{item.nombre}</Text>
+              <Text style={[s.cardArtista, { color: colors.textSecondary }]}>{item.artista}</Text>
               <View style={s.cardMeta}>
-                <View style={s.genreBadge}>
-                  <Text style={s.genreText}>{item.genero}</Text>
+                <View style={[s.genreBadge, { backgroundColor: colors.accentFaint }]}>
+                  <Text style={[s.genreText, { color: colors.accentLight }]}>{item.genero}</Text>
                 </View>
-                <Text style={s.cardAño}>{item.año}</Text>
+                <Text style={[s.cardAño, { color: colors.textMuted }]}>{item.año}</Text>
               </View>
-              {item.nota ? <Text style={s.cardNota} numberOfLines={1}>"{item.nota}"</Text> : null}
+              {item.nota ? <Text style={[s.cardNota, { color: colors.textMuted }]} numberOfLines={1}>"{item.nota}"</Text> : null}
             </View>
             <View style={s.cardActions}>
-              <TouchableOpacity style={s.btnEdit} onPress={() => abrirEditar(item)} activeOpacity={0.7}>
+              <TouchableOpacity style={[s.btnEdit, { backgroundColor: colors.bgDeep, borderColor: colors.accentBorder }]} onPress={() => abrirEditar(item)} activeOpacity={0.7}>
                 <Pencil color="#bf5af2" size={16} strokeWidth={2} />
               </TouchableOpacity>
-              <TouchableOpacity style={s.btnDel} onPress={() => confirmarEliminar(item)} activeOpacity={0.7}>
+              <TouchableOpacity style={[s.btnDel, { backgroundColor: colors.bgDeep, borderColor: '#ff453a20' }]} onPress={() => confirmarEliminar(item)} activeOpacity={0.7}>
                 <Trash2 color="#ff453a" size={16} strokeWidth={2} />
               </TouchableOpacity>
             </View>
@@ -136,64 +139,64 @@ export default function ColeccionScreen() {
           behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
           style={s.modalOverlay}
         >
-          <View style={s.modalBox}>
+          <View style={[s.modalBox, { backgroundColor: colors.bgDeep, borderColor: colors.accentBorder }]}>
             <ScrollView showsVerticalScrollIndicator={false}>
               {/* Título del modal con ícono */}
               <View style={s.modalTitleRow}>
-                <View style={editando ? s.modalIconEdit : s.modalIconNew}>
+                <View style={[editando ? s.modalIconEdit : s.modalIconNew, { backgroundColor: colors.accentFaint }]}>
                   {editando
                     ? <Pencil color="#bf5af2" size={18} strokeWidth={2} />
                     : <Plus   color="#bf5af2" size={18} strokeWidth={2} />
                   }
                 </View>
-                <Text style={s.modalTitle}>
+                <Text style={[s.modalTitle, { color: colors.textPrimary }]}>
                   {editando ? 'Editar disco' : 'Nuevo disco'}
                 </Text>
               </View>
 
-              <Text style={s.inputLabel}>Nombre del álbum *</Text>
+              <Text style={[s.inputLabel, { color: colors.textSecondary }]}>Nombre del álbum *</Text>
               <TextInput
-                style={s.input}
+                style={[s.input, { backgroundColor: colors.bgInput, color: colors.textPrimary, borderColor: colors.borderMid }]}
                 placeholder="Ej: After Hours"
-                placeholderTextColor="#5e5e66"
+                placeholderTextColor={colors.textMuted}
                 value={form.nombre}
                 onChangeText={(v) => setForm({ ...form, nombre: v })}
               />
 
-              <Text style={s.inputLabel}>Artista *</Text>
+              <Text style={[s.inputLabel, { color: colors.textSecondary }]}>Artista *</Text>
               <TextInput
-                style={s.input}
+                style={[s.input, { backgroundColor: colors.bgInput, color: colors.textPrimary, borderColor: colors.borderMid }]}
                 placeholder="Ej: The Weeknd"
-                placeholderTextColor="#5e5e66"
+                placeholderTextColor={colors.textMuted}
                 value={form.artista}
                 onChangeText={(v) => setForm({ ...form, artista: v })}
               />
 
-              <Text style={s.inputLabel}>Género *</Text>
+              <Text style={[s.inputLabel, { color: colors.textSecondary }]}>Género *</Text>
               <TextInput
-                style={s.input}
+                style={[s.input, { backgroundColor: colors.bgInput, color: colors.textPrimary, borderColor: colors.borderMid }]}
                 placeholder="Ej: R&B / Pop"
-                placeholderTextColor="#5e5e66"
+                placeholderTextColor={colors.textMuted}
                 value={form.genero}
                 onChangeText={(v) => setForm({ ...form, genero: v })}
               />
 
-              <Text style={s.inputLabel}>Año *</Text>
+              <Text style={[s.inputLabel, { color: colors.textSecondary }]}>Año *</Text>
               <TextInput
-                style={s.input}
+                style={[s.input, { backgroundColor: colors.bgInput, color: colors.textPrimary, borderColor: colors.borderMid }]}
                 placeholder="Ej: 2020"
-                placeholderTextColor="#5e5e66"
+                placeholderTextColor={colors.textMuted}
                 keyboardType="numeric"
                 maxLength={4}
                 value={form.año}
                 onChangeText={(v) => setForm({ ...form, año: v })}
               />
 
-              <Text style={s.inputLabel}>Nota personal</Text>
+              <Text style={[s.inputLabel, { color: colors.textSecondary }]}>Nota personal</Text>
               <TextInput
-                style={[s.input, s.inputMulti]}
+                style={[s.input, s.inputMulti, { backgroundColor: colors.bgInput, color: colors.textPrimary, borderColor: colors.borderMid }]}
                 placeholder="¿Qué te parece este álbum?"
-                placeholderTextColor="#5e5e66"
+                placeholderTextColor={colors.textMuted}
                 multiline
                 numberOfLines={3}
                 value={form.nota}
@@ -201,8 +204,8 @@ export default function ColeccionScreen() {
               />
 
               <View style={s.modalBtns}>
-                <TouchableOpacity style={s.btnCancelar} onPress={() => setModal(false)}>
-                  <Text style={s.btnCancelarText}>Cancelar</Text>
+                <TouchableOpacity style={[s.btnCancelar, { backgroundColor: colors.bgCard, borderColor: colors.border }]} onPress={() => setModal(false)}>
+                  <Text style={[s.btnCancelarText, { color: colors.textSecondary }]}>Cancelar</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={s.btnGuardar} onPress={guardar}>
                   <Text style={s.btnGuardarText}>
@@ -218,28 +221,28 @@ export default function ColeccionScreen() {
       {/* Modal confirmar eliminar */}
       <Modal visible={modalEliminar !== null} animationType="fade" transparent>
         <View style={s.deleteOverlay}>
-          <View style={s.deleteBox}>
+          <View style={[s.deleteBox, { backgroundColor: colors.bgDeep, borderColor: colors.border }]}>
             <View style={s.deleteIconWrapper}>
               <Trash2 color="#ff453a" size={30} strokeWidth={1.5} />
             </View>
 
-            <Text style={s.deleteTitle}>Eliminar disco</Text>
+            <Text style={[s.deleteTitle, { color: colors.textPrimary }]}>Eliminar disco</Text>
 
-            <Text style={s.deleteMsg}>
+            <Text style={[s.deleteMsg, { color: colors.textSecondary }]}>
               ¿Seguro que quieres eliminar{'\n'}
-              <Text style={s.deleteNombre}>"{modalEliminar?.nombre}"</Text>?
+              <Text style={[s.deleteNombre, { color: colors.textPrimary }]}>"{modalEliminar?.nombre}"</Text>?
               {'\n'}Esta acción no se puede deshacer.
             </Text>
 
-            <View style={s.deleteDivider} />
+            <View style={[s.deleteDivider, { backgroundColor: colors.border }]} />
 
             <View style={s.deleteBtns}>
               <TouchableOpacity
-                style={s.deleteCancelar}
+                style={[s.deleteCancelar, { backgroundColor: colors.bgCard, borderColor: colors.border }]}
                 activeOpacity={0.8}
                 onPress={() => setModalEliminar(null)}
               >
-                <Text style={s.deleteCancelarText}>Cancelar</Text>
+                <Text style={[s.deleteCancelarText, { color: colors.textSecondary }]}>Cancelar</Text>
               </TouchableOpacity>
 
               <TouchableOpacity
@@ -264,11 +267,11 @@ export default function ColeccionScreen() {
 }
 
 const s = StyleSheet.create({
-  container:      { flex: 1, backgroundColor: '#090912', paddingTop: 25 },
+  container:      { flex: 1, paddingTop: 25 },
   header:         { paddingHorizontal: 25, marginBottom: 20 },
-  label:          { color: '#bf5af2', fontSize: 11, fontWeight: '800', letterSpacing: 2 },
-  title:          { color: '#fff', fontSize: 32, fontWeight: '900', marginTop: 8, letterSpacing: -1 },
-  subtitle:       { color: '#8e8e93', fontSize: 14, marginTop: 6 },
+  label:          { fontSize: 11, fontWeight: '800', letterSpacing: 2 },
+  title:          { fontSize: 32, fontWeight: '900', marginTop: 8, letterSpacing: -1 },
+  subtitle:       { fontSize: 14, marginTop: 6 },
 
   btnAgregar:     { marginHorizontal: 25, marginBottom: 20, backgroundColor: '#bf5af2',
                     paddingVertical: 14, borderRadius: 18, alignItems: 'center',
@@ -278,52 +281,43 @@ const s = StyleSheet.create({
   lista:          { paddingHorizontal: 25, paddingBottom: 40 },
 
   vacio:          { alignItems: 'center', marginTop: 60, gap: 16 },
-  vacioIconWrapper: { width: 72, height: 72, borderRadius: 22, backgroundColor: '#151525',
-                      alignItems: 'center', justifyContent: 'center',
-                      borderWidth: 1, borderColor: '#ffffff10' },
-  vacioTexto:     { color: '#5e5e66', fontSize: 15, textAlign: 'center', lineHeight: 24 },
+  vacioIconWrapper: { width: 72, height: 72, borderRadius: 22,
+                      alignItems: 'center', justifyContent: 'center', borderWidth: 1 },
+  vacioTexto:     { fontSize: 15, textAlign: 'center', lineHeight: 24 },
 
-  card:           { flexDirection: 'row', backgroundColor: '#151525', borderRadius: 18,
-                    padding: 14, marginBottom: 12, borderWidth: 1, borderColor: '#ffffff10',
-                    alignItems: 'center' },
+  card:           { flexDirection: 'row', borderRadius: 18,
+                    padding: 14, marginBottom: 12, borderWidth: 1, alignItems: 'center' },
   cardLeft:       { marginRight: 12 },
   dot:            { width: 10, height: 10, borderRadius: 5, backgroundColor: '#bf5af2' },
   cardInfo:       { flex: 1 },
-  cardNombre:     { color: '#fff', fontSize: 15, fontWeight: '700' },
-  cardArtista:    { color: '#8e8e93', fontSize: 13, marginTop: 2 },
+  cardNombre:     { fontSize: 15, fontWeight: '700' },
+  cardArtista:    { fontSize: 13, marginTop: 2 },
   cardMeta:       { flexDirection: 'row', alignItems: 'center', gap: 8, marginTop: 6 },
-  genreBadge:     { backgroundColor: '#bf5af220', paddingHorizontal: 8, paddingVertical: 2, borderRadius: 8 },
-  genreText:      { color: '#d4a8f5', fontSize: 11, fontWeight: '600' },
-  cardAño:        { color: '#5e5e66', fontSize: 12 },
-  cardNota:       { color: '#5e5e66', fontSize: 12, fontStyle: 'italic', marginTop: 4 },
+  genreBadge:     { paddingHorizontal: 8, paddingVertical: 2, borderRadius: 8 },
+  genreText:      { fontSize: 11, fontWeight: '600' },
+  cardAño:        { fontSize: 12 },
+  cardNota:       { fontSize: 12, fontStyle: 'italic', marginTop: 4 },
   cardActions:    { gap: 8 },
-  btnEdit:        { backgroundColor: '#1c1c2e', width: 36, height: 36, borderRadius: 10,
-                    alignItems: 'center', justifyContent: 'center',
-                    borderWidth: 1, borderColor: '#bf5af220' },
-  btnDel:         { backgroundColor: '#2c1c1c', width: 36, height: 36, borderRadius: 10,
-                    alignItems: 'center', justifyContent: 'center',
-                    borderWidth: 1, borderColor: '#ff453a20' },
+  btnEdit:        { width: 36, height: 36, borderRadius: 10,
+                    alignItems: 'center', justifyContent: 'center', borderWidth: 1 },
+  btnDel:         { width: 36, height: 36, borderRadius: 10,
+                    alignItems: 'center', justifyContent: 'center', borderWidth: 1 },
 
   // Modal formulario
   modalOverlay:     { flex: 1, backgroundColor: '#000000aa', justifyContent: 'flex-end' },
-  modalBox:         { backgroundColor: '#0f0f1e', borderTopLeftRadius: 28, borderTopRightRadius: 28,
-                      padding: 28, maxHeight: '90%' },
+  modalBox:         { borderTopLeftRadius: 28, borderTopRightRadius: 28,
+                      padding: 28, maxHeight: '90%', borderTopWidth: 1 },
   modalTitleRow:    { flexDirection: 'row', alignItems: 'center', gap: 12, marginBottom: 24 },
-  modalIconEdit:    { width: 36, height: 36, borderRadius: 10, backgroundColor: '#bf5af220',
-                      alignItems: 'center', justifyContent: 'center' },
-  modalIconNew:     { width: 36, height: 36, borderRadius: 10, backgroundColor: '#bf5af220',
-                      alignItems: 'center', justifyContent: 'center' },
-  modalTitle:       { color: '#fff', fontSize: 20, fontWeight: '800' },
-  inputLabel:       { color: '#8e8e93', fontSize: 12, fontWeight: '600',
-                      letterSpacing: 0.5, marginBottom: 6 },
-  input:            { backgroundColor: '#151525', color: '#fff', borderRadius: 14,
-                      paddingHorizontal: 16, paddingVertical: 13, marginBottom: 16,
-                      borderWidth: 1, borderColor: '#ffffff10', fontSize: 14 },
+  modalIconEdit:    { width: 36, height: 36, borderRadius: 10, alignItems: 'center', justifyContent: 'center' },
+  modalIconNew:     { width: 36, height: 36, borderRadius: 10, alignItems: 'center', justifyContent: 'center' },
+  modalTitle:       { fontSize: 20, fontWeight: '800' },
+  inputLabel:       { fontSize: 12, fontWeight: '600', letterSpacing: 0.5, marginBottom: 6 },
+  input:            { borderRadius: 14, paddingHorizontal: 16, paddingVertical: 13, marginBottom: 16,
+                      borderWidth: 1, fontSize: 14 },
   inputMulti:       { height: 90, textAlignVertical: 'top' },
   modalBtns:        { flexDirection: 'row', gap: 12, marginTop: 8 },
-  btnCancelar:      { flex: 1, backgroundColor: '#1c1c2e', paddingVertical: 15,
-                      borderRadius: 16, alignItems: 'center' },
-  btnCancelarText:  { color: '#8e8e93', fontSize: 15, fontWeight: '700' },
+  btnCancelar:      { flex: 1, paddingVertical: 15, borderRadius: 16, alignItems: 'center', borderWidth: 1 },
+  btnCancelarText:  { fontSize: 15, fontWeight: '700' },
   btnGuardar:       { flex: 1, backgroundColor: '#bf5af2', paddingVertical: 15,
                       borderRadius: 16, alignItems: 'center' },
   btnGuardarText:   { color: '#fff', fontSize: 15, fontWeight: '800' },
@@ -331,25 +325,19 @@ const s = StyleSheet.create({
   // Modal eliminar
   deleteOverlay:      { flex: 1, backgroundColor: '#000000bb',
                         justifyContent: 'center', alignItems: 'center' },
-  deleteBox:          { backgroundColor: '#0f0f1e', borderRadius: 24, padding: 28,
-                        marginHorizontal: 30, borderWidth: 1, borderColor: '#ffffff10',
+  deleteBox:          { borderRadius: 24, padding: 28, marginHorizontal: 30, borderWidth: 1,
                         alignItems: 'center', width: '85%' },
   deleteIconWrapper:  { width: 64, height: 64, borderRadius: 20, backgroundColor: '#2c1c1c',
                         alignItems: 'center', justifyContent: 'center', marginBottom: 16,
                         borderWidth: 1, borderColor: '#ff453a20' },
-  deleteTitle:        { color: '#fff', fontSize: 18, fontWeight: '800',
-                        marginBottom: 10, textAlign: 'center' },
-  deleteMsg:          { color: '#8e8e93', fontSize: 14, textAlign: 'center',
-                        lineHeight: 22, marginBottom: 20 },
-  deleteNombre:       { color: '#ffffff', fontWeight: '700' },
-  deleteDivider:      { height: 1, backgroundColor: '#ffffff10', width: '100%', marginBottom: 20 },
+  deleteTitle:        { fontSize: 18, fontWeight: '800', marginBottom: 10, textAlign: 'center' },
+  deleteMsg:          { fontSize: 14, textAlign: 'center', lineHeight: 22, marginBottom: 20 },
+  deleteNombre:       { fontWeight: '700' },
+  deleteDivider:      { height: 1, width: '100%', marginBottom: 20 },
   deleteBtns:         { flexDirection: 'row', gap: 12, width: '100%' },
-  deleteCancelar:     { flex: 1, backgroundColor: '#1c1c2e', paddingVertical: 15,
-                        borderRadius: 16, alignItems: 'center',
-                        borderWidth: 1, borderColor: '#ffffff08' },
-  deleteCancelarText: { color: '#8e8e93', fontSize: 15, fontWeight: '700' },
+  deleteCancelar:     { flex: 1, paddingVertical: 15, borderRadius: 16, alignItems: 'center', borderWidth: 1 },
+  deleteCancelarText: { fontSize: 15, fontWeight: '700' },
   deleteConfirmar:    { flex: 1, backgroundColor: '#2c1c1c', paddingVertical: 15,
-                        borderRadius: 16, alignItems: 'center',
-                        borderWidth: 1, borderColor: '#ff453a30' },
+                        borderRadius: 16, alignItems: 'center', borderWidth: 1, borderColor: '#ff453a30' },
   deleteConfirmarText:{ color: '#ff453a', fontSize: 15, fontWeight: '800' },
 });

@@ -207,15 +207,23 @@ export default function ProfileScreen({ onLogout }: ProfileScreenProps) {
         <View style={styles.cover}>
           <Image source={require('../../assets/HasleyLuke.jpg')} style={styles.coverImage} resizeMode="cover" />
 
-          {/* Botón toggle de tema — símbolo ✧⋆ */}
+          {/* ── Botón toggle de tema con fondo sólido siempre visible ── */}
           <TouchableOpacity
-            style={[styles.themeButton, { backgroundColor: colors.accentFaint, borderColor: colors.accentBorder }]}
+            style={styles.themeButton}
             onPress={toggleTheme}
             activeOpacity={0.8}
           >
-            <Text style={[styles.themeSymbol, { color: colors.accent }]}>
-              {isDark ? '✧⋆' : '✧⋆'}
-            </Text>
+            {/* Fondo sólido garantizado: blanco semi-opaco en modo oscuro, oscuro en modo claro */}
+            <View style={[
+              styles.themeButtonInner,
+              isDark
+                ? { backgroundColor: '#1a0a2e', borderColor: '#bf5af2' }
+                : { backgroundColor: '#ffffff', borderColor: '#bf5af2' },
+            ]}>
+              <Text style={[styles.themeSymbol, { color: colors.accent }]}>
+                {isDark ? '☀︎' : '☾'}
+              </Text>
+            </View>
           </TouchableOpacity>
         </View>
 
@@ -451,16 +459,30 @@ const styles = StyleSheet.create({
   cover:        { height: 150, overflow: 'hidden' },
   coverImage:   { width: '100%', height: '100%' },
 
+  // ── Botón de tema: posicionado absolutamente sobre la portada ──
   themeButton: {
-    position: 'absolute', top: 14, right: 16,
-    width: 42, height: 36, borderRadius: 18,
-    borderWidth: 1,
-    alignItems: 'center', justifyContent: 'center',
+    position: 'absolute',
+    top: 14,
+    right: 16,
+    // Sin fondo aquí — el inner lo maneja
+  },
+  themeButtonInner: {
+    width: 44,
+    height: 38,
+    borderRadius: 12,
+    borderWidth: 1.5,
+    alignItems: 'center',
+    justifyContent: 'center',
+    // Sombra para que resalte sobre cualquier imagen
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.5,
+    shadowRadius: 4,
+    elevation: 6,
   },
   themeSymbol: {
-    fontSize: 16,
-    fontWeight: '300',
-    letterSpacing: -1,
+    fontSize: 18,
+    fontWeight: '400',
   },
 
   avatarWrapper: { marginTop: -AVATAR_SIZE / 2, paddingLeft: 20 },

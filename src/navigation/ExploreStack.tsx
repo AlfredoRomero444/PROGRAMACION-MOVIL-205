@@ -6,6 +6,7 @@ import {
 import ExploreScreen from '../screens/ExploreScreen';
 import ExploreDetailScreen from '../screens/ExploreDetailScreen';
 import { Disco, Artista } from '../types';
+import { useTheme } from '../context/ThemeContext';
 
 // ── Tipos tipados del Stack ──────────────────────────────────────
 export type ExploreStackParamList = {
@@ -22,26 +23,28 @@ export type ExploreDetailProps = NativeStackScreenProps<ExploreStackParamList, '
 const Stack = createNativeStackNavigator<ExploreStackParamList>();
 
 export default function ExploreStack() {
+  const { colors } = useTheme();
+
   return (
     <Stack.Navigator
       screenOptions={{
-        headerStyle:       { backgroundColor: '#090912' },
-        headerTintColor:   '#bf5af2',
-        headerTitleStyle:  { color: '#fff', fontWeight: '700', fontSize: 17 },
+        headerStyle:       { backgroundColor: colors.bg },
+        headerTintColor:   colors.accent,
+        headerTitleStyle:  { color: colors.textPrimary, fontWeight: '700', fontSize: 17 },
         headerShadowVisible: false,
-        contentStyle:      { backgroundColor: '#090912' },
+        contentStyle:      { backgroundColor: colors.bg },
       }}
     >
       <Stack.Screen
         name="ExploreList"
         component={ExploreScreen}
-        options={{ headerShown: false }}   // ExploreScreen ya tiene su propio header visual
+        options={{ headerShown: false }}
       />
       <Stack.Screen
         name="ExploreDetail"
         component={ExploreDetailScreen}
         options={({ route }) => ({
-          title: route.params.disco.nombre,  // título dinámico
+          title: route.params.disco.nombre,
         })}
       />
     </Stack.Navigator>

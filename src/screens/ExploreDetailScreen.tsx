@@ -7,21 +7,21 @@ import {
   resolveImagen,
   formatFechaCorta,
 } from '../utils/formatters';
+import { useTheme } from '../context/ThemeContext';
 
 export default function ExploreDetailScreen({ route }: ExploreDetailProps) {
+  const { colors } = useTheme();
   const { disco, artista } = route.params;
   const descuento = calcularDescuento(disco.precioInicial, disco.precioActual);
 
   return (
-    <ScrollView style={s.container} contentContainerStyle={s.content}>
-
+    <ScrollView
+      style={[s.container, { backgroundColor: colors.bg }]}
+      contentContainerStyle={s.content}
+    >
       {/* Portada */}
       <View style={s.coverWrapper}>
-        <Image
-          source={resolveImagen(disco.imagen)}
-          style={s.cover}
-          resizeMode="cover"
-        />
+        <Image source={resolveImagen(disco.imagen)} style={s.cover} resizeMode="cover" />
         <View style={s.coverOverlay} />
         {descuento > 0 && (
           <View style={s.badgeOnImage}>
@@ -30,191 +30,85 @@ export default function ExploreDetailScreen({ route }: ExploreDetailProps) {
         )}
       </View>
 
-      <Text style={s.title}>{disco.nombre}</Text>
+      <Text style={[s.title, { color: colors.textPrimary }]}>{disco.nombre}</Text>
 
       {artista && (
-        <View style={s.artistaRow}>
-          <Image
-            source={resolveImagen(artista.imagen)}
-            style={s.artistaAvatar}
-            resizeMode="cover"
-          />
+        <View style={[s.artistaRow, { backgroundColor: colors.bgCard, borderColor: colors.border }]}>
+          <Image source={resolveImagen(artista.imagen)} style={s.artistaAvatar} resizeMode="cover" />
           <View>
-            <Text style={s.artistaNombre}>{artista.nombre}</Text>
-            <Text style={s.artistaPais}>{artista.genero} · {artista.pais}</Text>
+            <Text style={[s.artistaNombre, { color: colors.textPrimary }]}>{artista.nombre}</Text>
+            <Text style={[s.artistaPais, { color: colors.textSecondary }]}>{artista.genero} · {artista.pais}</Text>
           </View>
         </View>
       )}
 
-      <Text style={s.descripcion}>{disco.descripcion}</Text>
+      <Text style={[s.descripcion, { color: colors.textSecondary }]}>{disco.descripcion}</Text>
 
-      <View style={s.card}>
-        <Text style={s.cardLabel}>PRECIO</Text>
+      <View style={[s.card, { backgroundColor: colors.bgCard, borderColor: colors.border }]}>
+        <Text style={[s.cardLabel, { color: colors.accent }]}>PRECIO</Text>
         <View style={s.precioRow}>
-          <Text style={s.precioActual}>{formatPrecio(disco.precioActual)}</Text>
+          <Text style={[s.precioActual, { color: colors.green }]}>{formatPrecio(disco.precioActual)}</Text>
           {descuento > 0 && (
-            <Text style={s.precioOriginal}>{formatPrecio(disco.precioInicial)}</Text>
+            <Text style={[s.precioOriginal, { color: colors.textMuted }]}>{formatPrecio(disco.precioInicial)}</Text>
           )}
         </View>
 
-        <View style={s.divider} />
+        <View style={[s.divider, { backgroundColor: colors.border }]} />
 
-        <Fila label="ID del disco" valor={String(disco.id)} />
-        <Fila label="Oferta hasta" valor={formatFechaCorta(disco.fechaFin)} />
-        {artista && <Fila label="Artista" valor={artista.nombre} />}
-        {artista && <Fila label="País"    valor={artista.pais} />}
+        <Fila label="ID del disco" valor={String(disco.id)} colors={colors} />
+        <Fila label="Oferta hasta" valor={formatFechaCorta(disco.fechaFin)} colors={colors} />
+        {artista && <Fila label="Artista" valor={artista.nombre} colors={colors} />}
+        {artista && <Fila label="País"    valor={artista.pais}   colors={colors} />}
       </View>
-
     </ScrollView>
   );
 }
 
-function Fila({ label, valor }: { label: string; valor: string }) {
+function Fila({ label, valor, colors }: { label: string; valor: string; colors: any }) {
   return (
     <View style={s.fila}>
-      <Text style={s.filaLabel}>{label}</Text>
-      <Text style={s.filaValor}>{valor}</Text>
+      <Text style={[s.filaLabel, { color: colors.textSecondary }]}>{label}</Text>
+      <Text style={[s.filaValor, { color: colors.textPrimary }]}>{valor}</Text>
     </View>
   );
 }
 
 const s = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#090912',
-  },
-  content: {
-    padding: 24,
-    paddingBottom: 50,
-  },
+  container: { flex: 1 },
+  content:   { padding: 24, paddingBottom: 50 },
 
-  // ── Portada ──────────────────────────────────────────
   coverWrapper: {
-    width: '100%',
-    height: 320,
-    borderRadius: 24,
-    marginBottom: 20,
-    overflow: 'hidden',
-    backgroundColor: '#1c1c2e',
+    width: '100%', height: 320, borderRadius: 24,
+    marginBottom: 20, overflow: 'hidden', backgroundColor: '#1c1c2e',
   },
-  cover: {
-    width: '100%',
-    height: '100%',
-  },
-  coverOverlay: {
-    ...StyleSheet.absoluteFillObject,
-    backgroundColor: '#00000020',
-  },
+  cover:        { width: '100%', height: '100%' },
+  coverOverlay: { ...StyleSheet.absoluteFillObject, backgroundColor: '#00000020' },
   badgeOnImage: {
-    position: 'absolute',
-    top: 14,
-    left: 14,
-    backgroundColor: '#bf5af2',
-    paddingHorizontal: 12,
-    paddingVertical: 5,
-    borderRadius: 12,
+    position: 'absolute', top: 14, left: 14,
+    backgroundColor: '#bf5af2', paddingHorizontal: 12,
+    paddingVertical: 5, borderRadius: 12,
   },
-  badgeText: {
-    color: '#fff',
-    fontSize: 11,
-    fontWeight: '800',
-    letterSpacing: 1,
-  },
+  badgeText:    { color: '#fff', fontSize: 11, fontWeight: '800', letterSpacing: 1 },
 
-  // ── Título ───────────────────────────────────────────
-  title: {
-    color: '#fff',
-    fontSize: 26,
-    fontWeight: '900',
-    letterSpacing: -0.5,
-    marginBottom: 14,
-  },
+  title:        { fontSize: 26, fontWeight: '900', letterSpacing: -0.5, marginBottom: 14 },
 
-  // ── Artista ──────────────────────────────────────────
-  artistaRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 12,
-    marginBottom: 16,
-    backgroundColor: '#151525',
-    padding: 12,
-    borderRadius: 16,
-    borderWidth: 1,
-    borderColor: '#ffffff10',
+  artistaRow:   {
+    flexDirection: 'row', alignItems: 'center', gap: 12,
+    marginBottom: 16, padding: 12, borderRadius: 16, borderWidth: 1,
   },
-  artistaAvatar: {
-    width: 48,
-    height: 48,
-    borderRadius: 24,
-    backgroundColor: '#1c1c2e',
-  },
-  artistaNombre: {
-    color: '#fff',
-    fontWeight: '700',
-    fontSize: 15,
-  },
-  artistaPais: {
-    color: '#8e8e93',
-    fontSize: 12,
-    marginTop: 3,
-  },
+  artistaAvatar:  { width: 48, height: 48, borderRadius: 24, backgroundColor: '#1c1c2e' },
+  artistaNombre:  { fontWeight: '700', fontSize: 15 },
+  artistaPais:    { fontSize: 12, marginTop: 3 },
 
-  // ── Descripción ──────────────────────────────────────
-  descripcion: {
-    color: '#8e8e93',
-    fontSize: 14,
-    lineHeight: 22,
-    marginBottom: 24,
-  },
+  descripcion:  { fontSize: 14, lineHeight: 22, marginBottom: 24 },
 
-  // ── Card de precio y detalles ────────────────────────
-  card: {
-    backgroundColor: '#151525',
-    borderRadius: 20,
-    padding: 20,
-    borderWidth: 1,
-    borderColor: '#ffffff10',
-  },
-  cardLabel: {
-    color: '#bf5af2',
-    fontSize: 11,
-    fontWeight: '800',
-    letterSpacing: 2,
-    marginBottom: 10,
-  },
-  precioRow: {
-    flexDirection: 'row',
-    alignItems: 'baseline',
-    gap: 10,
-  },
-  precioActual: {
-    color: '#32d74b',
-    fontSize: 32,
-    fontWeight: '900',
-  },
-  precioOriginal: {
-    color: '#5e5e66',
-    fontSize: 16,
-    textDecorationLine: 'line-through',
-  },
-  divider: {
-    height: 1,
-    backgroundColor: '#ffffff10',
-    marginVertical: 16,
-  },
-  fila: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingVertical: 8,
-  },
-  filaLabel: {
-    color: '#8e8e93',
-    fontSize: 13,
-  },
-  filaValor: {
-    color: '#fff',
-    fontSize: 13,
-    fontWeight: '600',
-  },
+  card:         { borderRadius: 20, padding: 20, borderWidth: 1 },
+  cardLabel:    { fontSize: 11, fontWeight: '800', letterSpacing: 2, marginBottom: 10 },
+  precioRow:    { flexDirection: 'row', alignItems: 'baseline', gap: 10 },
+  precioActual: { fontSize: 32, fontWeight: '900' },
+  precioOriginal: { fontSize: 16, textDecorationLine: 'line-through' },
+  divider:      { height: 1, marginVertical: 16 },
+  fila:         { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingVertical: 8 },
+  filaLabel:    { fontSize: 13 },
+  filaValor:    { fontSize: 13, fontWeight: '600' },
 });
