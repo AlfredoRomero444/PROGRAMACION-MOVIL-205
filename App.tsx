@@ -12,8 +12,11 @@ import {
 import { StatusBar, StyleSheet, View, Animated } from 'react-native';
 import { House, Search, Disc3, User, Library } from 'lucide-react-native';
 
-import { ThemeProvider, useTheme } from './src/context/ThemeContext';
-import LoginScreen     from './src/screens/LoginScreen';
+import { ThemeProvider, useTheme }  from './src/context/ThemeContext';
+import SplashScreen        from './src/components/SplashScreen';
+import LogoutScreen        from './src/components/Logoutscreen';
+import ReturnToLoginScreen from './src/components/ReturnToLoginScreen';
+import LoginScreen         from './src/screens/LoginScreen';
 import RegisterScreen  from './src/screens/RegisterScreen';
 import HomeScreen      from './src/screens/HomeScreen';
 import ExploreStack    from './src/navigation/ExploreStack';
@@ -133,8 +136,10 @@ function MainTabs({ onLogout }: { onLogout: () => void }) {
 // ── Root interno (necesita acceso al contexto) ────────────────────────────────
 function AppInner() {
   const { theme, colors, isThemeReady } = useTheme();
-  const [isLogged, setIsLogged] = useState(false);
-  const [isReady,  setIsReady]  = useState(false);
+  const [isLogged,     setIsLogged]     = useState(false);
+  const [isReady,      setIsReady]      = useState(false);
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
+  const [isReturning,  setIsReturning]  = useState(false);
 
   const handleLogin = () => {
     setIsLogged(true);
@@ -143,8 +148,21 @@ function AppInner() {
   };
 
   const handleLogout = () => {
-    setIsLogged(false);
-    setIsReady(false);
+    // Etapa 1: "Saliendo…" con spinner grande y texto.
+    setIsLoggingOut(true);
+
+    setTimeout(() => {
+      setIsLoggingOut(false);
+      // Etapa 2: transición más sutil (solo spinner chico),
+      // igual que hace Facebook justo antes de mostrar el Login.
+      setIsReturning(true);
+
+      setTimeout(() => {
+        setIsLogged(false);
+        setIsReady(false);
+        setIsReturning(false);
+      }, 2200);
+    }, 900);
   };
 
   // Espera a que el tema guardado se cargue antes de renderizar nada,
@@ -161,6 +179,9 @@ function AppInner() {
       />
 
       {isLogged && !isReady && <LoadingScreen bgColor={colors.bg} />}
+
+      {isLoggingOut && <LogoutScreen />}
+      {isReturning  && <ReturnToLoginScreen />}
 
       <View style={{ flex: 1, display: (!isLogged || isReady) ? 'flex' : 'none' }}>
         <NavigationContainer>
@@ -191,7 +212,9 @@ export default function App() {
   return (
     <SafeAreaProvider>
       <ThemeProvider>
-        <AppInner />
+        <SplashScreen>
+          <AppInner />
+        </SplashScreen>
       </ThemeProvider>
     </SafeAreaProvider>
   );
