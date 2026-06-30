@@ -42,7 +42,7 @@ export default function StoreScreen() {
         style={[styles.searchInput, {
           backgroundColor: colors.bgInput,
           color: colors.textPrimary,
-          borderColor: colors.border,
+          borderColor: colors.accentBorder,
         }]}
         placeholder="Buscar disco o artista"
         placeholderTextColor={colors.textSecondary}

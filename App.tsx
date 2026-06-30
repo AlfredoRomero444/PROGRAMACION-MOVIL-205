@@ -80,7 +80,7 @@ function LoadingScreen({ bgColor }: { bgColor: string }) {
 const loadingStyles = StyleSheet.create({
   container: { flex: 1, justifyContent: 'center', alignItems: 'center' },
   row:       { flexDirection: 'row', alignItems: 'center', gap: 6 },
-  symbol:    { color: '#bf5af2', fontSize: 48, fontWeight: '300' },
+  symbol:    { color: '#fec3b1', fontSize: 48, fontWeight: '300' },
 });
 
 // ── Tabs (usa colores del tema) ───────────────────────────────────────────────
@@ -229,8 +229,8 @@ const styles = StyleSheet.create({
     borderRadius: 16,
   },
   iconWrapperActive: {
-    backgroundColor: '#bf5af215',
-    shadowColor: '#bf5af2',
+    backgroundColor: '#fec3b115',
+    shadowColor: '#fec3b1',
     shadowOffset: { width: 0, height: 0 },
     shadowOpacity: 0.9,
     shadowRadius: 8,

@@ -25,16 +25,16 @@ const darkColors = {
   // Bordes
   border:     '#ffffff10',
   borderMid:  '#ffffff1a',
-  // Acento (morado — no cambia)
-  accent:        '#bf5af2',
-  accentLight:   '#d4a8f5',
-  accentFaint:   '#bf5af215',
-  accentBorder:  '#bf5af230',
+  // Acento (durazno/rosa claro — no cambia)
+  accent:        '#fec3b1',
+  accentLight:   '#ffd9cb',
+  accentFaint:   '#fec3b115',
+  accentBorder:  '#fec3b130',
   // Otros
   green:      '#32d74b',
   red:        '#ff453a',
   tabBar:     '#0a0a12',
-  tabBorder:  '#bf5af230',
+  tabBorder:  '#fec3b130',
 };
 
 const lightColors: typeof darkColors = {
@@ -47,14 +47,14 @@ const lightColors: typeof darkColors = {
   textMuted:     '#aeaeb2',
   border:     '#00000010',
   borderMid:  '#0000001a',
-  accent:        '#bf5af2',
-  accentLight:   '#9b30d9',
-  accentFaint:   '#bf5af215',
-  accentBorder:  '#bf5af240',
+  accent:        '#fec3b1',
+  accentLight:   '#c97a56',
+  accentFaint:   '#fec3b115',
+  accentBorder:  '#fec3b140',
   green:      '#34c759',
   red:        '#ff3b30',
   tabBar:     '#ffffff',
-  tabBorder:  '#bf5af230',
+  tabBorder:  '#fec3b130',
 };
 
 const ThemeContext = createContext<ThemeContextType>({

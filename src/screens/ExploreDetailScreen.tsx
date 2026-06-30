@@ -33,7 +33,7 @@ export default function ExploreDetailScreen({ route }: ExploreDetailProps) {
       <Text style={[s.title, { color: colors.textPrimary }]}>{disco.nombre}</Text>
 
       {artista && (
-        <View style={[s.artistaRow, { backgroundColor: colors.bgCard, borderColor: colors.border }]}>
+        <View style={[s.artistaRow, { backgroundColor: colors.bgCard, borderColor: colors.accentBorder }]}>
           <Image source={resolveImagen(artista.imagen)} style={s.artistaAvatar} resizeMode="cover" />
           <View>
             <Text style={[s.artistaNombre, { color: colors.textPrimary }]}>{artista.nombre}</Text>
@@ -44,7 +44,7 @@ export default function ExploreDetailScreen({ route }: ExploreDetailProps) {
 
       <Text style={[s.descripcion, { color: colors.textSecondary }]}>{disco.descripcion}</Text>
 
-      <View style={[s.card, { backgroundColor: colors.bgCard, borderColor: colors.border }]}>
+      <View style={[s.card, { backgroundColor: colors.bgCard, borderColor: colors.accentBorder }]}>
         <Text style={[s.cardLabel, { color: colors.accent }]}>PRECIO</Text>
         <View style={s.precioRow}>
           <Text style={[s.precioActual, { color: colors.green }]}>{formatPrecio(disco.precioActual)}</Text>
@@ -85,7 +85,7 @@ const s = StyleSheet.create({
   coverOverlay: { ...StyleSheet.absoluteFillObject, backgroundColor: '#00000020' },
   badgeOnImage: {
     position: 'absolute', top: 14, left: 14,
-    backgroundColor: '#bf5af2', paddingHorizontal: 12,
+    backgroundColor: '#fec3b1', paddingHorizontal: 12,
     paddingVertical: 5, borderRadius: 12,
   },
   badgeText:    { color: '#fff', fontSize: 11, fontWeight: '800', letterSpacing: 1 },

@@ -154,12 +154,12 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     marginBottom: 16,
     borderWidth: 1,
-    borderColor: '#ffffff10',
+    borderColor: '#fec3b130',
     fontSize: 15,
   },
 
   button: {
-    backgroundColor: '#bf5af2',
+    backgroundColor: '#fec3b1',
     paddingVertical: 18,
     borderRadius: 20,
     alignItems: 'center',
@@ -174,7 +174,7 @@ const styles = StyleSheet.create({
   },
 
   link: {
-    color: '#bf5af2',
+    color: '#fec3b1',
     textAlign: 'center',
     marginTop: 25,
     fontWeight: '600',

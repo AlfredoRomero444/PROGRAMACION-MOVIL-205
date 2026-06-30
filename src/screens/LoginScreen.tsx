@@ -109,7 +109,7 @@ export default function LoginScreen({ onLogin }: LoginScreenProps) {
           style={[styles.input, {
             backgroundColor: colors.bgInput,
             color: colors.textPrimary,
-            borderColor: colors.border,
+            borderColor: colors.accentBorder,
           }]}
           placeholder="Nombre completo"
           placeholderTextColor={colors.textSecondary}
@@ -123,7 +123,7 @@ export default function LoginScreen({ onLogin }: LoginScreenProps) {
         style={[styles.input, {
           backgroundColor: colors.bgInput,
           color: colors.textPrimary,
-          borderColor: colors.border,
+          borderColor: colors.accentBorder,
         }]}
         placeholder="Correo electrónico"
         placeholderTextColor={colors.textSecondary}
@@ -137,7 +137,7 @@ export default function LoginScreen({ onLogin }: LoginScreenProps) {
         style={[styles.input, {
           backgroundColor: colors.bgInput,
           color: colors.textPrimary,
-          borderColor: colors.border,
+          borderColor: colors.accentBorder,
         }]}
         placeholder="Contraseña"
         placeholderTextColor={colors.textSecondary}
@@ -151,7 +151,7 @@ export default function LoginScreen({ onLogin }: LoginScreenProps) {
           style={[styles.input, {
             backgroundColor: colors.bgInput,
             color: colors.textPrimary,
-            borderColor: colors.border,
+            borderColor: colors.accentBorder,
           }]}
           placeholder="Confirmar contraseña"
           placeholderTextColor={colors.textSecondary}
@@ -181,9 +181,9 @@ export default function LoginScreen({ onLogin }: LoginScreenProps) {
       {/* Modal de alerta personalizado */}
       <Modal visible={alerta !== null} animationType="fade" transparent>
         <View style={styles.alertOverlay}>
-          <View style={[styles.alertBox, { backgroundColor: colors.bgDeep, borderColor: colors.border }]}>
+          <View style={[styles.alertBox, { backgroundColor: colors.bgDeep, borderColor: colors.accentBorder }]}>
             <View style={styles.alertIconWrapper}>
-              <AlertCircle color="#bf5af2" size={30} strokeWidth={1.5} />
+              <AlertCircle color="#fec3b1" size={30} strokeWidth={1.5} />
             </View>
 
             <Text style={[styles.alertTitle, { color: colors.textPrimary }]}>{alerta?.titulo}</Text>
@@ -234,7 +234,7 @@ const styles = StyleSheet.create({
   },
 
   button: {
-    backgroundColor: '#bf5af2',
+    backgroundColor: '#fec3b1',
     paddingVertical: 16,
     borderRadius: 20,
     alignItems: 'center',
@@ -260,7 +260,7 @@ const styles = StyleSheet.create({
   },
 
   switchLink: {
-    color: '#bf5af2',
+    color: '#fec3b1',
     fontSize: 14,
     fontWeight: '700',
   },
@@ -283,12 +283,12 @@ const styles = StyleSheet.create({
     width: 64,
     height: 64,
     borderRadius: 20,
-    backgroundColor: '#bf5af215',
+    backgroundColor: '#fec3b115',
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: 16,
     borderWidth: 1,
-    borderColor: '#bf5af230',
+    borderColor: '#fec3b130',
   },
   alertTitle: {
     fontSize: 18,
@@ -309,7 +309,7 @@ const styles = StyleSheet.create({
   },
   alertBtn: {
     width: '100%',
-    backgroundColor: '#bf5af2',
+    backgroundColor: '#fec3b1',
     paddingVertical: 15,
     borderRadius: 16,
     alignItems: 'center',

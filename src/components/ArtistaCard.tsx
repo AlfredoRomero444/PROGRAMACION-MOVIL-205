@@ -20,7 +20,7 @@ export default function ArtistaCard({ artista, onPress }: ArtistaCardProps) {
 
   return (
     <TouchableOpacity
-      style={[styles.card, { backgroundColor: colors.bgCard, borderColor: colors.border }]}
+      style={[styles.card, { backgroundColor: colors.bgCard, borderColor: colors.accentBorder }]}
       onPress={onPress}
       activeOpacity={0.8}
     >

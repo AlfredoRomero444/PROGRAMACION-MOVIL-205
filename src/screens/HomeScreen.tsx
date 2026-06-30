@@ -111,7 +111,7 @@ export default function HomeScreen() {
 
       {/* BANNER */}
       {destacado && (
-        <View style={[styles.banner, { backgroundColor: colors.bgCard, borderColor: colors.border }]}>
+        <View style={[styles.banner, { backgroundColor: colors.bgCard, borderColor: colors.accentBorder, shadowColor: colors.accent }]}>
           <View style={styles.bannerContent}>
             <Text style={[styles.bannerTag, { color: colors.accent }]}>
               TENDENCIA
@@ -181,7 +181,7 @@ export default function HomeScreen() {
       {productos.map(disco => {
         const artista = getArtesano(disco.artistaId);
         return (
-          <View key={disco.id} style={[styles.albumCard, { backgroundColor: colors.bgCard, borderColor: colors.border }]}>
+          <View key={disco.id} style={[styles.albumCard, { backgroundColor: colors.bgCard, borderColor: colors.accentBorder }]}>
             <Image
               source={
                 typeof disco.imagen === 'string'
@@ -218,7 +218,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   symbolsRow: { flexDirection: 'row', alignItems: 'center', gap: 6 },
-  symbol:     { color: '#bf5af2', fontSize: 48, fontWeight: '300' },
+  symbol:     { color: '#fec3b1', fontSize: 48, fontWeight: '300' },
 
   sectionLabel:  { fontSize: 11, fontWeight: '800', letterSpacing: 2 },
   title:         { fontSize: 34, fontWeight: '900', marginTop: 10 },
@@ -227,6 +227,7 @@ const styles = StyleSheet.create({
   banner: {
     borderRadius: 30, padding: 20, marginBottom: 30,
     flexDirection: 'row', alignItems: 'center', borderWidth: 1,
+    shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.25, shadowRadius: 14, elevation: 4,
   },
   bannerContent: { flex: 1, marginRight: 15 },
   bannerTag:     { fontSize: 11, fontWeight: '800', letterSpacing: 2 },

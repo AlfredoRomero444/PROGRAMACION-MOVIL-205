@@ -62,7 +62,7 @@ export default function ExploreScreen({ navigation }: ExploreListProps) {
               key={genero}
               style={[
                 styles.chip,
-                { backgroundColor: colors.bgCard, borderColor: colors.border },
+                { backgroundColor: colors.bgCard, borderColor: colors.accentBorder },
                 activo && styles.chipActivo,
               ]}
               onPress={() => setGeneroActivo(genero)}
@@ -107,7 +107,7 @@ export default function ExploreScreen({ navigation }: ExploreListProps) {
                 activeOpacity={0.8}
                 onPress={() => irAlDetalle(item.id)}
               >
-                <View style={[styles.discoRow, { backgroundColor: colors.bgCard, borderColor: colors.border }]}>
+                <View style={[styles.discoRow, { backgroundColor: colors.bgCard, borderColor: colors.accentBorder }]}>
                   <View style={styles.discoDot} />
                   <View style={styles.discoInfo}>
                     <Text style={[styles.discoNombre, { color: colors.textPrimary }]} numberOfLines={1}>{item.nombre}</Text>
@@ -138,7 +138,7 @@ const styles = StyleSheet.create({
   chip:             { height: 40, minWidth: 70, paddingHorizontal: 16,
                       borderRadius: 20, borderWidth: 1,
                       alignItems: 'center', justifyContent: 'center' },
-  chipActivo:       { backgroundColor: '#bf5af2', borderColor: '#bf5af2' },
+  chipActivo:       { backgroundColor: '#fec3b1', borderColor: '#fec3b1' },
   chipText:         { fontSize: 13, fontWeight: '700' },
   chipTextActivo:   { color: '#ffffff' },
   lista:            { paddingHorizontal: 25, paddingBottom: 30 },
@@ -147,7 +147,7 @@ const styles = StyleSheet.create({
   discoWrapper:     { marginBottom: 12 },
   discoRow:         { flexDirection: 'row', alignItems: 'center',
                       borderRadius: 18, padding: 14, borderWidth: 1 },
-  discoDot:         { width: 8, height: 8, borderRadius: 4, backgroundColor: '#bf5af2', marginRight: 12 },
+  discoDot:         { width: 8, height: 8, borderRadius: 4, backgroundColor: '#fec3b1', marginRight: 12 },
   discoInfo:        { flex: 1 },
   discoNombre:      { fontSize: 14, fontWeight: '700' },
   discoArtista:     { fontSize: 12, marginTop: 3 },

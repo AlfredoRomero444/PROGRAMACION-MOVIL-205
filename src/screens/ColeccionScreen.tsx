@@ -99,14 +99,14 @@ export default function ColeccionScreen() {
         showsVerticalScrollIndicator={false}
         ListEmptyComponent={
           <View style={s.vacio}>
-            <View style={[s.vacioIconWrapper, { backgroundColor: colors.bgCard, borderColor: colors.border }]}>
+            <View style={[s.vacioIconWrapper, { backgroundColor: colors.bgCard, borderColor: colors.accentBorder }]}>
               <Music2 color={colors.textMuted} size={36} strokeWidth={1.5} />
             </View>
             <Text style={[s.vacioTexto, { color: colors.textMuted }]}>Tu colección está vacía.{'\n'}Agrega tu primer disco.</Text>
           </View>
         }
         renderItem={({ item }) => (
-          <View style={[s.card, { backgroundColor: colors.bgCard, borderColor: colors.border }]}>
+          <View style={[s.card, { backgroundColor: colors.bgCard, borderColor: colors.accentBorder }]}>
             <View style={s.cardLeft}>
               <View style={s.dot} />
             </View>
@@ -123,7 +123,7 @@ export default function ColeccionScreen() {
             </View>
             <View style={s.cardActions}>
               <TouchableOpacity style={[s.btnEdit, { backgroundColor: colors.bgDeep, borderColor: colors.accentBorder }]} onPress={() => abrirEditar(item)} activeOpacity={0.7}>
-                <Pencil color="#bf5af2" size={16} strokeWidth={2} />
+                <Pencil color="#fec3b1" size={16} strokeWidth={2} />
               </TouchableOpacity>
               <TouchableOpacity style={[s.btnDel, { backgroundColor: colors.bgDeep, borderColor: '#ff453a20' }]} onPress={() => confirmarEliminar(item)} activeOpacity={0.7}>
                 <Trash2 color="#ff453a" size={16} strokeWidth={2} />
@@ -145,8 +145,8 @@ export default function ColeccionScreen() {
               <View style={s.modalTitleRow}>
                 <View style={[editando ? s.modalIconEdit : s.modalIconNew, { backgroundColor: colors.accentFaint }]}>
                   {editando
-                    ? <Pencil color="#bf5af2" size={18} strokeWidth={2} />
-                    : <Plus   color="#bf5af2" size={18} strokeWidth={2} />
+                    ? <Pencil color="#fec3b1" size={18} strokeWidth={2} />
+                    : <Plus   color="#fec3b1" size={18} strokeWidth={2} />
                   }
                 </View>
                 <Text style={[s.modalTitle, { color: colors.textPrimary }]}>
@@ -275,7 +275,7 @@ const s = StyleSheet.create({
   title:          { fontSize: 32, fontWeight: '900', marginTop: 8, letterSpacing: -1 },
   subtitle:       { fontSize: 14, marginTop: 6 },
 
-  btnAgregar:     { marginHorizontal: 25, marginBottom: 20, backgroundColor: '#bf5af2',
+  btnAgregar:     { marginHorizontal: 25, marginBottom: 20, backgroundColor: '#fec3b1',
                     paddingVertical: 14, borderRadius: 18, alignItems: 'center',
                     flexDirection: 'row', justifyContent: 'center', gap: 8 },
   btnAgregarText: { color: '#fff', fontSize: 15, fontWeight: '800' },
@@ -290,7 +290,7 @@ const s = StyleSheet.create({
   card:           { flexDirection: 'row', borderRadius: 18,
                     padding: 14, marginBottom: 12, borderWidth: 1, alignItems: 'center' },
   cardLeft:       { marginRight: 12 },
-  dot:            { width: 10, height: 10, borderRadius: 5, backgroundColor: '#bf5af2' },
+  dot:            { width: 10, height: 10, borderRadius: 5, backgroundColor: '#fec3b1' },
   cardInfo:       { flex: 1 },
   cardNombre:     { fontSize: 15, fontWeight: '700' },
   cardArtista:    { fontSize: 13, marginTop: 2 },
@@ -320,7 +320,7 @@ const s = StyleSheet.create({
   modalBtns:        { flexDirection: 'row', gap: 12, marginTop: 8 },
   btnCancelar:      { flex: 1, paddingVertical: 15, borderRadius: 16, alignItems: 'center', borderWidth: 1 },
   btnCancelarText:  { fontSize: 15, fontWeight: '700' },
-  btnGuardar:       { flex: 1, backgroundColor: '#bf5af2', paddingVertical: 15,
+  btnGuardar:       { flex: 1, backgroundColor: '#fec3b1', paddingVertical: 15,
                       borderRadius: 16, alignItems: 'center' },
   btnGuardarText:   { color: '#fff', fontSize: 15, fontWeight: '800' },
 

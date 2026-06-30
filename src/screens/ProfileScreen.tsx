@@ -217,8 +217,8 @@ export default function ProfileScreen({ onLogout }: ProfileScreenProps) {
             <View style={[
               styles.themeButtonInner,
               isDark
-                ? { backgroundColor: '#1a0a2e', borderColor: '#bf5af2' }
-                : { backgroundColor: '#ffffff', borderColor: '#bf5af2' },
+                ? { backgroundColor: '#2a160d', borderColor: '#fec3b1' }
+                : { backgroundColor: '#ffffff', borderColor: '#fec3b1' },
             ]}>
               <Text style={[styles.themeSymbol, { color: colors.accent }]}>
                 .✧⋆
@@ -229,7 +229,9 @@ export default function ProfileScreen({ onLogout }: ProfileScreenProps) {
 
         {/* Avatar */}
         <View style={[styles.avatarWrapper, { borderColor: colors.bg }]}>
-          <Image source={require('../../assets/perfil.jpg')} style={[styles.avatar, { borderColor: colors.bg }]} />
+          <View style={[styles.avatarRing, { backgroundColor: colors.accent }]}>
+            <Image source={require('../../assets/perfil.jpg')} style={[styles.avatar, { borderColor: colors.bg }]} />
+          </View>
         </View>
 
         <View style={styles.content}>
@@ -237,7 +239,7 @@ export default function ProfileScreen({ onLogout }: ProfileScreenProps) {
           <Text style={[styles.correo, { color: colors.textSecondary }]}>{usuario.correo}</Text>
 
           {/* Redes sociales */}
-          <View style={[styles.socialColumn, { backgroundColor: colors.bgCard, borderColor: colors.border }]}>
+          <View style={[styles.socialColumn, { backgroundColor: colors.bgCard, borderColor: colors.accentBorder }]}>
             {SOCIAL_LINKS.map(({ id, username, url, Icon }) => (
               <TouchableOpacity key={id} style={[styles.socialRow, { borderColor: colors.border }]} onPress={() => Linking.openURL(url)} activeOpacity={0.7}>
                 <View style={[styles.socialIconWrap, { backgroundColor: colors.border }]}><Icon size={22} /></View>
@@ -288,7 +290,7 @@ export default function ProfileScreen({ onLogout }: ProfileScreenProps) {
 
           {/* API Monitor */}
           <View style={[styles.apiCard, { backgroundColor: colors.bgCard, borderColor: colors.accentBorder }]}>
-            <View style={[styles.apiHeader, { borderColor: colors.accentBorder, backgroundColor: isDark ? '#160d26' : '#f5f0fc' }]}>
+            <View style={[styles.apiHeader, { borderColor: colors.accentBorder, backgroundColor: isDark ? '#2a160d' : '#fdf0ea' }]}>
               <View style={styles.apiHeaderLeft}>
                 <View style={[styles.apiDot, { opacity: blink ? 1 : 0.2, backgroundColor: apiStatus === 'error' ? '#e24b4a' : colors.accent }]} />
                 <Text style={[styles.apiTitle, { color: colors.accent }]}>API STATUS</Text>
@@ -313,7 +315,7 @@ export default function ProfileScreen({ onLogout }: ProfileScreenProps) {
                 <Text style={[styles.apiMetricLabel, { color: colors.textMuted }]}>UPTIME</Text>
               </View>
             </View>
-            <View style={[styles.apiJsonBox, { backgroundColor: isDark ? '#0a0714' : '#faf8ff' }]}>
+            <View style={[styles.apiJsonBox, { backgroundColor: isDark ? '#190d08' : '#fffaf6' }]}>
               {apiStatus === 'loading' && (
                 <View style={styles.apiLoading}>
                   <ActivityIndicator size="small" color={colors.accent} />
@@ -330,7 +332,7 @@ export default function ProfileScreen({ onLogout }: ProfileScreenProps) {
               )}
             </View>
             <TouchableOpacity
-              style={[styles.apiRefetchBtn, { backgroundColor: isDark ? '#160d26' : '#f5f0fc' }, apiStatus === 'loading' && { opacity: 0.5 }]}
+              style={[styles.apiRefetchBtn, { backgroundColor: isDark ? '#2a160d' : '#fdf0ea' }, apiStatus === 'loading' && { opacity: 0.5 }]}
               onPress={fetchApi}
               disabled={apiStatus === 'loading'}
             >
@@ -435,8 +437,8 @@ export default function ProfileScreen({ onLogout }: ProfileScreenProps) {
           <View style={[styles.logoutDialog, { backgroundColor: colors.bgDeep, borderColor: colors.accentBorder }]}>
             <View style={[styles.logoutIconWrap, { backgroundColor: colors.accentFaint, borderColor: colors.accentBorder }]}>
               <Svg width={26} height={26} viewBox="0 0 24 24" fill="none">
-                <Path d="M12 8v5" stroke="#bf5af2" strokeWidth={2.2} strokeLinecap="round" />
-                <Path d="M12 16.5v.5" stroke="#bf5af2" strokeWidth={2.5} strokeLinecap="round" />
+                <Path d="M12 8v5" stroke="#fec3b1" strokeWidth={2.2} strokeLinecap="round" />
+                <Path d="M12 16.5v.5" stroke="#fec3b1" strokeWidth={2.5} strokeLinecap="round" />
               </Svg>
             </View>
             <Text style={[styles.logoutDialogTitle,    { color: colors.textPrimary }]}>Campos requeridos</Text>
@@ -486,6 +488,7 @@ const styles = StyleSheet.create({
   },
 
   avatarWrapper: { marginTop: -AVATAR_SIZE / 2, paddingLeft: 20 },
+  avatarRing: { width: AVATAR_SIZE + 6, height: AVATAR_SIZE + 6, borderRadius: (AVATAR_SIZE + 6) / 2, alignItems: 'center', justifyContent: 'center' },
   avatar: { width: AVATAR_SIZE, height: AVATAR_SIZE, borderRadius: AVATAR_SIZE / 2, borderWidth: 3 },
 
   content:      { paddingHorizontal: 20, paddingTop: 12, paddingBottom: 40 },
@@ -534,7 +537,7 @@ const styles = StyleSheet.create({
   apiMetricDivider: { width: 1 },
   apiMetricValue:   { fontSize: 16, fontWeight: '700', fontFamily: 'monospace' },
   apiMetricLabel:   { fontSize: 9, fontFamily: 'monospace', letterSpacing: 1, marginTop: 2 },
-  apiJsonBox:       { padding: 14, borderBottomWidth: 1, borderColor: '#bf5af215' },
+  apiJsonBox:       { padding: 14, borderBottomWidth: 1, borderColor: '#fec3b115' },
   apiLoading:       { flexDirection: 'row', alignItems: 'center', gap: 10, paddingVertical: 8 },
   apiLoadingText:   { fontSize: 11, fontFamily: 'monospace' },
   apiEndpointLine:  { fontSize: 10, fontFamily: 'monospace', marginBottom: 10 },

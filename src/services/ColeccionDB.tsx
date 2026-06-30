@@ -12,7 +12,7 @@ export type DiscoColeccion = {
   nota: string;
 };
 
-/** Crea la tabla si no existe — se llama al arrancar la app */
+
 export function inicializarDB() {
   db.execSync(`
     CREATE TABLE IF NOT EXISTS coleccion (

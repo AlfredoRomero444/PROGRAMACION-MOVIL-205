@@ -22,7 +22,7 @@ export default function DiscoCard({ disco, artistaNombre, onPress }: DiscoCardPr
 
   return (
     <TouchableOpacity
-      style={[styles.card, { backgroundColor: colors.bgCard, borderColor: colors.border }]}
+      style={[styles.card, { backgroundColor: colors.bgCard, borderColor: colors.accentBorder }]}
       onPress={onPress}
       activeOpacity={0.8}
     >
@@ -68,7 +68,7 @@ const styles = StyleSheet.create({
 
   badge:        {
     position: 'absolute', top: 10, left: 10,
-    backgroundColor: '#bf5af2', paddingHorizontal: 8,
+    backgroundColor: '#fec3b1', paddingHorizontal: 8,
     paddingVertical: 4, borderRadius: 10,
   },
   badgeText:    { color: '#fff', fontSize: 11, fontWeight: '800' },
