@@ -10,9 +10,12 @@ import {
   useSafeAreaInsets,
 } from 'react-native-safe-area-context';
 import { StatusBar, StyleSheet, View, Animated } from 'react-native';
-import { House, Search, Disc3, User, Library } from 'lucide-react-native';
+import { House, Search, Disc3, User, Library, ShoppingCart, Receipt } from 'lucide-react-native';
 
 import { ThemeProvider, useTheme }  from './src/context/ThemeContext';
+import { AuthProvider, useAuth }    from './src/context/AuthContext';
+import { CartProvider, useCart }    from './src/context/CartContext';
+import { FacturasProvider }         from './src/context/FacturasContext';
 import SplashScreen        from './src/components/SplashScreen';
 import LogoutScreen        from './src/components/Logoutscreen';
 import ReturnToLoginScreen from './src/components/ReturnToLoginScreen';
@@ -20,7 +23,9 @@ import LoginScreen         from './src/screens/LoginScreen';
 import RegisterScreen  from './src/screens/RegisterScreen';
 import HomeScreen      from './src/screens/HomeScreen';
 import ExploreStack    from './src/navigation/ExploreStack';
-import StoreScreen     from './src/screens/StoreScreen';
+import StoreStack      from './src/navigation/StoreStack';
+import CartScreen      from './src/screens/CartScreen';
+import FacturasScreen  from './src/screens/FacturasScreen';
 import ColeccionScreen from './src/screens/ColeccionScreen';
 import ProfileScreen   from './src/screens/ProfileScreen';
 
@@ -34,6 +39,8 @@ type TabParamList = {
   Inicio: undefined;
   Explorar: undefined;
   Tienda: undefined;
+  Carrito: undefined;
+  Facturas: undefined;
   Colección: undefined;
   Perfil: undefined;
 };
@@ -87,6 +94,7 @@ const loadingStyles = StyleSheet.create({
 function MainTabs({ onLogout }: { onLogout: () => void }) {
   const insets = useSafeAreaInsets();
   const { colors, theme } = useTheme();
+  const { totalItems } = useCart();
 
   return (
     <Tab.Navigator
@@ -97,6 +105,12 @@ function MainTabs({ onLogout }: { onLogout: () => void }) {
         headerTitleStyle:    { fontWeight: '700', fontSize: 18, color: colors.textPrimary },
         tabBarActiveTintColor:   colors.accent,
         tabBarInactiveTintColor: colors.textSecondary,
+        tabBarBadgeStyle: {
+          backgroundColor: colors.accent,
+          color: '#fff',
+          fontSize: 10,
+          fontWeight: '700',
+        },
         tabBarStyle: {
           backgroundColor: colors.tabBar,
           borderTopWidth: 1.5,
@@ -113,18 +127,26 @@ function MainTabs({ onLogout }: { onLogout: () => void }) {
         },
         tabBarIcon: ({ focused, color }) => (
           <View style={[styles.iconWrapper, focused && styles.iconWrapperActive]}>
-            {route.name === 'Inicio'    && <House   color={color} size={18} strokeWidth={2} />}
-            {route.name === 'Explorar'  && <Search  color={color} size={18} strokeWidth={2} />}
-            {route.name === 'Tienda'    && <Disc3   color={color} size={18} strokeWidth={2} />}
-            {route.name === 'Colección' && <Library color={color} size={18} strokeWidth={2} />}
-            {route.name === 'Perfil'    && <User    color={color} size={18} strokeWidth={2} />}
+            {route.name === 'Inicio'    && <House       color={color} size={18} strokeWidth={2} />}
+            {route.name === 'Explorar'  && <Search      color={color} size={18} strokeWidth={2} />}
+            {route.name === 'Tienda'    && <Disc3       color={color} size={18} strokeWidth={2} />}
+            {route.name === 'Carrito'   && <ShoppingCart color={color} size={18} strokeWidth={2} />}
+            {route.name === 'Facturas'  && <Receipt     color={color} size={18} strokeWidth={2} />}
+            {route.name === 'Colección' && <Library     color={color} size={18} strokeWidth={2} />}
+            {route.name === 'Perfil'    && <User        color={color} size={18} strokeWidth={2} />}
           </View>
         ),
       })}
     >
       <Tab.Screen name="Inicio"    component={HomeScreen} />
       <Tab.Screen name="Explorar"  component={ExploreStack} options={{ headerShown: false }} />
-      <Tab.Screen name="Tienda"    component={StoreScreen} />
+      <Tab.Screen name="Tienda"    component={StoreStack} options={{ headerShown: false }} />
+      <Tab.Screen
+        name="Carrito"
+        component={CartScreen}
+        options={{ tabBarBadge: totalItems > 0 ? totalItems : undefined }}
+      />
+      <Tab.Screen name="Facturas"  component={FacturasScreen} />
       <Tab.Screen name="Colección" component={ColeccionScreen} />
       <Tab.Screen name="Perfil">
         {() => <ProfileScreen onLogout={onLogout} />}
@@ -136,13 +158,19 @@ function MainTabs({ onLogout }: { onLogout: () => void }) {
 // ── Root interno (necesita acceso al contexto) ────────────────────────────────
 function AppInner() {
   const { theme, colors, isThemeReady } = useTheme();
-  const [isLogged,     setIsLogged]     = useState(false);
+  const { isLogged, isAuthReady, login, logout } = useAuth();
   const [isReady,      setIsReady]      = useState(false);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
   const [isReturning,  setIsReturning]  = useState(false);
 
-  const handleLogin = () => {
-    setIsLogged(true);
+  // Si ya había una sesión guardada al abrir la app, no repetimos la
+  // animación de "cargando" — el usuario ya estaba dentro.
+  useEffect(() => {
+    if (isAuthReady && isLogged) setIsReady(true);
+  }, [isAuthReady, isLogged]);
+
+  const handleLogin = (correo?: string) => {
+    login({ nombre: correo ? correo.split('@')[0] : 'Usuario', correo: correo ?? '' });
     setIsReady(false);
     setTimeout(() => setIsReady(true), 800);
   };
@@ -158,16 +186,16 @@ function AppInner() {
       setIsReturning(true);
 
       setTimeout(() => {
-        setIsLogged(false);
+        logout();
         setIsReady(false);
         setIsReturning(false);
       }, 2200);
     }, 900);
   };
 
-  // Espera a que el tema guardado se cargue antes de renderizar nada,
-  // para evitar el "flash" del tema incorrecto al abrir la app.
-  if (!isThemeReady) {
+  // Espera a que el tema y la sesión guardada terminen de cargar antes
+  // de renderizar nada, para evitar el "flash" del login incorrecto.
+  if (!isThemeReady || !isAuthReady) {
     return <LoadingScreen bgColor={colors.bg} />;
   }
 
@@ -212,9 +240,15 @@ export default function App() {
   return (
     <SafeAreaProvider>
       <ThemeProvider>
-        <SplashScreen>
-          <AppInner />
-        </SplashScreen>
+        <AuthProvider>
+          <CartProvider>
+            <FacturasProvider>
+              <SplashScreen>
+                <AppInner />
+              </SplashScreen>
+            </FacturasProvider>
+          </CartProvider>
+        </AuthProvider>
       </ThemeProvider>
     </SafeAreaProvider>
   );

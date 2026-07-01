@@ -24,3 +24,25 @@ export type Oferta = {
   monto: number;
   fecha: string;
 };
+
+export type CartItem = {
+  disco: Disco;
+  cantidad: number;
+};
+
+export type FacturaItem = {
+  discoId: number;
+  nombre: string;
+  cantidad: number;
+  precioUnitario: number;
+};
+
+export type Factura = {
+  id: string;
+  folio: string;
+  fecha: string;
+  items: FacturaItem[];
+  subtotal: number;
+  impuestos: number;
+  total: number;
+};

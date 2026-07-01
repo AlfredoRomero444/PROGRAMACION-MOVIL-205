@@ -11,7 +11,7 @@ import { AlertCircle, X } from 'lucide-react-native';
 import { useTheme } from '../context/ThemeContext';
 
 type LoginScreenProps = {
-  onLogin: () => void;
+  onLogin: (correo?: string) => void;
 };
 
 type AlertData = {
@@ -83,7 +83,7 @@ export default function LoginScreen({ onLogin }: LoginScreenProps) {
       }
     }
 
-    onLogin();
+    onLogin(emailTrimmed);
   };
 
   const toggleMode = () => {

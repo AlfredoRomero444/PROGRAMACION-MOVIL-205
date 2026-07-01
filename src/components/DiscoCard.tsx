@@ -6,9 +6,11 @@ import {
   Image,
   TouchableOpacity,
 } from 'react-native';
+import { Plus, Check } from 'lucide-react-native';
 import { Disco } from '../types';
 import { formatPrecio, calcularDescuento, resolveImagen } from '../utils/formatters';
 import { useTheme } from '../context/ThemeContext';
+import { useCart } from '../context/CartContext';
 
 type DiscoCardProps = {
   disco: Disco;
@@ -18,7 +20,9 @@ type DiscoCardProps = {
 
 export default function DiscoCard({ disco, artistaNombre, onPress }: DiscoCardProps) {
   const { colors } = useTheme();
+  const { addToCart, getCantidad } = useCart();
   const descuento = calcularDescuento(disco.precioInicial, disco.precioActual);
+  const enCarrito = getCantidad(disco.id) > 0;
 
   return (
     <TouchableOpacity
@@ -33,6 +37,25 @@ export default function DiscoCard({ disco, artistaNombre, onPress }: DiscoCardPr
             <Text style={styles.badgeText}>-{descuento}%</Text>
           </View>
         )}
+
+        {/* Ícono de agregar al carrito, directo desde el catálogo */}
+        <TouchableOpacity
+          style={[
+            styles.cartButton,
+            { backgroundColor: enCarrito ? colors.green : colors.accent },
+          ]}
+          onPress={(e) => {
+            e.stopPropagation?.();
+            addToCart(disco, 1);
+          }}
+          activeOpacity={0.8}
+        >
+          {enCarrito ? (
+            <Check color="#fff" size={16} strokeWidth={3} />
+          ) : (
+            <Plus color="#fff" size={16} strokeWidth={3} />
+          )}
+        </TouchableOpacity>
       </View>
 
       <View style={styles.info}>
@@ -72,6 +95,14 @@ const styles = StyleSheet.create({
     paddingVertical: 4, borderRadius: 10,
   },
   badgeText:    { color: '#fff', fontSize: 11, fontWeight: '800' },
+
+  cartButton: {
+    position: 'absolute', bottom: 10, right: 10,
+    width: 30, height: 30, borderRadius: 15,
+    alignItems: 'center', justifyContent: 'center',
+    shadowColor: '#000', shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3, shadowRadius: 4, elevation: 4,
+  },
 
   info:         { padding: 12 },
   nombre:       { fontSize: 14, fontWeight: '700' },

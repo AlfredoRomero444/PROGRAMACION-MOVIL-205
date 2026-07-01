@@ -43,3 +43,21 @@ export function formatFechaCorta(fechaIso: string): string {
     month: 'short',
   });
 }
+
+/**
+ * Da formato a una fecha-hora ISO completa, para folios de factura.
+ * Ej: "1 jul 2026, 14:32"
+ */
+export function formatFechaHora(fechaIso: string): string {
+  const fecha = new Date(fechaIso);
+  const fechaTexto = fecha.toLocaleDateString('es-MX', {
+    day: 'numeric',
+    month: 'short',
+    year: 'numeric',
+  });
+  const horaTexto = fecha.toLocaleTimeString('es-MX', {
+    hour: '2-digit',
+    minute: '2-digit',
+  });
+  return `${fechaTexto}, ${horaTexto}`;
+}

@@ -11,8 +11,9 @@ import { Search } from 'lucide-react-native';
 import { discos, artistas } from '../services/DiscosService';
 import DiscoCard from '../components/DiscoCard';
 import { useTheme } from '../context/ThemeContext';
+import { StoreListProps } from '../navigation/StoreStack';
 
-export default function StoreScreen() {
+export default function StoreScreen({ navigation }: StoreListProps) {
   const { colors } = useTheme();
   const [busqueda, setBusqueda] = useState('');
 
@@ -66,7 +67,11 @@ export default function StoreScreen() {
           const artista = artistas.find((a) => a.id === item.artistaId);
           return (
             <View style={styles.cardWrapper}>
-              <DiscoCard disco={item} artistaNombre={artista?.nombre} />
+              <DiscoCard
+                disco={item}
+                artistaNombre={artista?.nombre}
+                onPress={() => navigation.navigate('StoreDetail', { disco: item, artista })}
+              />
             </View>
           );
         }}
