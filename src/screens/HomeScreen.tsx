@@ -160,7 +160,7 @@ export default function HomeScreen() {
 
   // NAVEGACIÓN RÁPIDA — ahora en formato lista (sin burbujas circulares)
   const navegacionRapida = [
-    { label: 'Artistas',    desc: 'Descubre nuevos artistas',      Icon: Search,   tab: 'Explorar'  },
+    { label: 'Artistas',    desc: 'Descubre nuevos artistas',      Icon: Search,   tab: 'Explorar', screen: 'Artista', params: { filtroInicial: 'Artistas' } },
     { label: 'Álbumes',     desc: 'Explora álbumes destacados',    Icon: Disc3,    tab: 'Explorar', screen: 'Artista', params: { filtroInicial: 'Álbumes' } },
     { label: 'Colecciones', desc: 'Escucha colecciones exclusivas',Icon: Library,  tab: 'Colección'  },
     { label: 'Novedades',   desc: 'Lo último en la música',        Icon: Sparkles, tab: 'Explorar', screen: 'Artista', params: { filtroInicial: 'Todos' } },
