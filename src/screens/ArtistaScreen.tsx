@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import {
   View,
   Text,
@@ -22,6 +22,16 @@ type Filtro = 'Todos' | 'Artistas' | 'Álbumes';
 export default function ArtistaScreen({ navigation, route }: Partial<ArtistaScreenProps>) {
   const { colors } = useTheme();
   const [filtro, setFiltro] = useState<Filtro>(route?.params?.filtroInicial ?? 'Todos');
+
+  // Si la pantalla ya estaba montada (por ej. se navega de nuevo desde el
+  // menú de inicio), React Navigation solo actualiza los params, no vuelve
+  // a ejecutar el useState inicial. Este efecto mantiene la pestaña activa
+  // sincronizada con el filtro que se pidió desde el atajo de navegación.
+  useEffect(() => {
+    if (route?.params?.filtroInicial) {
+      setFiltro(route.params.filtroInicial);
+    }
+  }, [route?.params?.filtroInicial]);
 
   const filtros: Filtro[] = ['Todos', 'Artistas', 'Álbumes'];
 
