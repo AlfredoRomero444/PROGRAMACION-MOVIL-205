@@ -16,7 +16,6 @@ import {
 import { useTheme } from '../context/ThemeContext';
 import { Svg, Path, Defs, LinearGradient, Stop, Rect, Circle } from 'react-native-svg';
 import { Pencil, LogOut } from 'lucide-react-native';
-import { glowCard, glowCircle } from '../utils/glow';
 
 type ApiStatus = 'idle' | 'loading' | 'success' | 'error';
 
@@ -235,7 +234,6 @@ export default function ProfileScreen({ onLogout }: ProfileScreenProps) {
             style={[
               styles.avatarRing,
               { backgroundColor: colors.accent },
-              glowCircle(colors.accent, { opacity: 0.5, radius: 14, elevation: 10 }),
             ]}
           >
             <Image source={require('../../assets/perfil.jpg')} style={[styles.avatar, { borderColor: colors.bg }]} />
@@ -251,7 +249,6 @@ export default function ProfileScreen({ onLogout }: ProfileScreenProps) {
             style={[
               styles.socialColumn,
               { backgroundColor: colors.bgCard, borderColor: colors.accentBorder },
-              glowCard(colors.accent, { opacity: 0.1, radius: 10, elevation: 3 }),
             ]}
           >
             {SOCIAL_LINKS.map(({ id, username, url, Icon }) => (
@@ -268,7 +265,6 @@ export default function ProfileScreen({ onLogout }: ProfileScreenProps) {
             style={[
               styles.statsRow,
               { backgroundColor: colors.bgCard, borderColor: colors.accentBorder },
-              glowCard(colors.accent, { opacity: 0.1, radius: 10, elevation: 3 }),
             ]}
           >
             <View style={styles.statBox}>
@@ -313,7 +309,6 @@ export default function ProfileScreen({ onLogout }: ProfileScreenProps) {
             style={[
               styles.apiCard,
               { backgroundColor: colors.bgCard, borderColor: colors.accentBorder },
-              glowCard(colors.accent, { opacity: 0.1, radius: 10, elevation: 3 }),
             ]}
           >
             <View style={[styles.apiHeader, { borderColor: colors.accentBorder, backgroundColor: isDark ? '#2a160d' : '#fdf0ea' }]}>
@@ -371,7 +366,6 @@ export default function ProfileScreen({ onLogout }: ProfileScreenProps) {
             style={[
               styles.optionsContainer,
               { backgroundColor: colors.bgCard, borderColor: colors.accentBorder },
-              glowCard(colors.accent, { opacity: 0.1, radius: 10, elevation: 3 }),
             ]}
           >
             <TouchableOpacity style={[styles.optionRow, { borderColor: colors.borderMid }]} onPress={openEditModal} activeOpacity={0.7}>
@@ -380,7 +374,6 @@ export default function ProfileScreen({ onLogout }: ProfileScreenProps) {
                   style={[
                     styles.optionIconWrap,
                     { backgroundColor: colors.accentFaint, borderColor: colors.accentBorder },
-                    glowCircle(colors.accent, { opacity: 0.3, radius: 8 }),
                   ]}
                 >
                   <Pencil color={colors.accent} size={16} strokeWidth={2} />

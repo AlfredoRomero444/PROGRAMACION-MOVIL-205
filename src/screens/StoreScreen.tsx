@@ -11,7 +11,6 @@ import { Search } from 'lucide-react-native';
 import { discos, artistas } from '../services/DiscosService';
 import DiscoCard from '../components/DiscoCard';
 import { useTheme } from '../context/ThemeContext';
-import { glowCard } from '../utils/glow';
 
 export default function StoreScreen() {
   const { colors } = useTheme();
@@ -44,7 +43,6 @@ export default function StoreScreen() {
         style={[
           styles.searchWrapper,
           { backgroundColor: colors.bgInput, borderColor: colors.accentBorder },
-          glowCard(colors.accent, { opacity: 0.1, radius: 8, elevation: 2 }),
         ]}
       >
         <Search color={colors.accent} size={17} strokeWidth={2} />
@@ -67,7 +65,7 @@ export default function StoreScreen() {
         renderItem={({ item }) => {
           const artista = artistas.find((a) => a.id === item.artistaId);
           return (
-            <View style={[styles.cardWrapper, glowCard(colors.accent, { opacity: 0.1, radius: 8, elevation: 2 })]}>
+            <View style={styles.cardWrapper}>
               <DiscoCard disco={item} artistaNombre={artista?.nombre} />
             </View>
           );

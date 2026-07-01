@@ -10,7 +10,6 @@ import {
   actualizarDisco, eliminarDisco, DiscoColeccion,
 } from '../services/ColeccionDB';
 import { useTheme } from '../context/ThemeContext';
-import { glowCard, glowCircle } from '../utils/glow';
 
 // Formulario vacío reutilizable
 const FORM_VACIO = { nombre: '', artista: '', genero: '', año: '', nota: '' };
@@ -98,7 +97,6 @@ export default function ColeccionScreen() {
               style={[
                 s.vacioIconWrapper,
                 { backgroundColor: colors.bgCard, borderColor: colors.accentBorder },
-                glowCircle(colors.accent, { opacity: 0.18, radius: 10 }),
               ]}
             >
               <Music2 color={colors.textMuted} size={36} strokeWidth={1.5} />
@@ -111,7 +109,6 @@ export default function ColeccionScreen() {
             style={[
               s.card,
               { backgroundColor: colors.bgCard, borderColor: colors.accentBorder },
-              glowCard(colors.accent, { opacity: 0.12, radius: 10, elevation: 3 }),
             ]}
           >
             <View style={s.cardLeft}>
@@ -145,7 +142,6 @@ export default function ColeccionScreen() {
         style={[
           s.fab,
           { backgroundColor: colors.accent },
-          glowCircle(colors.accent, { opacity: 0.6, radius: 14, elevation: 10 }),
         ]}
         onPress={abrirNuevo}
         activeOpacity={0.85}
@@ -167,7 +163,6 @@ export default function ColeccionScreen() {
                   style={[
                     editando ? s.modalIconEdit : s.modalIconNew,
                     { backgroundColor: colors.accentFaint, borderColor: colors.accentBorder, borderWidth: 1 },
-                    glowCircle(colors.accent, { opacity: 0.3, radius: 8 }),
                   ]}
                 >
                   {editando
@@ -234,7 +229,7 @@ export default function ColeccionScreen() {
                   <Text style={[s.btnCancelarText, { color: colors.textSecondary }]}>Cancelar</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
-                  style={[s.btnGuardar, glowCircle(colors.accent, { opacity: 0.4, radius: 12 })]}
+                  style={s.btnGuardar}
                   onPress={guardar}
                 >
                   <Text style={s.btnGuardarText}>

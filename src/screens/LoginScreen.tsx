@@ -9,7 +9,6 @@ import {
 } from 'react-native';
 import { AlertCircle, X } from 'lucide-react-native';
 import { useTheme } from '../context/ThemeContext';
-import { glowCard, glowCircle } from '../utils/glow';
 
 type LoginScreenProps = {
   onLogin: () => void;
@@ -163,7 +162,7 @@ export default function LoginScreen({ onLogin }: LoginScreenProps) {
       )}
 
       <TouchableOpacity
-        style={[styles.button, glowCircle(colors.accent, { opacity: 0.4, radius: 14 })]}
+        style={styles.button}
         onPress={handleSubmit}
       >
         <Text style={styles.buttonText}>
@@ -186,7 +185,7 @@ export default function LoginScreen({ onLogin }: LoginScreenProps) {
       <Modal visible={alerta !== null} animationType="fade" transparent>
         <View style={styles.alertOverlay}>
           <View style={[styles.alertBox, { backgroundColor: colors.bgDeep, borderColor: colors.accentBorder }]}>
-            <View style={[styles.alertIconWrapper, glowCircle('#fec3b1', { opacity: 0.3, radius: 10 })]}>
+            <View style={styles.alertIconWrapper}>
               <AlertCircle color="#fec3b1" size={30} strokeWidth={1.5} />
             </View>
 

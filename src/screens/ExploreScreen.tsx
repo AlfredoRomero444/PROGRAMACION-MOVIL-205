@@ -9,7 +9,6 @@ import DiscoCard from '../components/DiscoCard';
 import ArtistaCard from '../components/ArtistaCard';
 import { ExploreListProps } from '../navigation/ExploreStack';
 import { useTheme } from '../context/ThemeContext';
-import { glowCard, glowCircle } from '../utils/glow';
 
 export default function ExploreScreen({ navigation }: ExploreListProps) {
   const { colors } = useTheme();
@@ -65,7 +64,6 @@ export default function ExploreScreen({ navigation }: ExploreListProps) {
                 styles.chip,
                 { backgroundColor: colors.bgCard, borderColor: colors.accentBorder },
                 activo && styles.chipActivo,
-                activo && glowCircle(colors.accent, { opacity: 0.4, radius: 10 }),
               ]}
               onPress={() => setGeneroActivo(genero)}
               activeOpacity={0.85}
@@ -113,7 +111,6 @@ export default function ExploreScreen({ navigation }: ExploreListProps) {
                   style={[
                     styles.discoRow,
                     { backgroundColor: colors.bgCard, borderColor: colors.accentBorder },
-                    glowCard(colors.accent, { opacity: 0.1, radius: 8, elevation: 2 }),
                   ]}
                 >
                   <View style={[styles.discoDot, { backgroundColor: colors.accent }]} />

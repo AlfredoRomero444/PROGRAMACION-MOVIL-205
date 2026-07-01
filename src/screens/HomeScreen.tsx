@@ -10,11 +10,10 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { Search, Disc3, Library, User } from 'lucide-react-native';
+import { Search, Disc3, Library, Sparkles, ChevronRight } from 'lucide-react-native';
 
 import { useProductos } from '../hooks/useProductos';
 import { useTheme } from '../context/ThemeContext';
-import { glowCard, glowCircle } from '../utils/glow';
 
 function LoadingSymbols() {
   const dot   = useRef(new Animated.Value(0)).current;
@@ -94,12 +93,21 @@ export default function HomeScreen() {
     .filter(Boolean)
     .slice(0, 8);
 
+  // NAVEGACIÓN RÁPIDA — ahora en formato lista (sin burbujas circulares)
+  const navegacionRapida = [
+    { label: 'Artistas',    desc: 'Descubre nuevos artistas',      Icon: Search,   tab: 'Explorar'  },
+    { label: 'Álbumes',     desc: 'Explora álbumes destacados',    Icon: Disc3,    tab: 'Tienda'     },
+    { label: 'Colecciones', desc: 'Escucha colecciones exclusivas',Icon: Library,  tab: 'Colección'  },
+    { label: 'Novedades',   desc: 'Lo último en la música',        Icon: Sparkles, tab: 'Explorar', screen: 'Artista' },
+  ];
+
   return (
     <ScrollView
       style={[styles.container, { backgroundColor: colors.bg }]}
       contentContainerStyle={styles.content}
       showsVerticalScrollIndicator={false}
     >
+      {/* ── CABECERA ── */}
       <Text style={[styles.sectionLabel, { color: colors.accent }]}>
         DESCUBRE NUEVA MÚSICA
       </Text>
@@ -112,43 +120,58 @@ export default function HomeScreen() {
         Explora artistas, álbumes y colecciones exclusivas.
       </Text>
 
-      {/* ACCESOS RÁPIDOS — íconos circulares con glow, estilo dashboard */}
-      <View style={styles.quickRow}>
-        {[
-          { label: 'Explorar',  Icon: Search,  tab: 'Explorar'  },
-          { label: 'Tienda',    Icon: Disc3,   tab: 'Tienda'    },
-          { label: 'Colección', Icon: Library, tab: 'Colección' },
-          { label: 'Perfil',    Icon: User,    tab: 'Perfil'    },
-        ].map(({ label, Icon, tab }) => (
+      <View style={[styles.divider, { backgroundColor: colors.accentBorder }]} />
+
+      {/* ── EXPLORA LA MÚSICA — navegación en lista, sin burbujas ── */}
+      <Text style={[styles.sectionTitle, { color: colors.textPrimary }]}>
+        Explora la música
+      </Text>
+
+      <View
+        style={[
+          styles.navList,
+          { backgroundColor: colors.bgCard, borderColor: colors.accentBorder },
+        ]}
+      >
+        {navegacionRapida.map(({ label, desc, Icon, tab, screen }, index) => (
           <TouchableOpacity
-            key={tab}
-            style={styles.quickItem}
-            activeOpacity={0.8}
-            onPress={() => navigation.navigate(tab)}
+            key={label}
+            style={[
+              styles.navRow,
+              index !== navegacionRapida.length - 1 && {
+                borderBottomWidth: 1,
+                borderBottomColor: colors.border,
+              },
+            ]}
+            activeOpacity={0.75}
+            onPress={() =>
+              screen
+                ? navigation.navigate(tab, { screen })
+                : navigation.navigate(tab)
+            }
           >
-            <View
-              style={[
-                styles.quickCircle,
-                { backgroundColor: colors.accentFaint, borderColor: colors.accentBorder },
-                glowCircle(colors.accent, { opacity: 0.35, radius: 10 }),
-              ]}
-            >
-              <Icon color={colors.accent} size={22} strokeWidth={2} />
+            <View style={[styles.navIconWrap, { backgroundColor: colors.accentFaint }]}>
+              <Icon color={colors.accent} size={18} strokeWidth={2} />
             </View>
-            <Text style={[styles.quickLabel, { color: colors.textSecondary }]} numberOfLines={1}>
-              {label}
-            </Text>
+
+            <View style={styles.navTextWrap}>
+              <Text style={[styles.navLabel, { color: colors.textPrimary }]}>{label}</Text>
+              <Text style={[styles.navDesc, { color: colors.textSecondary }]} numberOfLines={1}>
+                {desc}
+              </Text>
+            </View>
+
+            <ChevronRight color={colors.textSecondary} size={18} strokeWidth={2} />
           </TouchableOpacity>
         ))}
       </View>
 
-      {/* BANNER */}
+      {/* ── BANNER DESTACADO ── */}
       {destacado && (
         <View
           style={[
             styles.banner,
             { backgroundColor: colors.bgCard, borderColor: colors.accentBorder },
-            glowCard(colors.accent, { opacity: 0.22, radius: 18 }),
           ]}
         >
           <View style={styles.bannerContent}>
@@ -174,9 +197,9 @@ export default function HomeScreen() {
         </View>
       )}
 
-      {/* ARTISTAS */}
+      {/* ── ARTISTAS ── */}
       <View style={styles.sectionHeader}>
-        <Text style={[styles.sectionTitle, { color: colors.textPrimary }]}>
+        <Text style={[styles.sectionTitleRow, { color: colors.textPrimary }]}>
           Artistas destacados
         </Text>
         <Text style={[styles.sectionAction, { color: colors.accent }]}>
@@ -210,9 +233,9 @@ export default function HomeScreen() {
         )}
       />
 
-      {/* ÁLBUMES */}
+      {/* ── ÁLBUMES ── */}
       <View style={styles.sectionHeader}>
-        <Text style={[styles.sectionTitle, { color: colors.textPrimary }]}>
+        <Text style={[styles.sectionTitleRow, { color: colors.textPrimary }]}>
           Álbumes populares
         </Text>
       </View>
@@ -225,7 +248,6 @@ export default function HomeScreen() {
             style={[
               styles.albumCard,
               { backgroundColor: colors.bgCard, borderColor: colors.accentBorder },
-              glowCard(colors.accent, { opacity: 0.12, radius: 10, elevation: 3 }),
             ]}
           >
             <Image
@@ -268,15 +290,36 @@ const styles = StyleSheet.create({
 
   sectionLabel:  { fontSize: 11, fontWeight: '800', letterSpacing: 2 },
   title:         { fontSize: 34, fontWeight: '900', marginTop: 10 },
-  subtitle:      { fontSize: 15, lineHeight: 22, marginTop: 10, marginBottom: 30 },
+  subtitle:      { fontSize: 15, lineHeight: 22, marginTop: 10, marginBottom: 22 },
 
-  quickRow:    { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 28 },
-  quickItem:   { alignItems: 'center', width: 68 },
-  quickCircle: {
-    width: 58, height: 58, borderRadius: 29, borderWidth: 1,
-    alignItems: 'center', justifyContent: 'center', marginBottom: 8,
+  divider: { height: 1, width: 40, marginBottom: 22 },
+
+  sectionTitle: { fontSize: 18, fontWeight: '700', marginBottom: 14 },
+
+  // ── Lista de navegación (reemplaza las burbujas circulares) ──
+  navList: {
+    borderRadius: 24,
+    borderWidth: 1,
+    paddingHorizontal: 6,
+    marginBottom: 28,
   },
-  quickLabel:  { fontSize: 11, fontWeight: '600' },
+  navRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 14,
+    paddingHorizontal: 10,
+    gap: 14,
+  },
+  navIconWrap: {
+    width: 40,
+    height: 40,
+    borderRadius: 14,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  navTextWrap: { flex: 1 },
+  navLabel:    { fontSize: 15, fontWeight: '700' },
+  navDesc:     { fontSize: 12, marginTop: 2 },
 
   banner: {
     borderRadius: 30, padding: 20, marginBottom: 30,
@@ -292,8 +335,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row', justifyContent: 'space-between',
     alignItems: 'center', marginBottom: 18, marginTop: 10,
   },
-  sectionTitle:  { fontSize: 20, fontWeight: '700' },
-  sectionAction: { fontWeight: '600' },
+  sectionTitleRow: { fontSize: 20, fontWeight: '700' },
+  sectionAction:   { fontWeight: '600' },
 
   artistList:  { paddingBottom: 15 },
   artistCard:  { width: 120, marginRight: 15 },

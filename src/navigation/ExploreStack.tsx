@@ -5,6 +5,7 @@ import {
 } from '@react-navigation/native-stack';
 import ExploreScreen from '../screens/ExploreScreen';
 import ExploreDetailScreen from '../screens/ExploreDetailScreen';
+import ArtistaScreen from '../screens/ArtistaScreen';
 import { Disco, Artista } from '../types';
 import { useTheme } from '../context/ThemeContext';
 
@@ -15,10 +16,12 @@ export type ExploreStackParamList = {
     disco: Disco;
     artista: Artista | undefined;
   };
+  Artista: undefined;
 };
 
 export type ExploreListProps   = NativeStackScreenProps<ExploreStackParamList, 'ExploreList'>;
 export type ExploreDetailProps = NativeStackScreenProps<ExploreStackParamList, 'ExploreDetail'>;
+export type ArtistaScreenProps = NativeStackScreenProps<ExploreStackParamList, 'Artista'>;
 
 const Stack = createNativeStackNavigator<ExploreStackParamList>();
 
@@ -46,6 +49,11 @@ export default function ExploreStack() {
         options={({ route }) => ({
           title: route.params.disco.nombre,
         })}
+      />
+      <Stack.Screen
+        name="Artista"
+        component={ArtistaScreen}
+        options={{ title: 'Novedades' }}
       />
     </Stack.Navigator>
   );

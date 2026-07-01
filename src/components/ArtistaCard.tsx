@@ -9,7 +9,6 @@ import {
 import { Artista } from '../types';
 import { resolveImagen } from '../utils/formatters';
 import { useTheme } from '../context/ThemeContext';
-import { glowCard } from '../utils/glow';
 
 type ArtistaCardProps = {
   artista: Artista;
@@ -24,7 +23,6 @@ export default function ArtistaCard({ artista, onPress }: ArtistaCardProps) {
       style={[
         styles.card,
         { backgroundColor: colors.bgCard, borderColor: colors.accentBorder },
-        glowCard(colors.accent, { opacity: 0.1, radius: 8, elevation: 2 }),
       ]}
       onPress={onPress}
       activeOpacity={0.8}

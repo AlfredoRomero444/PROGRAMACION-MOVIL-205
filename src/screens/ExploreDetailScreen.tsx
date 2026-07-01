@@ -8,7 +8,6 @@ import {
   formatFechaCorta,
 } from '../utils/formatters';
 import { useTheme } from '../context/ThemeContext';
-import { glowCard } from '../utils/glow';
 
 export default function ExploreDetailScreen({ route }: ExploreDetailProps) {
   const { colors } = useTheme();
@@ -38,7 +37,6 @@ export default function ExploreDetailScreen({ route }: ExploreDetailProps) {
           style={[
             s.artistaRow,
             { backgroundColor: colors.bgCard, borderColor: colors.accentBorder },
-            glowCard(colors.accent, { opacity: 0.1, radius: 8, elevation: 2 }),
           ]}
         >
           <Image source={resolveImagen(artista.imagen)} style={s.artistaAvatar} resizeMode="cover" />
@@ -55,7 +53,6 @@ export default function ExploreDetailScreen({ route }: ExploreDetailProps) {
         style={[
           s.card,
           { backgroundColor: colors.bgCard, borderColor: colors.accentBorder },
-          glowCard(colors.accent, { opacity: 0.16, radius: 14, elevation: 4 }),
         ]}
       >
         <Text style={[s.cardLabel, { color: colors.accent }]}>PRECIO</Text>
