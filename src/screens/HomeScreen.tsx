@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   View,
   Text,
@@ -8,9 +8,20 @@ import {
   FlatList,
   Animated,
   TouchableOpacity,
+  LayoutAnimation,
+  Platform,
+  UIManager,
+  Easing,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { Search, Disc3, Library, Sparkles, ChevronRight } from 'lucide-react-native';
+import { Search, Disc3, Library, Sparkles, ChevronRight, Menu } from 'lucide-react-native';
+
+if (
+  Platform.OS === 'android' &&
+  UIManager.setLayoutAnimationEnabledExperimental
+) {
+  UIManager.setLayoutAnimationEnabledExperimental(true);
+}
 
 import { useProductos } from '../hooks/useProductos';
 import { useTheme } from '../context/ThemeContext';
@@ -50,10 +61,64 @@ function LoadingSymbols() {
   );
 }
 
+// Título "Explora la música" con efecto de barrido (sweep) al presionar.
+// Solo afecta a este texto; el resto del diseño queda intacto.
+function SweepTitle({ text, color, accent }: { text: string; color: string; accent: string }) {
+  const sweep = useRef(new Animated.Value(0)).current;
+  const [width, setWidth] = useState(0);
+
+  const runSweep = () => {
+    sweep.setValue(0);
+    Animated.timing(sweep, {
+      toValue: 1,
+      duration: 650,
+      easing: Easing.out(Easing.cubic),
+      useNativeDriver: true,
+    }).start();
+  };
+
+  const translateX = sweep.interpolate({
+    inputRange: [0, 1],
+    outputRange: [-width, width],
+  });
+
+  return (
+    <TouchableOpacity
+      activeOpacity={0.7}
+      onPress={runSweep}
+      onLayout={(e) => setWidth(e.nativeEvent.layout.width)}
+      style={styles.sweepWrap}
+    >
+      <Text style={[styles.sectionTitle, { color }]}>{text}</Text>
+      {width > 0 && (
+        <Animated.View
+          pointerEvents="none"
+          style={[
+            styles.sweepOverlay,
+            {
+              width: width * 0.6,
+              backgroundColor: accent,
+              transform: [{ translateX }],
+            },
+          ]}
+        />
+      )}
+    </TouchableOpacity>
+  );
+}
+
 export default function HomeScreen() {
   const { productos, cargando, getArtesano } = useProductos();
   const { colors, theme } = useTheme();
   const navigation = useNavigation<any>();
+
+  // Controla si la lista "Explora la música" está visible u oculta tras el ícono de sándwich
+  const [exploreOpen, setExploreOpen] = useState(false);
+
+  const toggleExplore = () => {
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+    setExploreOpen((prev) => !prev);
+  };
 
   // Oculta header y tab bar mientras carga, los restaura al terminar
   useEffect(() => {
@@ -96,9 +161,9 @@ export default function HomeScreen() {
   // NAVEGACIÓN RÁPIDA — ahora en formato lista (sin burbujas circulares)
   const navegacionRapida = [
     { label: 'Artistas',    desc: 'Descubre nuevos artistas',      Icon: Search,   tab: 'Explorar'  },
-    { label: 'Álbumes',     desc: 'Explora álbumes destacados',    Icon: Disc3,    tab: 'Tienda'     },
+    { label: 'Álbumes',     desc: 'Explora álbumes destacados',    Icon: Disc3,    tab: 'Explorar', screen: 'Artista', params: { filtroInicial: 'Álbumes' } },
     { label: 'Colecciones', desc: 'Escucha colecciones exclusivas',Icon: Library,  tab: 'Colección'  },
-    { label: 'Novedades',   desc: 'Lo último en la música',        Icon: Sparkles, tab: 'Explorar', screen: 'Artista' },
+    { label: 'Novedades',   desc: 'Lo último en la música',        Icon: Sparkles, tab: 'Explorar', screen: 'Artista', params: { filtroInicial: 'Todos' } },
   ];
 
   return (
@@ -122,49 +187,59 @@ export default function HomeScreen() {
 
       <View style={[styles.divider, { backgroundColor: colors.accentBorder }]} />
 
-      {/* ── EXPLORA LA MÚSICA — navegación en lista, sin burbujas ── */}
-      <Text style={[styles.sectionTitle, { color: colors.textPrimary }]}>
-        Explora la música
-      </Text>
+      {/* ── EXPLORA LA MÚSICA — oculta tras el ícono de sándwich ── */}
+      <View style={styles.exploreHeader}>
+        <SweepTitle text="Explora la música" color={colors.textPrimary} accent={colors.accent} />
 
-      <View
-        style={[
-          styles.navList,
-          { backgroundColor: colors.bgCard, borderColor: colors.accentBorder },
-        ]}
-      >
-        {navegacionRapida.map(({ label, desc, Icon, tab, screen }, index) => (
-          <TouchableOpacity
-            key={label}
-            style={[
-              styles.navRow,
-              index !== navegacionRapida.length - 1 && {
-                borderBottomWidth: 1,
-                borderBottomColor: colors.border,
-              },
-            ]}
-            activeOpacity={0.75}
-            onPress={() =>
-              screen
-                ? navigation.navigate(tab, { screen })
-                : navigation.navigate(tab)
-            }
-          >
-            <View style={[styles.navIconWrap, { backgroundColor: colors.accentFaint }]}>
-              <Icon color={colors.accent} size={18} strokeWidth={2} />
-            </View>
-
-            <View style={styles.navTextWrap}>
-              <Text style={[styles.navLabel, { color: colors.textPrimary }]}>{label}</Text>
-              <Text style={[styles.navDesc, { color: colors.textSecondary }]} numberOfLines={1}>
-                {desc}
-              </Text>
-            </View>
-
-            <ChevronRight color={colors.textSecondary} size={18} strokeWidth={2} />
-          </TouchableOpacity>
-        ))}
+        <TouchableOpacity
+          style={[styles.hamburgerBtn, { backgroundColor: colors.accentFaint }]}
+          activeOpacity={0.75}
+          onPress={toggleExplore}
+        >
+          <Menu color={colors.accent} size={20} strokeWidth={2} />
+        </TouchableOpacity>
       </View>
+
+      {exploreOpen && (
+        <View
+          style={[
+            styles.navList,
+            { backgroundColor: colors.bgCard, borderColor: colors.accentBorder },
+          ]}
+        >
+          {navegacionRapida.map(({ label, desc, Icon, tab, screen, params }, index) => (
+            <TouchableOpacity
+              key={label}
+              style={[
+                styles.navRow,
+                index !== navegacionRapida.length - 1 && {
+                  borderBottomWidth: 1,
+                  borderBottomColor: colors.border,
+                },
+              ]}
+              activeOpacity={0.75}
+              onPress={() =>
+                screen
+                  ? navigation.navigate(tab, { screen, params })
+                  : navigation.navigate(tab)
+              }
+            >
+              <View style={[styles.navIconWrap, { backgroundColor: colors.accentFaint }]}>
+                <Icon color={colors.accent} size={18} strokeWidth={2} />
+              </View>
+
+              <View style={styles.navTextWrap}>
+                <Text style={[styles.navLabel, { color: colors.textPrimary }]}>{label}</Text>
+                <Text style={[styles.navDesc, { color: colors.textSecondary }]} numberOfLines={1}>
+                  {desc}
+                </Text>
+              </View>
+
+              <ChevronRight color={colors.textSecondary} size={18} strokeWidth={2} />
+            </TouchableOpacity>
+          ))}
+        </View>
+      )}
 
       {/* ── BANNER DESTACADO ── */}
       {destacado && (
@@ -294,7 +369,34 @@ const styles = StyleSheet.create({
 
   divider: { height: 1, width: 40, marginBottom: 22 },
 
-  sectionTitle: { fontSize: 18, fontWeight: '700', marginBottom: 14 },
+  sectionTitle: { fontSize: 18, fontWeight: '700' },
+
+  // ── Cabecera de "Explora la música" + ícono de sándwich ──
+  exploreHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 14,
+  },
+  hamburgerBtn: {
+    width: 36,
+    height: 36,
+    borderRadius: 12,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+
+  // ── Título con efecto de barrido (sweep) al presionar ──
+  sweepWrap: {
+    overflow: 'hidden',
+    alignSelf: 'flex-start',
+  },
+  sweepOverlay: {
+    position: 'absolute',
+    top: 0,
+    bottom: 0,
+    opacity: 0.18,
+  },
 
   // ── Lista de navegación (reemplaza las burbujas circulares) ──
   navList: {

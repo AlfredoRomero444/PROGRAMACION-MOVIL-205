@@ -15,13 +15,13 @@ import ArtistaCard from '../components/ArtistaCard';
 import DiscoCard from '../components/DiscoCard';
 import { resolveImagen } from '../utils/formatters';
 import { useTheme } from '../context/ThemeContext';
-import { ExploreListProps } from '../navigation/ExploreStack';
+import { ArtistaScreenProps } from '../navigation/ExploreStack';
 
 type Filtro = 'Todos' | 'Artistas' | 'Álbumes';
 
-export default function ArtistaScreen({ navigation }: Partial<ExploreListProps>) {
+export default function ArtistaScreen({ navigation, route }: Partial<ArtistaScreenProps>) {
   const { colors } = useTheme();
-  const [filtro, setFiltro] = useState<Filtro>('Todos');
+  const [filtro, setFiltro] = useState<Filtro>(route?.params?.filtroInicial ?? 'Todos');
 
   const filtros: Filtro[] = ['Todos', 'Artistas', 'Álbumes'];
 

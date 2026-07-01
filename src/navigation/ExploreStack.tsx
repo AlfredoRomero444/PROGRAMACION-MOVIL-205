@@ -16,7 +16,7 @@ export type ExploreStackParamList = {
     disco: Disco;
     artista: Artista | undefined;
   };
-  Artista: undefined;
+  Artista: { filtroInicial?: 'Todos' | 'Artistas' | 'Álbumes' } | undefined;
 };
 
 export type ExploreListProps   = NativeStackScreenProps<ExploreStackParamList, 'ExploreList'>;
