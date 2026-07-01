@@ -226,19 +226,24 @@ const styles = StyleSheet.create({
   },
 
   input: {
-    borderRadius: 18,
-    paddingHorizontal: 20,
-    paddingVertical: 16,
+    borderRadius: 22,
+    paddingHorizontal: 22,
+    paddingVertical: 17,
     marginBottom: 16,
     borderWidth: 1,
   },
 
   button: {
     backgroundColor: '#fec3b1',
-    paddingVertical: 16,
-    borderRadius: 20,
+    paddingVertical: 17,
+    borderRadius: 24,
     alignItems: 'center',
     marginTop: 10,
+    shadowColor: '#fec3b1',
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.35,
+    shadowRadius: 16,
+    elevation: 6,
   },
 
   buttonText: {
@@ -273,7 +278,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   alertBox: {
-    borderRadius: 24,
+    borderRadius: 30,
     padding: 28,
     width: '85%',
     borderWidth: 1,
@@ -282,7 +287,7 @@ const styles = StyleSheet.create({
   alertIconWrapper: {
     width: 64,
     height: 64,
-    borderRadius: 20,
+    borderRadius: 22,
     backgroundColor: '#fec3b115',
     alignItems: 'center',
     justifyContent: 'center',
@@ -311,7 +316,7 @@ const styles = StyleSheet.create({
     width: '100%',
     backgroundColor: '#fec3b1',
     paddingVertical: 15,
-    borderRadius: 16,
+    borderRadius: 20,
     alignItems: 'center',
   },
   alertBtnText: {

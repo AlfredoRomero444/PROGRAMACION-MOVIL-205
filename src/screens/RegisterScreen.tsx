@@ -129,6 +129,8 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     borderRadius: 50,
     marginBottom: 30,
+    borderWidth: 1.5,
+    borderColor: '#fec3b130',
   },
 
   title: {
@@ -151,7 +153,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#151525',
     color: '#ffffff',
     padding: 18,
-    borderRadius: 20,
+    borderRadius: 22,
     marginBottom: 16,
     borderWidth: 1,
     borderColor: '#fec3b130',
@@ -161,9 +163,14 @@ const styles = StyleSheet.create({
   button: {
     backgroundColor: '#fec3b1',
     paddingVertical: 18,
-    borderRadius: 20,
+    borderRadius: 24,
     alignItems: 'center',
     marginTop: 10,
+    shadowColor: '#fec3b1',
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.35,
+    shadowRadius: 16,
+    elevation: 6,
   },
 
   buttonText: {

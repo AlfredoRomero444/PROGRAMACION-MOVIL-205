@@ -106,7 +106,7 @@ export default function ColeccionScreen() {
           </View>
         }
         renderItem={({ item }) => (
-          <View style={[s.card, { backgroundColor: colors.bgCard, borderColor: colors.accentBorder }]}>
+          <View style={[s.card, { backgroundColor: colors.bgCard, borderColor: colors.accentBorder, shadowColor: colors.accent }]}>
             <View style={s.cardLeft}>
               <View style={s.dot} />
             </View>
@@ -276,60 +276,66 @@ const s = StyleSheet.create({
   subtitle:       { fontSize: 14, marginTop: 6 },
 
   btnAgregar:     { marginHorizontal: 25, marginBottom: 20, backgroundColor: '#fec3b1',
-                    paddingVertical: 14, borderRadius: 18, alignItems: 'center',
-                    flexDirection: 'row', justifyContent: 'center', gap: 8 },
+                    paddingVertical: 15, borderRadius: 22, alignItems: 'center',
+                    flexDirection: 'row', justifyContent: 'center', gap: 8,
+                    shadowColor: '#fec3b1', shadowOffset: { width: 0, height: 8 },
+                    shadowOpacity: 0.35, shadowRadius: 16, elevation: 6 },
   btnAgregarText: { color: '#fff', fontSize: 15, fontWeight: '800' },
 
   lista:          { paddingHorizontal: 25, paddingBottom: 40 },
 
   vacio:          { alignItems: 'center', marginTop: 60, gap: 16 },
-  vacioIconWrapper: { width: 72, height: 72, borderRadius: 22,
+  vacioIconWrapper: { width: 76, height: 76, borderRadius: 38,
                       alignItems: 'center', justifyContent: 'center', borderWidth: 1 },
   vacioTexto:     { fontSize: 15, textAlign: 'center', lineHeight: 24 },
 
-  card:           { flexDirection: 'row', borderRadius: 18,
-                    padding: 14, marginBottom: 12, borderWidth: 1, alignItems: 'center' },
+  card:           { flexDirection: 'row', borderRadius: 26,
+                    padding: 16, marginBottom: 12, borderWidth: 1, alignItems: 'center',
+                    shadowOffset: { width: 0, height: 6 }, shadowOpacity: 0.12,
+                    shadowRadius: 14, elevation: 3 },
   cardLeft:       { marginRight: 12 },
   dot:            { width: 10, height: 10, borderRadius: 5, backgroundColor: '#fec3b1' },
   cardInfo:       { flex: 1 },
   cardNombre:     { fontSize: 15, fontWeight: '700' },
   cardArtista:    { fontSize: 13, marginTop: 2 },
   cardMeta:       { flexDirection: 'row', alignItems: 'center', gap: 8, marginTop: 6 },
-  genreBadge:     { paddingHorizontal: 8, paddingVertical: 2, borderRadius: 8 },
+  genreBadge:     { paddingHorizontal: 8, paddingVertical: 2, borderRadius: 10 },
   genreText:      { fontSize: 11, fontWeight: '600' },
   cardAño:        { fontSize: 12 },
   cardNota:       { fontSize: 12, fontStyle: 'italic', marginTop: 4 },
   cardActions:    { gap: 8 },
-  btnEdit:        { width: 36, height: 36, borderRadius: 10,
+  btnEdit:        { width: 38, height: 38, borderRadius: 19,
                     alignItems: 'center', justifyContent: 'center', borderWidth: 1 },
-  btnDel:         { width: 36, height: 36, borderRadius: 10,
+  btnDel:         { width: 38, height: 38, borderRadius: 19,
                     alignItems: 'center', justifyContent: 'center', borderWidth: 1 },
 
   // Modal formulario
   modalOverlay:     { flex: 1, backgroundColor: '#000000aa', justifyContent: 'flex-end' },
-  modalBox:         { borderTopLeftRadius: 28, borderTopRightRadius: 28,
+  modalBox:         { borderTopLeftRadius: 34, borderTopRightRadius: 34,
                       padding: 28, maxHeight: '90%', borderTopWidth: 1 },
   modalTitleRow:    { flexDirection: 'row', alignItems: 'center', gap: 12, marginBottom: 24 },
-  modalIconEdit:    { width: 36, height: 36, borderRadius: 10, alignItems: 'center', justifyContent: 'center' },
-  modalIconNew:     { width: 36, height: 36, borderRadius: 10, alignItems: 'center', justifyContent: 'center' },
+  modalIconEdit:    { width: 38, height: 38, borderRadius: 19, alignItems: 'center', justifyContent: 'center' },
+  modalIconNew:     { width: 38, height: 38, borderRadius: 19, alignItems: 'center', justifyContent: 'center' },
   modalTitle:       { fontSize: 20, fontWeight: '800' },
   inputLabel:       { fontSize: 12, fontWeight: '600', letterSpacing: 0.5, marginBottom: 6 },
-  input:            { borderRadius: 14, paddingHorizontal: 16, paddingVertical: 13, marginBottom: 16,
+  input:            { borderRadius: 18, paddingHorizontal: 18, paddingVertical: 13, marginBottom: 16,
                       borderWidth: 1, fontSize: 14 },
   inputMulti:       { height: 90, textAlignVertical: 'top' },
   modalBtns:        { flexDirection: 'row', gap: 12, marginTop: 8 },
-  btnCancelar:      { flex: 1, paddingVertical: 15, borderRadius: 16, alignItems: 'center', borderWidth: 1 },
+  btnCancelar:      { flex: 1, paddingVertical: 15, borderRadius: 20, alignItems: 'center', borderWidth: 1 },
   btnCancelarText:  { fontSize: 15, fontWeight: '700' },
   btnGuardar:       { flex: 1, backgroundColor: '#fec3b1', paddingVertical: 15,
-                      borderRadius: 16, alignItems: 'center' },
+                      borderRadius: 20, alignItems: 'center',
+                      shadowColor: '#fec3b1', shadowOffset: { width: 0, height: 6 },
+                      shadowOpacity: 0.3, shadowRadius: 12, elevation: 4 },
   btnGuardarText:   { color: '#fff', fontSize: 15, fontWeight: '800' },
 
   // Modal eliminar — respeta el tema oscuro/claro, mismo diseño que cerrar sesión
   deleteOverlay:      { flex: 1, backgroundColor: '#000000b0',
                         justifyContent: 'center', alignItems: 'center', paddingHorizontal: 32 },
-  deleteBox:          { width: '100%', borderRadius: 20,
+  deleteBox:          { width: '100%', borderRadius: 26,
                         overflow: 'hidden', alignItems: 'center', paddingTop: 28 },
-  deleteIconWrapper:  { width: 56, height: 56, borderRadius: 28,
+  deleteIconWrapper:  { width: 58, height: 58, borderRadius: 29,
                         borderWidth: 1.5,
                         alignItems: 'center', justifyContent: 'center', marginBottom: 16 },
   deleteTitle:        { fontSize: 17, fontWeight: '700',

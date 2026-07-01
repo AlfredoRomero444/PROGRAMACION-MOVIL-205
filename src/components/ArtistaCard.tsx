@@ -20,11 +20,16 @@ export default function ArtistaCard({ artista, onPress }: ArtistaCardProps) {
 
   return (
     <TouchableOpacity
-      style={[styles.card, { backgroundColor: colors.bgCard, borderColor: colors.accentBorder }]}
+      style={[
+        styles.card,
+        { backgroundColor: colors.bgCard, borderColor: colors.accentBorder, shadowColor: colors.accent },
+      ]}
       onPress={onPress}
-      activeOpacity={0.8}
+      activeOpacity={0.85}
     >
-      <Image source={resolveImagen(artista.imagen)} style={styles.imagen} />
+      <View style={[styles.avatarRing, { borderColor: colors.accentBorder, backgroundColor: colors.accentFaint }]}>
+        <Image source={resolveImagen(artista.imagen)} style={styles.imagen} />
+      </View>
 
       <View style={styles.info}>
         <Text style={[styles.nombre, { color: colors.textPrimary }]} numberOfLines={1}>
@@ -45,13 +50,22 @@ export default function ArtistaCard({ artista, onPress }: ArtistaCardProps) {
 const styles = StyleSheet.create({
   card:       {
     flexDirection: 'row', alignItems: 'center',
-    borderRadius: 20, padding: 12, borderWidth: 1,
+    borderRadius: 24, padding: 12, borderWidth: 1,
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.14,
+    shadowRadius: 14,
+    elevation: 3,
   },
-  imagen:     { width: 56, height: 56, borderRadius: 28, marginRight: 14 },
+  avatarRing: {
+    width: 62, height: 62, borderRadius: 31,
+    borderWidth: 1.5, alignItems: 'center', justifyContent: 'center',
+    marginRight: 14,
+  },
+  imagen:     { width: 54, height: 54, borderRadius: 27 },
   info:       { flex: 1 },
   nombre:     { fontSize: 15, fontWeight: '700' },
   metaRow:    { flexDirection: 'row', alignItems: 'center', marginTop: 6, gap: 8 },
-  generoBadge:{ paddingHorizontal: 10, paddingVertical: 3, borderRadius: 10 },
+  generoBadge:{ paddingHorizontal: 10, paddingVertical: 3, borderRadius: 12 },
   generoText: { fontSize: 11, fontWeight: '600' },
   pais:       { fontSize: 12 },
 });

@@ -84,9 +84,9 @@ const styles = StyleSheet.create({
   subtitle:     { fontSize: 14, marginTop: 6 },
 
   searchInput: {
-    borderRadius: 18,
-    paddingHorizontal: 18,
-    paddingVertical: 14,
+    borderRadius: 22,
+    paddingHorizontal: 20,
+    paddingVertical: 15,
     marginBottom: 20,
     borderWidth: 1,
     fontSize: 14,

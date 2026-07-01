@@ -67,9 +67,16 @@ export default function HomeScreen() {
           backgroundColor: colors.tabBar,
           borderTopWidth: 1.5,
           borderTopColor: colors.tabBorder,
+          borderTopLeftRadius: 26,
+          borderTopRightRadius: 26,
           height: 60,
           paddingTop: 4,
           paddingBottom: 8,
+          shadowColor: colors.accent,
+          shadowOffset: { width: 0, height: -4 },
+          shadowOpacity: 0.12,
+          shadowRadius: 16,
+          elevation: 8,
         },
       });
     }
@@ -124,14 +131,16 @@ export default function HomeScreen() {
             </Text>
           </View>
 
-          <Image
-            source={
-              typeof destacado.imagen === 'string'
-                ? { uri: destacado.imagen }
-                : destacado.imagen
-            }
-            style={styles.bannerImage}
-          />
+          <View style={[styles.bannerImageRing, { backgroundColor: colors.accentFaint, borderColor: colors.accentBorder }]}>
+            <Image
+              source={
+                typeof destacado.imagen === 'string'
+                  ? { uri: destacado.imagen }
+                  : destacado.imagen
+              }
+              style={styles.bannerImage}
+            />
+          </View>
         </View>
       )}
 
@@ -140,9 +149,11 @@ export default function HomeScreen() {
         <Text style={[styles.sectionTitle, { color: colors.textPrimary }]}>
           Artistas destacados
         </Text>
-        <Text style={[styles.sectionAction, { color: colors.accent }]}>
-          Ver más
-        </Text>
+        <View style={[styles.sectionActionPill, { backgroundColor: colors.accentFaint, borderColor: colors.accentBorder }]}>
+          <Text style={[styles.sectionAction, { color: colors.accent }]}>
+            Ver más
+          </Text>
+        </View>
       </View>
 
       <FlatList
@@ -225,35 +236,43 @@ const styles = StyleSheet.create({
   subtitle:      { fontSize: 15, lineHeight: 22, marginTop: 10, marginBottom: 30 },
 
   banner: {
-    borderRadius: 30, padding: 20, marginBottom: 30,
+    borderRadius: 34, padding: 22, marginBottom: 30,
     flexDirection: 'row', alignItems: 'center', borderWidth: 1,
-    shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.25, shadowRadius: 14, elevation: 4,
+    shadowOffset: { width: 0, height: 10 }, shadowOpacity: 0.22, shadowRadius: 26, elevation: 6,
   },
   bannerContent: { flex: 1, marginRight: 15 },
   bannerTag:     { fontSize: 11, fontWeight: '800', letterSpacing: 2 },
   bannerTitle:   { fontSize: 24, fontWeight: 'bold', marginTop: 12 },
   bannerArtist:  { fontSize: 15, marginTop: 6 },
-  bannerImage:   { width: 110, height: 110, borderRadius: 20 },
+  bannerImageRing: {
+    width: 128, height: 128, borderRadius: 30,
+    borderWidth: 1.5, alignItems: 'center', justifyContent: 'center', padding: 8,
+  },
+  bannerImage:   { width: 110, height: 110, borderRadius: 24 },
 
   sectionHeader: {
     flexDirection: 'row', justifyContent: 'space-between',
     alignItems: 'center', marginBottom: 18, marginTop: 10,
   },
   sectionTitle:  { fontSize: 20, fontWeight: '700' },
-  sectionAction: { fontWeight: '600' },
+  sectionActionPill: {
+    paddingHorizontal: 14, paddingVertical: 7,
+    borderRadius: 18, borderWidth: 1,
+  },
+  sectionAction: { fontWeight: '700', fontSize: 12 },
 
   artistList:  { paddingBottom: 15 },
-  artistCard:  { width: 120, marginRight: 15 },
-  artistImage: { width: 120, height: 120, borderRadius: 24, marginBottom: 10 },
-  artistName:  { fontSize: 14, fontWeight: '700' },
-  artistGenre: { fontSize: 12, marginTop: 4 },
+  artistCard:  { width: 120, marginRight: 15, alignItems: 'center' },
+  artistImage: { width: 108, height: 108, borderRadius: 54, marginBottom: 10 },
+  artistName:  { fontSize: 14, fontWeight: '700', textAlign: 'center' },
+  artistGenre: { fontSize: 12, marginTop: 4, textAlign: 'center' },
 
   albumCard:   {
-    borderRadius: 24, padding: 15,
+    borderRadius: 28, padding: 15,
     flexDirection: 'row', alignItems: 'center',
     marginBottom: 15, borderWidth: 1,
   },
-  albumImage:  { width: 75, height: 75, borderRadius: 18 },
+  albumImage:  { width: 75, height: 75, borderRadius: 22 },
   albumInfo:   { flex: 1, marginLeft: 15 },
   albumName:   { fontSize: 17, fontWeight: '700' },
   albumArtist: { fontSize: 14, marginTop: 5 },

@@ -229,7 +229,7 @@ export default function ProfileScreen({ onLogout }: ProfileScreenProps) {
 
         {/* Avatar */}
         <View style={[styles.avatarWrapper, { borderColor: colors.bg }]}>
-          <View style={[styles.avatarRing, { backgroundColor: colors.accent }]}>
+          <View style={[styles.avatarRing, { backgroundColor: colors.accent, shadowColor: colors.accent }]}>
             <Image source={require('../../assets/perfil.jpg')} style={[styles.avatar, { borderColor: colors.bg }]} />
           </View>
         </View>
@@ -471,7 +471,7 @@ const styles = StyleSheet.create({
   themeButtonInner: {
     width: 44,
     height: 38,
-    borderRadius: 12,
+    borderRadius: 16,
     borderWidth: 1.5,
     alignItems: 'center',
     justifyContent: 'center',
@@ -488,16 +488,21 @@ const styles = StyleSheet.create({
   },
 
   avatarWrapper: { marginTop: -AVATAR_SIZE / 2, paddingLeft: 20 },
-  avatarRing: { width: AVATAR_SIZE + 6, height: AVATAR_SIZE + 6, borderRadius: (AVATAR_SIZE + 6) / 2, alignItems: 'center', justifyContent: 'center' },
+  avatarRing: {
+    width: AVATAR_SIZE + 6, height: AVATAR_SIZE + 6, borderRadius: (AVATAR_SIZE + 6) / 2,
+    alignItems: 'center', justifyContent: 'center',
+    shadowColor: '#fec3b1', shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.4, shadowRadius: 12, elevation: 6,
+  },
   avatar: { width: AVATAR_SIZE, height: AVATAR_SIZE, borderRadius: AVATAR_SIZE / 2, borderWidth: 3 },
 
   content:      { paddingHorizontal: 20, paddingTop: 12, paddingBottom: 40 },
   nombre:       { fontSize: 19, fontWeight: '700', fontFamily: 'monospace' },
   correo:       { fontSize: 13, marginTop: 2, marginBottom: 14 },
 
-  socialColumn: { marginBottom: 20, borderRadius: 12, overflow: 'hidden', borderWidth: 1 },
-  socialRow:    { flexDirection: 'row', alignItems: 'center', paddingHorizontal: 14, paddingVertical: 11, borderBottomWidth: 0.5, gap: 12 },
-  socialIconWrap: { width: 34, height: 34, borderRadius: 8, alignItems: 'center', justifyContent: 'center' },
+  socialColumn: { marginBottom: 20, borderRadius: 22, overflow: 'hidden', borderWidth: 1 },
+  socialRow:    { flexDirection: 'row', alignItems: 'center', paddingHorizontal: 14, paddingVertical: 12, borderBottomWidth: 0.5, gap: 12 },
+  socialIconWrap: { width: 36, height: 36, borderRadius: 18, alignItems: 'center', justifyContent: 'center' },
   socialUsername: { flex: 1, fontSize: 13, fontWeight: '500' },
   socialArrow:  { fontSize: 18 },
 
@@ -515,7 +520,7 @@ const styles = StyleSheet.create({
   artistaNombre:  { fontSize: 11, textAlign: 'center' },
 
   generosContainer: { flexDirection: 'row', flexWrap: 'wrap', gap: 8, marginBottom: 8 },
-  generoBadge:      { paddingHorizontal: 12, paddingVertical: 6, borderRadius: 14 },
+  generoBadge:      { paddingHorizontal: 13, paddingVertical: 6, borderRadius: 16 },
   generoText:       { fontSize: 12, fontWeight: '600' },
 
   optionsContainer: { marginTop: 14 },
@@ -525,7 +530,7 @@ const styles = StyleSheet.create({
   logoutRow:        { paddingBottom: 4 },
   logoutText:       { color: '#e24b4a', fontSize: 14 },
 
-  apiCard:          { marginTop: 28, borderRadius: 14, borderWidth: 1, overflow: 'hidden' },
+  apiCard:          { marginTop: 28, borderRadius: 22, borderWidth: 1, overflow: 'hidden' },
   apiHeader:        { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 14, paddingVertical: 10, borderBottomWidth: 1 },
   apiHeaderLeft:    { flexDirection: 'row', alignItems: 'center', gap: 8 },
   apiDot:           { width: 8, height: 8, borderRadius: 4 },
@@ -547,19 +552,19 @@ const styles = StyleSheet.create({
   apiRefetchText:   { fontSize: 12, fontWeight: '700', fontFamily: 'monospace', letterSpacing: 1 },
 
   modalOverlay:  { flex: 1, justifyContent: 'flex-end', backgroundColor: '#000000aa' },
-  modalSheet:    { borderTopLeftRadius: 20, borderTopRightRadius: 20, paddingHorizontal: 24, paddingTop: 12, paddingBottom: 36, borderTopWidth: 1 },
+  modalSheet:    { borderTopLeftRadius: 28, borderTopRightRadius: 28, paddingHorizontal: 24, paddingTop: 12, paddingBottom: 36, borderTopWidth: 1 },
   modalHandle:   { width: 40, height: 4, borderRadius: 2, backgroundColor: '#ffffff30', alignSelf: 'center', marginBottom: 18 },
   modalTitle:    { fontSize: 17, fontWeight: '700', fontFamily: 'monospace', marginBottom: 20 },
   fieldLabel:    { fontSize: 11, fontFamily: 'monospace', letterSpacing: 1, marginBottom: 4, textTransform: 'uppercase' },
-  fieldInput:    { borderRadius: 12, paddingHorizontal: 16, paddingVertical: 12, marginBottom: 14, borderWidth: 1, fontSize: 14 },
+  fieldInput:    { borderRadius: 18, paddingHorizontal: 18, paddingVertical: 13, marginBottom: 14, borderWidth: 1, fontSize: 14 },
   modalButtons:  { flexDirection: 'row', gap: 12, marginTop: 6 },
-  cancelBtn:     { flex: 1, paddingVertical: 14, borderRadius: 14, borderWidth: 1, alignItems: 'center' },
+  cancelBtn:     { flex: 1, paddingVertical: 14, borderRadius: 20, borderWidth: 1, alignItems: 'center' },
   cancelBtnText: { fontSize: 14, fontWeight: '600' },
-  saveBtn:       { flex: 1, paddingVertical: 14, borderRadius: 14, alignItems: 'center' },
+  saveBtn:       { flex: 1, paddingVertical: 14, borderRadius: 20, alignItems: 'center' },
   saveBtnText:   { color: '#fff', fontSize: 14, fontWeight: '700' },
 
   logoutOverlay:        { flex: 1, backgroundColor: '#000000b0', alignItems: 'center', justifyContent: 'center', paddingHorizontal: 32 },
-  logoutDialog:         { width: '100%', borderRadius: 20, borderWidth: 1, overflow: 'hidden', alignItems: 'center', paddingTop: 28 },
+  logoutDialog:         { width: '100%', borderRadius: 26, borderWidth: 1, overflow: 'hidden', alignItems: 'center', paddingTop: 28 },
   logoutIconWrap:       { width: 52, height: 52, borderRadius: 26, backgroundColor: '#e24b4a18', borderWidth: 1, borderColor: '#e24b4a40', alignItems: 'center', justifyContent: 'center', marginBottom: 16 },
   logoutDialogTitle:    { fontSize: 17, fontWeight: '700', fontFamily: 'monospace', marginBottom: 8 },
   logoutDialogSubtitle: { fontSize: 13, textAlign: 'center', lineHeight: 20, paddingHorizontal: 12, marginBottom: 24 },

@@ -44,7 +44,7 @@ export default function ExploreDetailScreen({ route }: ExploreDetailProps) {
 
       <Text style={[s.descripcion, { color: colors.textSecondary }]}>{disco.descripcion}</Text>
 
-      <View style={[s.card, { backgroundColor: colors.bgCard, borderColor: colors.accentBorder }]}>
+      <View style={[s.card, { backgroundColor: colors.bgCard, borderColor: colors.accentBorder, shadowColor: colors.accent }]}>
         <Text style={[s.cardLabel, { color: colors.accent }]}>PRECIO</Text>
         <View style={s.precioRow}>
           <Text style={[s.precioActual, { color: colors.green }]}>{formatPrecio(disco.precioActual)}</Text>
@@ -78,7 +78,7 @@ const s = StyleSheet.create({
   content:   { padding: 24, paddingBottom: 50 },
 
   coverWrapper: {
-    width: '100%', height: 320, borderRadius: 24,
+    width: '100%', height: 320, borderRadius: 32,
     marginBottom: 20, overflow: 'hidden', backgroundColor: '#1c1c2e',
   },
   cover:        { width: '100%', height: '100%' },
@@ -86,7 +86,7 @@ const s = StyleSheet.create({
   badgeOnImage: {
     position: 'absolute', top: 14, left: 14,
     backgroundColor: '#fec3b1', paddingHorizontal: 12,
-    paddingVertical: 5, borderRadius: 12,
+    paddingVertical: 5, borderRadius: 16,
   },
   badgeText:    { color: '#fff', fontSize: 11, fontWeight: '800', letterSpacing: 1 },
 
@@ -94,7 +94,7 @@ const s = StyleSheet.create({
 
   artistaRow:   {
     flexDirection: 'row', alignItems: 'center', gap: 12,
-    marginBottom: 16, padding: 12, borderRadius: 16, borderWidth: 1,
+    marginBottom: 16, padding: 14, borderRadius: 22, borderWidth: 1,
   },
   artistaAvatar:  { width: 48, height: 48, borderRadius: 24, backgroundColor: '#1c1c2e' },
   artistaNombre:  { fontWeight: '700', fontSize: 15 },
@@ -102,7 +102,10 @@ const s = StyleSheet.create({
 
   descripcion:  { fontSize: 14, lineHeight: 22, marginBottom: 24 },
 
-  card:         { borderRadius: 20, padding: 20, borderWidth: 1 },
+  card:         {
+    borderRadius: 28, padding: 22, borderWidth: 1,
+    shadowOffset: { width: 0, height: 8 }, shadowOpacity: 0.16, shadowRadius: 20, elevation: 4,
+  },
   cardLabel:    { fontSize: 11, fontWeight: '800', letterSpacing: 2, marginBottom: 10 },
   precioRow:    { flexDirection: 'row', alignItems: 'baseline', gap: 10 },
   precioActual: { fontSize: 32, fontWeight: '900' },
