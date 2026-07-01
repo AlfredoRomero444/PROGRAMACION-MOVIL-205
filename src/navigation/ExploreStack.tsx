@@ -1,8 +1,10 @@
 import React from 'react';
+import { TouchableOpacity } from 'react-native';
 import {
   createNativeStackNavigator,
   NativeStackScreenProps,
 } from '@react-navigation/native-stack';
+import { ArrowLeft } from 'lucide-react-native';
 import ExploreScreen from '../screens/ExploreScreen';
 import ExploreDetailScreen from '../screens/ExploreDetailScreen';
 import ArtistaScreen from '../screens/ArtistaScreen';
@@ -53,7 +55,18 @@ export default function ExploreStack() {
       <Stack.Screen
         name="Artista"
         component={ArtistaScreen}
-        options={{ title: 'Novedades' }}
+        options={({ navigation }) => ({
+          title: 'Novedades',
+          headerLeft: () => (
+            <TouchableOpacity
+              onPress={() => navigation.navigate('Inicio' as never)}
+              activeOpacity={0.7}
+              style={{ paddingRight: 8 }}
+            >
+              <ArrowLeft color={colors.accent} size={22} strokeWidth={2} />
+            </TouchableOpacity>
+          ),
+        })}
       />
     </Stack.Navigator>
   );
