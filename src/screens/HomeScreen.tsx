@@ -25,6 +25,7 @@ if (
 
 import { useProductos } from '../hooks/useProductos';
 import { useTheme } from '../context/ThemeContext';
+import { useNavBarVisibility } from '../context/NavBarVisibilityContext';
 
 function LoadingSymbols() {
   const dot   = useRef(new Animated.Value(0)).current;
@@ -111,6 +112,7 @@ export default function HomeScreen() {
   const { productos, cargando, getArtesano } = useProductos();
   const { colors, theme } = useTheme();
   const navigation = useNavigation<any>();
+  const { setNavBarHidden } = useNavBarVisibility();
 
   // Controla si la lista "Explora la música" está visible u oculta tras el ícono de sándwich
   const [exploreOpen, setExploreOpen] = useState(false);
@@ -120,27 +122,21 @@ export default function HomeScreen() {
     setExploreOpen((prev) => !prev);
   };
 
-  // Oculta header y tab bar mientras carga, los restaura al terminar
+  // El header nativo del Tab.Navigator se mantiene siempre oculto: la
+  // app usa su propia barra de navegación fija (ver App.tsx), así nunca
+  // aparece una barra blanca/duplicada encima del contenido, sin
+  // importar el tema activo (claro u oscuro).
   useEffect(() => {
-    const parent = navigation.getParent();
-    if (cargando) {
-      navigation.setOptions({ headerShown: false });
-      parent?.setOptions({ tabBarStyle: { display: 'none' } });
-    } else {
-      navigation.setOptions({ headerShown: true });
-      parent?.setOptions({
-        tabBarStyle: {
-          display: 'flex',
-          backgroundColor: colors.tabBar,
-          borderTopWidth: 1.5,
-          borderTopColor: colors.tabBorder,
-          height: 60,
-          paddingTop: 4,
-          paddingBottom: 8,
-        },
-      });
-    }
-  }, [cargando, colors]);
+    navigation.setOptions({ headerShown: false });
+  }, [navigation]);
+
+  // Mientras se muestra el logo de "cargando" (arranque de la app / carga
+  // de productos), ocultamos la barra de navegación fija; se vuelve a
+  // mostrar en cuanto el contenido está listo.
+  useEffect(() => {
+    setNavBarHidden(cargando);
+    return () => setNavBarHidden(false);
+  }, [cargando, setNavBarHidden]);
 
   if (cargando) {
     return (

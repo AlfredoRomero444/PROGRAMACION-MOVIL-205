@@ -5,20 +5,18 @@ import {
   NativeStackScreenProps,
 } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import {
-  SafeAreaProvider,
-  useSafeAreaInsets,
-} from 'react-native-safe-area-context';
+import { SafeAreaProvider, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { StatusBar, StyleSheet, View, Animated } from 'react-native';
-import { House, Search, Disc3, User, Library, ShoppingCart, Receipt } from 'lucide-react-native';
 
 import { ThemeProvider, useTheme }  from './src/context/ThemeContext';
 import { AuthProvider, useAuth }    from './src/context/AuthContext';
 import { CartProvider, useCart }    from './src/context/CartContext';
 import { FacturasProvider }         from './src/context/FacturasContext';
+import { NavBarVisibilityProvider, useNavBarVisibility } from './src/context/NavBarVisibilityContext';
 import SplashScreen        from './src/components/SplashScreen';
 import LogoutScreen        from './src/components/Logoutscreen';
 import ReturnToLoginScreen from './src/components/ReturnToLoginScreen';
+import SideMenu             from './src/components/SideMenu';
 import LoginScreen         from './src/screens/LoginScreen';
 import RegisterScreen  from './src/screens/RegisterScreen';
 import HomeScreen      from './src/screens/HomeScreen';
@@ -91,67 +89,63 @@ const loadingStyles = StyleSheet.create({
 });
 
 // ── Tabs (usa colores del tema) ───────────────────────────────────────────────
+// Ya no hay hamburguesa ni menú desplegable: la barra de navegación (SideMenu)
+// es fija y siempre visible, así ningún ícono queda encima de los títulos de
+// cada pantalla y el layout es totalmente predecible.
 function MainTabs({ onLogout }: { onLogout: () => void }) {
-  const insets = useSafeAreaInsets();
-  const { colors, theme } = useTheme();
+  const { colors } = useTheme();
   const { totalItems } = useCart();
+  const { navBarHidden } = useNavBarVisibility();
+  const insets = useSafeAreaInsets();
+  const navigationRef = useRef<any>(null);
+  // Fuerza un re-render del SideMenu (barra fija) cada vez que cambia
+  // la pestaña activa, para que resalte el ícono correcto. Se hace con
+  // un listener (no dentro del render de Tab.Navigator) para evitar el
+  // error de "setState durante el render de otro componente".
+  const [, setActiveTabTick] = useState(0);
+
+  useEffect(() => {
+    const nav = navigationRef.current;
+    if (!nav?.addListener) return;
+    const unsubscribe = nav.addListener('state', () => {
+      setActiveTabTick((n) => n + 1);
+    });
+    return unsubscribe;
+  }, []);
 
   return (
-    <Tab.Navigator
-      screenOptions={({ route }) => ({
-        headerStyle:         { backgroundColor: colors.tabBar },
-        headerTintColor:     colors.textPrimary,
-        headerShadowVisible: false,
-        headerTitleStyle:    { fontWeight: '700', fontSize: 18, color: colors.textPrimary },
-        tabBarActiveTintColor:   colors.accent,
-        tabBarInactiveTintColor: colors.textSecondary,
-        tabBarBadgeStyle: {
-          backgroundColor: colors.accent,
-          color: '#fff',
-          fontSize: 10,
-          fontWeight: '700',
-        },
-        tabBarStyle: {
-          backgroundColor: colors.tabBar,
-          borderTopWidth: 1.5,
-          borderTopColor: colors.tabBorder,
-          height: 60 + insets.bottom,
-          paddingTop: 4,
-          paddingBottom: Math.max(insets.bottom, 8),
-        },
-        tabBarLabelStyle: {
-          fontSize: 10,
-          fontWeight: '600',
-          marginBottom: 3,
-          marginTop: -2,
-        },
-        tabBarIcon: ({ focused, color }) => (
-          <View style={[styles.iconWrapper, focused && styles.iconWrapperActive]}>
-            {route.name === 'Inicio'    && <House       color={color} size={18} strokeWidth={2} />}
-            {route.name === 'Explorar'  && <Search      color={color} size={18} strokeWidth={2} />}
-            {route.name === 'Tienda'    && <Disc3       color={color} size={18} strokeWidth={2} />}
-            {route.name === 'Carrito'   && <ShoppingCart color={color} size={18} strokeWidth={2} />}
-            {route.name === 'Facturas'  && <Receipt     color={color} size={18} strokeWidth={2} />}
-            {route.name === 'Colección' && <Library     color={color} size={18} strokeWidth={2} />}
-            {route.name === 'Perfil'    && <User        color={color} size={18} strokeWidth={2} />}
-          </View>
-        ),
-      })}
-    >
-      <Tab.Screen name="Inicio"    component={HomeScreen} />
-      <Tab.Screen name="Explorar"  component={ExploreStack} options={{ headerShown: false }} />
-      <Tab.Screen name="Tienda"    component={StoreStack} options={{ headerShown: false }} />
-      <Tab.Screen
-        name="Carrito"
-        component={CartScreen}
-        options={{ tabBarBadge: totalItems > 0 ? totalItems : undefined }}
-      />
-      <Tab.Screen name="Facturas"  component={FacturasScreen} />
-      <Tab.Screen name="Colección" component={ColeccionScreen} />
-      <Tab.Screen name="Perfil">
-        {() => <ProfileScreen onLogout={onLogout} />}
-      </Tab.Screen>
-    </Tab.Navigator>
+    <View style={{ flex: 1, backgroundColor: colors.bg }}>
+      <View style={{ flex: 1, paddingTop: insets.top }}>
+        <Tab.Navigator
+          screenOptions={{ headerShown: false }}
+          tabBar={(props) => {
+            // No se dibuja la barra por defecto: solo capturamos el objeto
+            // navigation para que el SideMenu (fuera del Tab.Navigator)
+            // pueda navegar entre pestañas y saber cuál está activa.
+            navigationRef.current = props.navigation;
+            return null;
+          }}
+        >
+          <Tab.Screen name="Inicio"    component={HomeScreen} />
+          <Tab.Screen name="Explorar"  component={ExploreStack} />
+          <Tab.Screen name="Colección" component={ColeccionScreen} />
+          <Tab.Screen name="Tienda"    component={StoreStack} />
+          <Tab.Screen name="Carrito"   component={CartScreen} />
+          <Tab.Screen name="Facturas"  component={FacturasScreen} />
+          <Tab.Screen name="Perfil">
+            {() => <ProfileScreen onLogout={onLogout} />}
+          </Tab.Screen>
+        </Tab.Navigator>
+      </View>
+
+      {!navBarHidden && (
+        <SideMenu
+          navigationRef={navigationRef}
+          colors={colors}
+          totalItems={totalItems}
+        />
+      )}
+    </View>
   );
 }
 
@@ -243,9 +237,11 @@ export default function App() {
         <AuthProvider>
           <CartProvider>
             <FacturasProvider>
-              <SplashScreen>
-                <AppInner />
-              </SplashScreen>
+              <NavBarVisibilityProvider>
+                <SplashScreen>
+                  <AppInner />
+                </SplashScreen>
+              </NavBarVisibilityProvider>
             </FacturasProvider>
           </CartProvider>
         </AuthProvider>
@@ -254,19 +250,3 @@ export default function App() {
   );
 }
 
-const styles = StyleSheet.create({
-  iconWrapper: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: 32,
-    height: 32,
-    borderRadius: 16,
-  },
-  iconWrapperActive: {
-    backgroundColor: '#fec3b115',
-    shadowColor: '#fec3b1',
-    shadowOffset: { width: 0, height: 0 },
-    shadowOpacity: 0.9,
-    shadowRadius: 8,
-  },
-});

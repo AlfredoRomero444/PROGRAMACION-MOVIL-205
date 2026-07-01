@@ -4,7 +4,8 @@ import {
   TouchableOpacity, Alert, Modal, ScrollView,
   KeyboardAvoidingView, Platform,
 } from 'react-native';
-import { Pencil, Trash2, Plus, Music2 } from 'lucide-react-native';
+import { Pencil, Trash2, Plus, Music2, ArrowLeft } from 'lucide-react-native';
+import { useNavigation } from '@react-navigation/native';
 import {
   inicializarDB, insertarDisco, obtenerDiscos,
   actualizarDisco, eliminarDisco, DiscoColeccion,
@@ -16,6 +17,7 @@ const FORM_VACIO = { nombre: '', artista: '', genero: '', año: '', nota: '' };
 
 export default function ColeccionScreen() {
   const { colors } = useTheme();
+  const navigation = useNavigation<any>();
 
   const [discos, setDiscos]               = useState<DiscoColeccion[]>([]);
   const [modalVisible, setModal]          = useState(false);
@@ -80,6 +82,14 @@ export default function ColeccionScreen() {
     <View style={[s.container, { backgroundColor: colors.bg }]}>
       {/* Header */}
       <View style={s.header}>
+        <TouchableOpacity
+          style={[s.backBtn, { backgroundColor: colors.bgCard, borderColor: colors.accentBorder }]}
+          activeOpacity={0.75}
+          onPress={() => navigation.navigate('Inicio')}
+        >
+          <ArrowLeft color={colors.accent} size={18} strokeWidth={2.3} />
+        </TouchableOpacity>
+
         <Text style={[s.label, { color: colors.accent }]}>MI COLECCIÓN</Text>
         <Text style={[s.title, { color: colors.textPrimary }]}>SQLite Local</Text>
         <Text style={[s.subtitle, { color: colors.textSecondary }]}>{discos.length} discos guardados en el dispositivo</Text>
@@ -295,6 +305,8 @@ export default function ColeccionScreen() {
 const s = StyleSheet.create({
   container:      { flex: 1, paddingTop: 25 },
   header:         { paddingHorizontal: 25, marginBottom: 20 },
+  backBtn:        { width: 36, height: 36, borderRadius: 18, borderWidth: 1,
+                    alignItems: 'center', justifyContent: 'center', marginBottom: 14 },
   label:          { fontSize: 11, fontWeight: '800', letterSpacing: 2 },
   title:          { fontSize: 32, fontWeight: '900', marginTop: 8, letterSpacing: -1 },
   subtitle:       { fontSize: 14, marginTop: 6 },
