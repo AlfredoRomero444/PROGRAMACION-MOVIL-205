@@ -98,7 +98,7 @@ export default function SplashScreen({ children }: SplashScreenProps) {
           ]}
         >
           <Animated.Image
-            source={require('../../assets/wolf-logo.png')}
+            source={require('../../assets/WWolf-logo.png')}
             resizeMode="contain"
             style={[
               styles.logo,
