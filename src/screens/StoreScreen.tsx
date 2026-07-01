@@ -7,9 +7,11 @@ import {
   TextInput,
 } from 'react-native';
 
+import { Search } from 'lucide-react-native';
 import { discos, artistas } from '../services/DiscosService';
 import DiscoCard from '../components/DiscoCard';
 import { useTheme } from '../context/ThemeContext';
+import { glowCard } from '../utils/glow';
 
 export default function StoreScreen() {
   const { colors } = useTheme();
@@ -38,17 +40,22 @@ export default function StoreScreen() {
         </Text>
       </View>
 
-      <TextInput
-        style={[styles.searchInput, {
-          backgroundColor: colors.bgInput,
-          color: colors.textPrimary,
-          borderColor: colors.accentBorder,
-        }]}
-        placeholder="Buscar disco o artista"
-        placeholderTextColor={colors.textSecondary}
-        value={busqueda}
-        onChangeText={setBusqueda}
-      />
+      <View
+        style={[
+          styles.searchWrapper,
+          { backgroundColor: colors.bgInput, borderColor: colors.accentBorder },
+          glowCard(colors.accent, { opacity: 0.1, radius: 8, elevation: 2 }),
+        ]}
+      >
+        <Search color={colors.accent} size={17} strokeWidth={2} />
+        <TextInput
+          style={[styles.searchInput, { color: colors.textPrimary }]}
+          placeholder="Buscar disco o artista"
+          placeholderTextColor={colors.textSecondary}
+          value={busqueda}
+          onChangeText={setBusqueda}
+        />
+      </View>
 
       <FlatList
         data={discosFiltrados}
@@ -60,7 +67,7 @@ export default function StoreScreen() {
         renderItem={({ item }) => {
           const artista = artistas.find((a) => a.id === item.artistaId);
           return (
-            <View style={styles.cardWrapper}>
+            <View style={[styles.cardWrapper, glowCard(colors.accent, { opacity: 0.1, radius: 8, elevation: 2 })]}>
               <DiscoCard disco={item} artistaNombre={artista?.nombre} />
             </View>
           );
@@ -83,12 +90,19 @@ const styles = StyleSheet.create({
   title:        { fontSize: 32, fontWeight: '900', marginTop: 8, letterSpacing: -1 },
   subtitle:     { fontSize: 14, marginTop: 6 },
 
-  searchInput: {
-    borderRadius: 22,
-    paddingHorizontal: 20,
-    paddingVertical: 15,
+  searchWrapper: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+    borderRadius: 24,
+    paddingHorizontal: 18,
+    paddingVertical: 4,
     marginBottom: 20,
     borderWidth: 1,
+  },
+  searchInput: {
+    flex: 1,
+    paddingVertical: 13,
     fontSize: 14,
   },
 

@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import { AlertCircle, X } from 'lucide-react-native';
 import { useTheme } from '../context/ThemeContext';
+import { glowCard, glowCircle } from '../utils/glow';
 
 type LoginScreenProps = {
   onLogin: () => void;
@@ -161,7 +162,10 @@ export default function LoginScreen({ onLogin }: LoginScreenProps) {
         />
       )}
 
-      <TouchableOpacity style={styles.button} onPress={handleSubmit}>
+      <TouchableOpacity
+        style={[styles.button, glowCircle(colors.accent, { opacity: 0.4, radius: 14 })]}
+        onPress={handleSubmit}
+      >
         <Text style={styles.buttonText}>
           {isRegister ? 'Registrarse' : 'Iniciar sesión'}
         </Text>
@@ -182,7 +186,7 @@ export default function LoginScreen({ onLogin }: LoginScreenProps) {
       <Modal visible={alerta !== null} animationType="fade" transparent>
         <View style={styles.alertOverlay}>
           <View style={[styles.alertBox, { backgroundColor: colors.bgDeep, borderColor: colors.accentBorder }]}>
-            <View style={styles.alertIconWrapper}>
+            <View style={[styles.alertIconWrapper, glowCircle('#fec3b1', { opacity: 0.3, radius: 10 })]}>
               <AlertCircle color="#fec3b1" size={30} strokeWidth={1.5} />
             </View>
 
@@ -227,23 +231,18 @@ const styles = StyleSheet.create({
 
   input: {
     borderRadius: 22,
-    paddingHorizontal: 22,
-    paddingVertical: 17,
+    paddingHorizontal: 20,
+    paddingVertical: 16,
     marginBottom: 16,
     borderWidth: 1,
   },
 
   button: {
     backgroundColor: '#fec3b1',
-    paddingVertical: 17,
-    borderRadius: 24,
+    paddingVertical: 16,
+    borderRadius: 26,
     alignItems: 'center',
     marginTop: 10,
-    shadowColor: '#fec3b1',
-    shadowOffset: { width: 0, height: 8 },
-    shadowOpacity: 0.35,
-    shadowRadius: 16,
-    elevation: 6,
   },
 
   buttonText: {
@@ -278,7 +277,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   alertBox: {
-    borderRadius: 30,
+    borderRadius: 28,
     padding: 28,
     width: '85%',
     borderWidth: 1,
@@ -287,7 +286,7 @@ const styles = StyleSheet.create({
   alertIconWrapper: {
     width: 64,
     height: 64,
-    borderRadius: 22,
+    borderRadius: 32,
     backgroundColor: '#fec3b115',
     alignItems: 'center',
     justifyContent: 'center',

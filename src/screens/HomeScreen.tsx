@@ -7,11 +7,14 @@ import {
   Image,
   FlatList,
   Animated,
+  TouchableOpacity,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import { Search, Disc3, Library, User } from 'lucide-react-native';
 
 import { useProductos } from '../hooks/useProductos';
 import { useTheme } from '../context/ThemeContext';
+import { glowCard, glowCircle } from '../utils/glow';
 
 function LoadingSymbols() {
   const dot   = useRef(new Animated.Value(0)).current;
@@ -67,16 +70,9 @@ export default function HomeScreen() {
           backgroundColor: colors.tabBar,
           borderTopWidth: 1.5,
           borderTopColor: colors.tabBorder,
-          borderTopLeftRadius: 26,
-          borderTopRightRadius: 26,
           height: 60,
           paddingTop: 4,
           paddingBottom: 8,
-          shadowColor: colors.accent,
-          shadowOffset: { width: 0, height: -4 },
-          shadowOpacity: 0.12,
-          shadowRadius: 16,
-          elevation: 8,
         },
       });
     }
@@ -116,9 +112,45 @@ export default function HomeScreen() {
         Explora artistas, álbumes y colecciones exclusivas.
       </Text>
 
+      {/* ACCESOS RÁPIDOS — íconos circulares con glow, estilo dashboard */}
+      <View style={styles.quickRow}>
+        {[
+          { label: 'Explorar',  Icon: Search,  tab: 'Explorar'  },
+          { label: 'Tienda',    Icon: Disc3,   tab: 'Tienda'    },
+          { label: 'Colección', Icon: Library, tab: 'Colección' },
+          { label: 'Perfil',    Icon: User,    tab: 'Perfil'    },
+        ].map(({ label, Icon, tab }) => (
+          <TouchableOpacity
+            key={tab}
+            style={styles.quickItem}
+            activeOpacity={0.8}
+            onPress={() => navigation.navigate(tab)}
+          >
+            <View
+              style={[
+                styles.quickCircle,
+                { backgroundColor: colors.accentFaint, borderColor: colors.accentBorder },
+                glowCircle(colors.accent, { opacity: 0.35, radius: 10 }),
+              ]}
+            >
+              <Icon color={colors.accent} size={22} strokeWidth={2} />
+            </View>
+            <Text style={[styles.quickLabel, { color: colors.textSecondary }]} numberOfLines={1}>
+              {label}
+            </Text>
+          </TouchableOpacity>
+        ))}
+      </View>
+
       {/* BANNER */}
       {destacado && (
-        <View style={[styles.banner, { backgroundColor: colors.bgCard, borderColor: colors.accentBorder, shadowColor: colors.accent }]}>
+        <View
+          style={[
+            styles.banner,
+            { backgroundColor: colors.bgCard, borderColor: colors.accentBorder },
+            glowCard(colors.accent, { opacity: 0.22, radius: 18 }),
+          ]}
+        >
           <View style={styles.bannerContent}>
             <Text style={[styles.bannerTag, { color: colors.accent }]}>
               TENDENCIA
@@ -131,16 +163,14 @@ export default function HomeScreen() {
             </Text>
           </View>
 
-          <View style={[styles.bannerImageRing, { backgroundColor: colors.accentFaint, borderColor: colors.accentBorder }]}>
-            <Image
-              source={
-                typeof destacado.imagen === 'string'
-                  ? { uri: destacado.imagen }
-                  : destacado.imagen
-              }
-              style={styles.bannerImage}
-            />
-          </View>
+          <Image
+            source={
+              typeof destacado.imagen === 'string'
+                ? { uri: destacado.imagen }
+                : destacado.imagen
+            }
+            style={styles.bannerImage}
+          />
         </View>
       )}
 
@@ -149,11 +179,9 @@ export default function HomeScreen() {
         <Text style={[styles.sectionTitle, { color: colors.textPrimary }]}>
           Artistas destacados
         </Text>
-        <View style={[styles.sectionActionPill, { backgroundColor: colors.accentFaint, borderColor: colors.accentBorder }]}>
-          <Text style={[styles.sectionAction, { color: colors.accent }]}>
-            Ver más
-          </Text>
-        </View>
+        <Text style={[styles.sectionAction, { color: colors.accent }]}>
+          Ver más
+        </Text>
       </View>
 
       <FlatList
@@ -192,7 +220,14 @@ export default function HomeScreen() {
       {productos.map(disco => {
         const artista = getArtesano(disco.artistaId);
         return (
-          <View key={disco.id} style={[styles.albumCard, { backgroundColor: colors.bgCard, borderColor: colors.accentBorder }]}>
+          <View
+            key={disco.id}
+            style={[
+              styles.albumCard,
+              { backgroundColor: colors.bgCard, borderColor: colors.accentBorder },
+              glowCard(colors.accent, { opacity: 0.12, radius: 10, elevation: 3 }),
+            ]}
+          >
             <Image
               source={
                 typeof disco.imagen === 'string'
@@ -235,44 +270,43 @@ const styles = StyleSheet.create({
   title:         { fontSize: 34, fontWeight: '900', marginTop: 10 },
   subtitle:      { fontSize: 15, lineHeight: 22, marginTop: 10, marginBottom: 30 },
 
+  quickRow:    { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 28 },
+  quickItem:   { alignItems: 'center', width: 68 },
+  quickCircle: {
+    width: 58, height: 58, borderRadius: 29, borderWidth: 1,
+    alignItems: 'center', justifyContent: 'center', marginBottom: 8,
+  },
+  quickLabel:  { fontSize: 11, fontWeight: '600' },
+
   banner: {
-    borderRadius: 34, padding: 22, marginBottom: 30,
+    borderRadius: 30, padding: 20, marginBottom: 30,
     flexDirection: 'row', alignItems: 'center', borderWidth: 1,
-    shadowOffset: { width: 0, height: 10 }, shadowOpacity: 0.22, shadowRadius: 26, elevation: 6,
   },
   bannerContent: { flex: 1, marginRight: 15 },
   bannerTag:     { fontSize: 11, fontWeight: '800', letterSpacing: 2 },
   bannerTitle:   { fontSize: 24, fontWeight: 'bold', marginTop: 12 },
   bannerArtist:  { fontSize: 15, marginTop: 6 },
-  bannerImageRing: {
-    width: 128, height: 128, borderRadius: 30,
-    borderWidth: 1.5, alignItems: 'center', justifyContent: 'center', padding: 8,
-  },
-  bannerImage:   { width: 110, height: 110, borderRadius: 24 },
+  bannerImage:   { width: 110, height: 110, borderRadius: 20 },
 
   sectionHeader: {
     flexDirection: 'row', justifyContent: 'space-between',
     alignItems: 'center', marginBottom: 18, marginTop: 10,
   },
   sectionTitle:  { fontSize: 20, fontWeight: '700' },
-  sectionActionPill: {
-    paddingHorizontal: 14, paddingVertical: 7,
-    borderRadius: 18, borderWidth: 1,
-  },
-  sectionAction: { fontWeight: '700', fontSize: 12 },
+  sectionAction: { fontWeight: '600' },
 
   artistList:  { paddingBottom: 15 },
-  artistCard:  { width: 120, marginRight: 15, alignItems: 'center' },
-  artistImage: { width: 108, height: 108, borderRadius: 54, marginBottom: 10 },
-  artistName:  { fontSize: 14, fontWeight: '700', textAlign: 'center' },
-  artistGenre: { fontSize: 12, marginTop: 4, textAlign: 'center' },
+  artistCard:  { width: 120, marginRight: 15 },
+  artistImage: { width: 120, height: 120, borderRadius: 24, marginBottom: 10 },
+  artistName:  { fontSize: 14, fontWeight: '700' },
+  artistGenre: { fontSize: 12, marginTop: 4 },
 
   albumCard:   {
-    borderRadius: 28, padding: 15,
+    borderRadius: 24, padding: 15,
     flexDirection: 'row', alignItems: 'center',
     marginBottom: 15, borderWidth: 1,
   },
-  albumImage:  { width: 75, height: 75, borderRadius: 22 },
+  albumImage:  { width: 75, height: 75, borderRadius: 18 },
   albumInfo:   { flex: 1, marginLeft: 15 },
   albumName:   { fontSize: 17, fontWeight: '700' },
   albumArtist: { fontSize: 14, marginTop: 5 },

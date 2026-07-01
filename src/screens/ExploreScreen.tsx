@@ -9,6 +9,7 @@ import DiscoCard from '../components/DiscoCard';
 import ArtistaCard from '../components/ArtistaCard';
 import { ExploreListProps } from '../navigation/ExploreStack';
 import { useTheme } from '../context/ThemeContext';
+import { glowCard, glowCircle } from '../utils/glow';
 
 export default function ExploreScreen({ navigation }: ExploreListProps) {
   const { colors } = useTheme();
@@ -64,6 +65,7 @@ export default function ExploreScreen({ navigation }: ExploreListProps) {
                 styles.chip,
                 { backgroundColor: colors.bgCard, borderColor: colors.accentBorder },
                 activo && styles.chipActivo,
+                activo && glowCircle(colors.accent, { opacity: 0.4, radius: 10 }),
               ]}
               onPress={() => setGeneroActivo(genero)}
               activeOpacity={0.85}
@@ -107,8 +109,14 @@ export default function ExploreScreen({ navigation }: ExploreListProps) {
                 activeOpacity={0.8}
                 onPress={() => irAlDetalle(item.id)}
               >
-                <View style={[styles.discoRow, { backgroundColor: colors.bgCard, borderColor: colors.accentBorder }]}>
-                  <View style={styles.discoDot} />
+                <View
+                  style={[
+                    styles.discoRow,
+                    { backgroundColor: colors.bgCard, borderColor: colors.accentBorder },
+                    glowCard(colors.accent, { opacity: 0.1, radius: 8, elevation: 2 }),
+                  ]}
+                >
+                  <View style={[styles.discoDot, { backgroundColor: colors.accent }]} />
                   <View style={styles.discoInfo}>
                     <Text style={[styles.discoNombre, { color: colors.textPrimary }]} numberOfLines={1}>{item.nombre}</Text>
                     <Text style={[styles.discoArtista, { color: colors.textSecondary }]} numberOfLines={1}>{artista?.nombre}</Text>
@@ -146,8 +154,8 @@ const styles = StyleSheet.create({
   artistasContainer:{ gap: 12, marginBottom: 28 },
   discoWrapper:     { marginBottom: 12 },
   discoRow:         { flexDirection: 'row', alignItems: 'center',
-                      borderRadius: 18, padding: 14, borderWidth: 1 },
-  discoDot:         { width: 8, height: 8, borderRadius: 4, backgroundColor: '#fec3b1', marginRight: 12 },
+                      borderRadius: 22, padding: 14, borderWidth: 1 },
+  discoDot:         { width: 8, height: 8, borderRadius: 4, marginRight: 12 },
   discoInfo:        { flex: 1 },
   discoNombre:      { fontSize: 14, fontWeight: '700' },
   discoArtista:     { fontSize: 12, marginTop: 3 },

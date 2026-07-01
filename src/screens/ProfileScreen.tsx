@@ -15,6 +15,8 @@ import {
 } from 'react-native';
 import { useTheme } from '../context/ThemeContext';
 import { Svg, Path, Defs, LinearGradient, Stop, Rect, Circle } from 'react-native-svg';
+import { Pencil, LogOut } from 'lucide-react-native';
+import { glowCard, glowCircle } from '../utils/glow';
 
 type ApiStatus = 'idle' | 'loading' | 'success' | 'error';
 
@@ -229,7 +231,13 @@ export default function ProfileScreen({ onLogout }: ProfileScreenProps) {
 
         {/* Avatar */}
         <View style={[styles.avatarWrapper, { borderColor: colors.bg }]}>
-          <View style={[styles.avatarRing, { backgroundColor: colors.accent, shadowColor: colors.accent }]}>
+          <View
+            style={[
+              styles.avatarRing,
+              { backgroundColor: colors.accent },
+              glowCircle(colors.accent, { opacity: 0.5, radius: 14, elevation: 10 }),
+            ]}
+          >
             <Image source={require('../../assets/perfil.jpg')} style={[styles.avatar, { borderColor: colors.bg }]} />
           </View>
         </View>
@@ -239,7 +247,13 @@ export default function ProfileScreen({ onLogout }: ProfileScreenProps) {
           <Text style={[styles.correo, { color: colors.textSecondary }]}>{usuario.correo}</Text>
 
           {/* Redes sociales */}
-          <View style={[styles.socialColumn, { backgroundColor: colors.bgCard, borderColor: colors.accentBorder }]}>
+          <View
+            style={[
+              styles.socialColumn,
+              { backgroundColor: colors.bgCard, borderColor: colors.accentBorder },
+              glowCard(colors.accent, { opacity: 0.1, radius: 10, elevation: 3 }),
+            ]}
+          >
             {SOCIAL_LINKS.map(({ id, username, url, Icon }) => (
               <TouchableOpacity key={id} style={[styles.socialRow, { borderColor: colors.border }]} onPress={() => Linking.openURL(url)} activeOpacity={0.7}>
                 <View style={[styles.socialIconWrap, { backgroundColor: colors.border }]}><Icon size={22} /></View>
@@ -250,7 +264,13 @@ export default function ProfileScreen({ onLogout }: ProfileScreenProps) {
           </View>
 
           {/* Estadísticas */}
-          <View style={[styles.statsRow, { borderColor: colors.borderMid }]}>
+          <View
+            style={[
+              styles.statsRow,
+              { backgroundColor: colors.bgCard, borderColor: colors.accentBorder },
+              glowCard(colors.accent, { opacity: 0.1, radius: 10, elevation: 3 }),
+            ]}
+          >
             <View style={styles.statBox}>
               <Text style={[styles.statNumero, { color: colors.textPrimary }]}>{usuario.cancionesEscuchadas.toLocaleString()}</Text>
               <Text style={[styles.statLabel,  { color: colors.textSecondary }]}>canciones</Text>
@@ -289,7 +309,13 @@ export default function ProfileScreen({ onLogout }: ProfileScreenProps) {
           </View>
 
           {/* API Monitor */}
-          <View style={[styles.apiCard, { backgroundColor: colors.bgCard, borderColor: colors.accentBorder }]}>
+          <View
+            style={[
+              styles.apiCard,
+              { backgroundColor: colors.bgCard, borderColor: colors.accentBorder },
+              glowCard(colors.accent, { opacity: 0.1, radius: 10, elevation: 3 }),
+            ]}
+          >
             <View style={[styles.apiHeader, { borderColor: colors.accentBorder, backgroundColor: isDark ? '#2a160d' : '#fdf0ea' }]}>
               <View style={styles.apiHeaderLeft}>
                 <View style={[styles.apiDot, { opacity: blink ? 1 : 0.2, backgroundColor: apiStatus === 'error' ? '#e24b4a' : colors.accent }]} />
@@ -341,13 +367,35 @@ export default function ProfileScreen({ onLogout }: ProfileScreenProps) {
           </View>
 
           {/* Opciones */}
-          <View style={[styles.optionsContainer, { borderColor: colors.borderMid }]}>
-            <TouchableOpacity style={[styles.optionRow, { borderColor: colors.borderMid }]} onPress={openEditModal}>
-              <Text style={[styles.optionText, { color: colors.textPrimary }]}>Editar perfil</Text>
+          <View
+            style={[
+              styles.optionsContainer,
+              { backgroundColor: colors.bgCard, borderColor: colors.accentBorder },
+              glowCard(colors.accent, { opacity: 0.1, radius: 10, elevation: 3 }),
+            ]}
+          >
+            <TouchableOpacity style={[styles.optionRow, { borderColor: colors.borderMid }]} onPress={openEditModal} activeOpacity={0.7}>
+              <View style={styles.optionLeft}>
+                <View
+                  style={[
+                    styles.optionIconWrap,
+                    { backgroundColor: colors.accentFaint, borderColor: colors.accentBorder },
+                    glowCircle(colors.accent, { opacity: 0.3, radius: 8 }),
+                  ]}
+                >
+                  <Pencil color={colors.accent} size={16} strokeWidth={2} />
+                </View>
+                <Text style={[styles.optionText, { color: colors.textPrimary }]}>Editar perfil</Text>
+              </View>
               <Text style={[styles.optionArrow, { color: colors.textSecondary }]}>›</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={[styles.optionRow, styles.logoutRow, { borderColor: colors.borderMid }]} onPress={handleLogout}>
-              <Text style={styles.logoutText}>Cerrar sesión</Text>
+            <TouchableOpacity style={[styles.optionRow, styles.logoutRow]} onPress={handleLogout} activeOpacity={0.7}>
+              <View style={styles.optionLeft}>
+                <View style={[styles.optionIconWrap, { backgroundColor: '#e24b4a18', borderColor: '#e24b4a40' }]}>
+                  <LogOut color="#e24b4a" size={16} strokeWidth={2} />
+                </View>
+                <Text style={styles.logoutText}>Cerrar sesión</Text>
+              </View>
             </TouchableOpacity>
           </View>
         </View>
@@ -471,7 +519,7 @@ const styles = StyleSheet.create({
   themeButtonInner: {
     width: 44,
     height: 38,
-    borderRadius: 16,
+    borderRadius: 12,
     borderWidth: 1.5,
     alignItems: 'center',
     justifyContent: 'center',
@@ -488,12 +536,7 @@ const styles = StyleSheet.create({
   },
 
   avatarWrapper: { marginTop: -AVATAR_SIZE / 2, paddingLeft: 20 },
-  avatarRing: {
-    width: AVATAR_SIZE + 6, height: AVATAR_SIZE + 6, borderRadius: (AVATAR_SIZE + 6) / 2,
-    alignItems: 'center', justifyContent: 'center',
-    shadowColor: '#fec3b1', shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.4, shadowRadius: 12, elevation: 6,
-  },
+  avatarRing: { width: AVATAR_SIZE + 6, height: AVATAR_SIZE + 6, borderRadius: (AVATAR_SIZE + 6) / 2, alignItems: 'center', justifyContent: 'center' },
   avatar: { width: AVATAR_SIZE, height: AVATAR_SIZE, borderRadius: AVATAR_SIZE / 2, borderWidth: 3 },
 
   content:      { paddingHorizontal: 20, paddingTop: 12, paddingBottom: 40 },
@@ -501,12 +544,12 @@ const styles = StyleSheet.create({
   correo:       { fontSize: 13, marginTop: 2, marginBottom: 14 },
 
   socialColumn: { marginBottom: 20, borderRadius: 22, overflow: 'hidden', borderWidth: 1 },
-  socialRow:    { flexDirection: 'row', alignItems: 'center', paddingHorizontal: 14, paddingVertical: 12, borderBottomWidth: 0.5, gap: 12 },
-  socialIconWrap: { width: 36, height: 36, borderRadius: 18, alignItems: 'center', justifyContent: 'center' },
+  socialRow:    { flexDirection: 'row', alignItems: 'center', paddingHorizontal: 14, paddingVertical: 11, borderBottomWidth: 0.5, gap: 12 },
+  socialIconWrap: { width: 34, height: 34, borderRadius: 17, alignItems: 'center', justifyContent: 'center' },
   socialUsername: { flex: 1, fontSize: 13, fontWeight: '500' },
   socialArrow:  { fontSize: 18 },
 
-  statsRow:     { flexDirection: 'row', paddingVertical: 14, borderTopWidth: 0.5, borderBottomWidth: 0.5, marginBottom: 22 },
+  statsRow:     { flexDirection: 'row', paddingVertical: 16, borderRadius: 22, borderWidth: 1, marginBottom: 22 },
   statBox:      { flex: 1, alignItems: 'center' },
   statDivider:  { width: 0.5 },
   statNumero:   { fontSize: 17, fontWeight: '700' },
@@ -520,17 +563,19 @@ const styles = StyleSheet.create({
   artistaNombre:  { fontSize: 11, textAlign: 'center' },
 
   generosContainer: { flexDirection: 'row', flexWrap: 'wrap', gap: 8, marginBottom: 8 },
-  generoBadge:      { paddingHorizontal: 13, paddingVertical: 6, borderRadius: 16 },
+  generoBadge:      { paddingHorizontal: 12, paddingVertical: 6, borderRadius: 14 },
   generoText:       { fontSize: 12, fontWeight: '600' },
 
-  optionsContainer: { marginTop: 14 },
+  optionsContainer: { marginTop: 14, borderRadius: 22, borderWidth: 1, paddingHorizontal: 16, overflow: 'hidden' },
   optionRow:        { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingVertical: 14, borderTopWidth: 0.5 },
-  optionText:       { fontSize: 14 },
+  optionLeft:       { flexDirection: 'row', alignItems: 'center', gap: 12 },
+  optionIconWrap:   { width: 34, height: 34, borderRadius: 17, borderWidth: 1, alignItems: 'center', justifyContent: 'center' },
+  optionText:       { fontSize: 14, fontWeight: '600' },
   optionArrow:      { fontSize: 18 },
-  logoutRow:        { paddingBottom: 4 },
-  logoutText:       { color: '#e24b4a', fontSize: 14 },
+  logoutRow:        { paddingBottom: 14, borderTopWidth: 0.5, borderColor: '#e24b4a20' },
+  logoutText:       { color: '#e24b4a', fontSize: 14, fontWeight: '600' },
 
-  apiCard:          { marginTop: 28, borderRadius: 22, borderWidth: 1, overflow: 'hidden' },
+  apiCard:          { marginTop: 28, borderRadius: 20, borderWidth: 1, overflow: 'hidden' },
   apiHeader:        { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 14, paddingVertical: 10, borderBottomWidth: 1 },
   apiHeaderLeft:    { flexDirection: 'row', alignItems: 'center', gap: 8 },
   apiDot:           { width: 8, height: 8, borderRadius: 4 },
@@ -552,19 +597,19 @@ const styles = StyleSheet.create({
   apiRefetchText:   { fontSize: 12, fontWeight: '700', fontFamily: 'monospace', letterSpacing: 1 },
 
   modalOverlay:  { flex: 1, justifyContent: 'flex-end', backgroundColor: '#000000aa' },
-  modalSheet:    { borderTopLeftRadius: 28, borderTopRightRadius: 28, paddingHorizontal: 24, paddingTop: 12, paddingBottom: 36, borderTopWidth: 1 },
+  modalSheet:    { borderTopLeftRadius: 20, borderTopRightRadius: 20, paddingHorizontal: 24, paddingTop: 12, paddingBottom: 36, borderTopWidth: 1 },
   modalHandle:   { width: 40, height: 4, borderRadius: 2, backgroundColor: '#ffffff30', alignSelf: 'center', marginBottom: 18 },
   modalTitle:    { fontSize: 17, fontWeight: '700', fontFamily: 'monospace', marginBottom: 20 },
   fieldLabel:    { fontSize: 11, fontFamily: 'monospace', letterSpacing: 1, marginBottom: 4, textTransform: 'uppercase' },
-  fieldInput:    { borderRadius: 18, paddingHorizontal: 18, paddingVertical: 13, marginBottom: 14, borderWidth: 1, fontSize: 14 },
+  fieldInput:    { borderRadius: 12, paddingHorizontal: 16, paddingVertical: 12, marginBottom: 14, borderWidth: 1, fontSize: 14 },
   modalButtons:  { flexDirection: 'row', gap: 12, marginTop: 6 },
-  cancelBtn:     { flex: 1, paddingVertical: 14, borderRadius: 20, borderWidth: 1, alignItems: 'center' },
+  cancelBtn:     { flex: 1, paddingVertical: 14, borderRadius: 14, borderWidth: 1, alignItems: 'center' },
   cancelBtnText: { fontSize: 14, fontWeight: '600' },
-  saveBtn:       { flex: 1, paddingVertical: 14, borderRadius: 20, alignItems: 'center' },
+  saveBtn:       { flex: 1, paddingVertical: 14, borderRadius: 14, alignItems: 'center' },
   saveBtnText:   { color: '#fff', fontSize: 14, fontWeight: '700' },
 
   logoutOverlay:        { flex: 1, backgroundColor: '#000000b0', alignItems: 'center', justifyContent: 'center', paddingHorizontal: 32 },
-  logoutDialog:         { width: '100%', borderRadius: 26, borderWidth: 1, overflow: 'hidden', alignItems: 'center', paddingTop: 28 },
+  logoutDialog:         { width: '100%', borderRadius: 20, borderWidth: 1, overflow: 'hidden', alignItems: 'center', paddingTop: 28 },
   logoutIconWrap:       { width: 52, height: 52, borderRadius: 26, backgroundColor: '#e24b4a18', borderWidth: 1, borderColor: '#e24b4a40', alignItems: 'center', justifyContent: 'center', marginBottom: 16 },
   logoutDialogTitle:    { fontSize: 17, fontWeight: '700', fontFamily: 'monospace', marginBottom: 8 },
   logoutDialogSubtitle: { fontSize: 13, textAlign: 'center', lineHeight: 20, paddingHorizontal: 12, marginBottom: 24 },
