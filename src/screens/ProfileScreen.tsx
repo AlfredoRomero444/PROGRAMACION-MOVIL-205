@@ -298,7 +298,7 @@ export default function ProfileScreen({ onLogout }: ProfileScreenProps) {
           <Text style={[styles.sectionTitle, { color: colors.textPrimary }]}>Géneros favoritos</Text>
           <View style={styles.generosContainer}>
             {generosFavoritos.map(genero => (
-              <View key={genero} style={[styles.generoBadge, { backgroundColor: colors.accentFaint }]}>
+              <View key={genero} style={[styles.generoBadge, { backgroundColor: colors.tagBg, borderColor: colors.tagBorder, borderWidth: 1 }]}>
                 <Text style={[styles.generoText, { color: colors.accentLight }]}>{genero}</Text>
               </View>
             ))}
@@ -316,7 +316,7 @@ export default function ProfileScreen({ onLogout }: ProfileScreenProps) {
                 <View style={[styles.apiDot, { opacity: blink ? 1 : 0.2, backgroundColor: apiStatus === 'error' ? '#e24b4a' : colors.accent }]} />
                 <Text style={[styles.apiTitle, { color: colors.accent }]}>API STATUS</Text>
               </View>
-              <View style={[styles.apiBadge, { backgroundColor: colors.accentFaint, borderColor: colors.accentBorder }, apiStatus === 'error' && { borderColor: '#e24b4a50', backgroundColor: '#e24b4a20' }]}>
+              <View style={[styles.apiBadge, { backgroundColor: colors.tagBg, borderColor: colors.tagBorder }, apiStatus === 'error' && { borderColor: '#e24b4a50', backgroundColor: '#e24b4a20' }]}>
                 <Text style={[styles.apiBadgeText, { color: colors.accentLight }, apiStatus === 'error' && { color: '#e24b4a' }]}>{badgeLabel}</Text>
               </View>
             </View>

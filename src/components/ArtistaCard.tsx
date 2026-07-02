@@ -35,7 +35,7 @@ export default function ArtistaCard({ artista, onPress }: ArtistaCardProps) {
         </Text>
 
         <View style={styles.metaRow}>
-          <View style={[styles.generoBadge, { backgroundColor: colors.accentFaint }]}>
+          <View style={[styles.generoBadge, { backgroundColor: colors.tagBg, borderColor: colors.tagBorder, borderWidth: 1 }]}>
             <Text style={[styles.generoText, { color: colors.accentLight }]}>{artista.genero}</Text>
           </View>
           <Text style={[styles.pais, { color: colors.textSecondary }]}>{artista.pais}</Text>

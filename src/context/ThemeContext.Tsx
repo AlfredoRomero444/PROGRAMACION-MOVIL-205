@@ -30,6 +30,9 @@ const darkColors = {
   accentLight:   '#ffd9cb',
   accentFaint:   '#fec3b115',
   accentBorder:  '#fec3b130',
+  // Etiquetas / badges (fondo transparente, tono oscuro polarizado)
+  tagBg:      '#00000055',
+  tagBorder:  '#ffffff14',
   // Otros
   green:      '#32d74b',
   red:        '#ff453a',
@@ -51,6 +54,9 @@ const lightColors: typeof darkColors = {
   accentLight:   '#c97a56',
   accentFaint:   '#fec3b115',
   accentBorder:  '#fec3b140',
+  // Etiquetas / badges (fondo transparente, rosa durazno claro polarizado)
+  tagBg:      '#fec3b155',
+  tagBorder:  '#fec3b170',
   green:      '#34c759',
   red:        '#ff3b30',
   tabBar:     '#ffffff',

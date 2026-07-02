@@ -128,7 +128,7 @@ export default function ColeccionScreen() {
               <Text style={[s.cardNombre, { color: colors.textPrimary }]} numberOfLines={1}>{item.nombre}</Text>
               <Text style={[s.cardArtista, { color: colors.textSecondary }]}>{item.artista}</Text>
               <View style={s.cardMeta}>
-                <View style={[s.genreBadge, { backgroundColor: colors.accentFaint }]}>
+                <View style={[s.genreBadge, { backgroundColor: colors.tagBg, borderColor: colors.tagBorder, borderWidth: 1 }]}>
                   <Text style={[s.genreText, { color: colors.accentLight }]}>{item.genero}</Text>
                 </View>
                 <Text style={[s.cardAño, { color: colors.textMuted }]}>{item.año}</Text>
